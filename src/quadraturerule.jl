@@ -2,15 +2,7 @@ using BibInternal: Entry
 using BibParser: parse_file
 using StaticArrays: SVector
 
-
-struct CompactQuadratureRule{T, D, Domain<:AbstractDomain{D}}
-  degree::Int
-  orbits::Vector{Int}
-  values::Vector{T}
-end
-
-
-struct QuadratureRule{T, D, Domain<:AbstractDomain{D}}
+struct QuadratureRule{T, D, Ω<:AbstractDomain}
   degree::Int
   points::Vector{SVector{D,T}}
   weights::Vector{T}
@@ -19,7 +11,9 @@ struct QuadratureRule{T, D, Domain<:AbstractDomain{D}}
   bib::Entry
 end
 
-domaintype(::QuadratureRule{T, D, Domain}) where {T,D,Domain} = Domain
+ctype(::QuadratureRule{T,D,Ω}) where {T,D,Ω<:AbstractDomain} = T
+dimension(::QuadratureRule{T,D,Ω}) where {T,D,Ω<:AbstractDomain} = D
+domaintype(::QuadratureRule{T,D,Ω}) where {T,D,Ω<:AbstractDomain} = Ω
 
 import Base: parse
 parse(::Type{<:AbstractString}, x::AbstractString) = x

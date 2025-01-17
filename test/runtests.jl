@@ -2,5 +2,5 @@ using FiniteElementQuadratureRules
 using Test
 
 @testset "FiniteElementQuadratureRules.jl" begin
-    # Write your tests here.
+    include("referenceelement.jl")
 end

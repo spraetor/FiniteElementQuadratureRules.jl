@@ -1,0 +1,7 @@
+reference: 'Pap15'
+region: simplex
+dim: 2
+degree: 1
+orbits: [1, 0, 0, 0]
+arguments:
+
