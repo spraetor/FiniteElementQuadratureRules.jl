@@ -5,5 +5,8 @@ function transform(qr::QuadratureRule{T,D,Ω}, refIn::ReferenceElement{D,Ω}, re
   volIn = volume(refIn)
   volOut = volume(refOut)
 
-  QuadratureRule{T,D,Ω}(qr.degree, map(p -> map(geo,p), qr.points), map(w -> w*volOut/volIn, qr.weights), qr.properties, qr.accuracy, qr.bib)
+  QuadratureRule{T,D,Ω}(qr.degree,
+    map(p -> map(geo,p), qr.points),
+    map(w -> w*volOut/volIn, qr.weights),
+    qr.properties, qr.accuracy, qr.bib)
 end

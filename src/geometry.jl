@@ -23,3 +23,10 @@ import Base: map
 function map(geo::AffineGeometry{T,mydim,cdim,Ω}, λ::AbstractVector{S}) where {mydim,Ω,cdim,T,S<:Real}
   geo.origin + geo.jacobian * λ
 end
+
+
+struct MultilinearGeometry{T<:Real,mydim,cdim,Ω<:AbstractDomain} <: AbstractGeometry
+  refElement::ReferenceElement{mydim,Ω}
+  corners::Vector{SVector{cdim,T}}
+end
+
