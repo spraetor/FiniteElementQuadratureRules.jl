@@ -2,7 +2,10 @@ using BibInternal: Entry
 using BibParser: parse_file
 using StaticArrays: SVector
 
-struct QuadratureRule{T, D, Ω<:AbstractDomain}
+"""
+  QuadratureRule{T,D,Ω}
+"""
+struct QuadratureRule{T<:Real, D, Ω<:AbstractDomain}
   degree::Int
   points::Vector{SVector{D,T}}
   weights::Vector{T}

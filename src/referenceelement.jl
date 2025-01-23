@@ -1,9 +1,15 @@
-using StaticArray: SVector
+using StaticArrays: SVector
 
+"""
+  ReferenceElement{D,Ω}
+"""
 struct ReferenceElement{D, Ω<:AbstractDomain}
   coordinates::Vector{SVector{D,Int}}
   facets::Vector{Vector{Int}}
 end
+
+dimension(::ReferenceElement{D,Ω}) where {D, Ω<:AbstractDomain} = D
+domaintype(::ReferenceElement{D,Ω}) where {D, Ω<:AbstractDomain} = Ω
 
 # Define standard reference elements
 
@@ -45,16 +51,13 @@ function ReferenceElement(::Pyramid)
     [[1,2,3,4], [1,3,5], [2,4,5], [1,2,5], [3,4,5]])
 end
 
-dimension(::ReferenceElement{D,Ω}) where {D, Ω<:AbstractDomain} = D
-domaintype(::ReferenceElement{D,Ω}) where {D, Ω<:AbstractDomain} = Ω
-
-volume(::Type{T}, ::ReferenceElement{2,Triangle}) = T(1)
-volume(::Type{T}, ::ReferenceElement{1,Line}) = T(1)
-volume(::Type{T}, ::ReferenceElement{2,Triangle}) = T(1//2)
-volume(::Type{T}, ::ReferenceElement{2,Quadrilateral}) = T(1)
-volume(::Type{T}, ::ReferenceElement{3,Tetrahedron}) = T(1//6)
-volume(::Type{T}, ::ReferenceElement{3,Hexahedron}) = T(1)
-volume(::Type{T}, ::ReferenceElement{3,Prism}) = T(1//2)
-volume(::Type{T}, ::ReferenceElement{3,Pyramid}) = T(1//3)
+volume(::Type{T}, ::ReferenceElement{0,Point}) where T<:Real = T(1)
+volume(::Type{T}, ::ReferenceElement{1,Line}) where T<:Real = T(1)
+volume(::Type{T}, ::ReferenceElement{2,Triangle}) where T<:Real = T(1//2)
+volume(::Type{T}, ::ReferenceElement{2,Quadrilateral}) where T<:Real = T(1)
+volume(::Type{T}, ::ReferenceElement{3,Tetrahedron}) where T<:Real = T(1//6)
+volume(::Type{T}, ::ReferenceElement{3,Hexahedron}) where T<:Real = T(1)
+volume(::Type{T}, ::ReferenceElement{3,Prism}) where T<:Real = T(1//2)
+volume(::Type{T}, ::ReferenceElement{3,Pyramid}) where T<:Real = T(1//3)
 
 volume(ref::ReferenceElement{D,Ω}) where {D,Ω<:AbstractDomain} = volume(Rational,ref)
