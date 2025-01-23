@@ -17,6 +17,7 @@ order(lb::Lagrange) = lb.k
 # Return the domain type
 domain(::Lagrange{dim,Ω}) where {dim,Ω<:AbstractSimplex} = Ω()
 
+
 # evaluate all basis functions in a point x
 function (lb::Lagrange{dim,<:AbstractSimplex})(x::AbstractVector{T}) where {dim,T<:Real}
   if order(lb) == 0
@@ -44,6 +45,53 @@ function (lb::Lagrange{dim,<:AbstractCube})(x::AbstractVector{T}) where {dim,T<:
       end
     end
     SVector(out)
+  else
+    error("Not implemented")
+  end
+end
+
+
+# evaluate all basis functions in a point x
+function (lb::Lagrange{3,Prism})(x::AbstractVector{T}) where {dim,T<:Real}
+  if order(lb) == 0
+    SVector{1,T}([1.0])
+  elseif order(lb) == 1
+    SVector{6,T}([
+      (1.0-x[1]-x[2])*(1.0-x[3]),
+      x[1]*(1-x[3]),
+      x[2]*(1-x[3]),
+      x[3]*(1.0-x[1]-x[2]),
+      x[1]*x[3],
+      x[2]*x[3]
+    ])
+  else
+    error("Not implemented")
+  end
+end
+
+
+# evaluate all basis functions in a point x
+function (lb::Lagrange{3,Pyramid})(x::AbstractVector{T}) where {dim,T<:Real}
+  if order(lb) == 0
+    SVector{1,T}([1.0])
+  elseif order(lb) == 1
+    if x[1] > x[2]
+      SVector{5,T}([
+        (1-x[1])*(1-x[2])-x[3]*(1-x[2]),
+        x[1]*(1-x[2])-x[3]*x[2],
+        (1-x[1])*x[2]-x[3]*x[2],
+        x[1]*x[2]+x[3]*x[2],
+        x[3]
+      ])
+    else
+      SVector{5,T}([
+        (1-x[1])*(1-x[2])-x[3]*(1-x[1]),
+        x[1]*(1-x[2])-x[3]*x[1],
+        (1-x[1])*x[2]-x[3]*x[1],
+        x[1]*x[2]+x[3]*x[1],
+        x[3]
+      ])
+    end
   else
     error("Not implemented")
   end
