@@ -10,15 +10,16 @@ include("domain.jl")
 include("referenceelement.jl")
 include("lagrange.jl")
 include("geometry.jl")
+include("symmetryorbits.jl")
 include("quadraturerule.jl")
 include("generate.jl")
 include("transform.jl")
 
 export AbstractCube, AbstractDomain, AbstractGeometry, AbstractLocalBasis,
-  AbstractSimplex, AffineGeometry, CompactQuadratureRule, Hexahedron, Lagrange,
+  AbstractSimplex, AffineGeometry, CompactQuadratureRule, Hexahedron, LagrangeLocalBasis,
   Line, MultiLinearGeometry, Point, Prism, Pyramid, QuadratureRule, Quadrilateral,
-  Tetrahedron, Triangle
+  ReferenceElement, SymmetryOrbit, Tetrahedron, Triangle
 export ctype, dimension, domain, domaintype, expand, facets, generate, order,
-  transform, vertices, volume
+  position, symmetryOrbits, transform, vertices, volume
 
 end # end module FiniteElementQuadratureRules

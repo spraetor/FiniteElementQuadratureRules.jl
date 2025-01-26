@@ -1,8 +1,14 @@
 
 @testset "ReferenceElement" begin
 
-  for Domains in Base.uniontypes(AllDomains)
-    @test typeof(ReferenceElement(Domain).domain) == Domain
+  for Domain in Base.uniontypes(FiniteElementQuadratureRules.AllDomains)
+    domain = Domain()
+    ref = ReferenceElement(domain)
+
+    @test domaintype(ref) == Domain
+    @test dimension(ref) == dimension(domain)
+    @test length(ref.coordinates) == vertices(domain)
+    @test length(ref.facets) == facets(domain)
   end
 
 end

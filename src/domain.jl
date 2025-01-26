@@ -53,34 +53,41 @@ facets(::Pyramid) = 5
 facets(::UnknownDomain) = 0
 
 
-function domain(::Val{D}, region::String) where D
-  if region == "simplex"
-    if D == 1
-      return Line
-    elseif D == 2
-      return Triangle
-    elseif D == 3
-      return Tetrahedron
-    else
-      return UnknownDomain
-    end
-  elseif region == "cube"
-    if D == 1
-      return Line
-    elseif D == 2
-      return Quadrilateral
-    elseif D == 3
-      return Hexahedron
-    else
-      return UnknownDomain
-    end
-  elseif region == "prism"
-    @assert D == 3
-    return Prism
-  elseif region == "pyramid"
-    @assert D == 3
-    return Pyramid
+
+function domain(dim, region::Symbol)
+  if dim == 0
+    return Point
+  elseif dim == 1
+    return Line
   else
-    return UnknownDomain
+    if region == :simplex
+      if dim == 2
+        return Triangle
+      elseif dim == 3
+        return Tetrahedron
+      else
+        return UnknownDomain
+      end
+    elseif region == :cube
+      if dim == 2
+        return Quadrilateral
+      elseif dim == 3
+        return Hexahedron
+      else
+        return UnknownDomain
+      end
+    elseif region == :prism
+      @assert dim == 3
+      return Prism
+    elseif region == :pyramid
+      @assert dim == 3
+      return Pyramid
+    else
+      return UnknownDomain
+    end
   end
+end
+
+function domain(dim, region::String)
+  domain(dim, Symbol(region))
 end

@@ -17,8 +17,25 @@ function ReferenceElement(::Point)
   ReferenceElement{0,Point}([[]], [])
 end
 
+import Base: position
+function position(ref::ReferenceElement{0,Point}, i::Integer, c::Integer)
+  @assert c == 0 && i == 1
+  return ref.coordinates[1]
+end
+
 function ReferenceElement(::Line)
   ReferenceElement{1,Line}([[0], [1]], [[1], [2]])
+end
+
+function position(ref::ReferenceElement{1,Line}, i::Integer, c::Integer)
+  @assert c <= 1
+  if c == 0
+    @assert i == 1
+    return (ref.coordinates[1] + ref.coordinates[2])/2
+  elseif c == 1
+    @assert i <= 2
+    return ref.coordinates[i]
+  end
 end
 
 function ReferenceElement(::Triangle)
@@ -29,6 +46,21 @@ end
 function ReferenceElement(::Quadrilateral)
   ReferenceElement{2,Quadrilateral}([[0,0], [1,0], [0,1], [1,1]],
     [[1,3], [2,4], [1,2], [3,4]])
+end
+
+function position(ref::ReferenceElement{2,<:AbstractDomain}, i::Integer, c::Integer)
+  @assert c <= 2
+  if c == 0
+    @assert i == 1
+    return sum(c for c in ref.coordinates)/length(ref.coordinates)
+  elseif c == 1
+    @assert i <= length(ref.facets)
+    facet = ref.facets[i]
+    return sum(ref.coordinates[i] for i in facet)/length(facet)
+  elseif c == 2
+    @assert i <= length(ref.coordinates)
+    return ref.coordinates[i]
+  end
 end
 
 function ReferenceElement(::Tetrahedron)
@@ -49,6 +81,23 @@ end
 function ReferenceElement(::Pyramid)
   ReferenceElement{3,Pyramid}([[0,0,0], [1,0,0], [0,1,0], [1,1,0], [0,0,1]],
     [[1,2,3,4], [1,3,5], [2,4,5], [1,2,5], [3,4,5]])
+end
+
+function position(ref::ReferenceElement{3,<:AbstractDomain}, i::Integer, c::Integer)
+  @assert c <= 3
+  if c == 0
+    @assert i == 1
+    return sum(c for c in ref.coordinates)/length(ref.coordinates)
+  elseif c == 1
+    @assert i <= length(ref.facets)
+    facet = ref.facets[i]
+    return sum(ref.coordinates[i] for i in facet)/length(facet)
+  elseif c == 2
+    error("Not implemented.")
+  elseif c == 3
+    @assert i <= length(ref.coordinates)
+    return ref.coordinates[i]
+  end
 end
 
 volume(::Type{T}, ::ReferenceElement{0,Point}) where T<:Real = T(1)
