@@ -23,14 +23,23 @@ Symbol(::Type{Pyramid}) = :pyramid
 Symbol(::Type{UnknownDomain}) = :unknown
 
 dimension(::Point) = 0
+dimension(::Type{Point}) = 0
 dimension(::Line) = 1
+dimension(::Type{Line}) = 1
 dimension(::Triangle) = 2
+dimension(::Type{Triangle}) = 2
 dimension(::Quadrilateral) = 2
+dimension(::Type{Quadrilateral}) = 2
 dimension(::Tetrahedron) = 3
+dimension(::Type{Tetrahedron}) = 3
 dimension(::Hexahedron) = 3
+dimension(::Type{Hexahedron}) = 3
 dimension(::Prism) = 3
+dimension(::Type{Prism}) = 3
 dimension(::Pyramid) = 3
+dimension(::Type{Pyramid}) = 3
 dimension(::UnknownDomain) = 0
+dimension(::Type{UnknownDomain}) = 0
 
 vertices(::Point) = 1
 vertices(::Line) = 2
@@ -88,6 +97,6 @@ function domain(dim, region::Symbol)
   end
 end
 
-function domain(dim, region::String)
+function domain(dim, region::AbstractString)
   domain(dim, Symbol(region))
 end

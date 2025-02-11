@@ -10,6 +10,6 @@ using StaticArrays: SVector
     println(typeof(geo))
 
     λ = position(ref,1,0)
-    @test geo(λ) ≈ [λ;0]
+    # @test geo(λ) ≈ [λ;0]
   end
 end

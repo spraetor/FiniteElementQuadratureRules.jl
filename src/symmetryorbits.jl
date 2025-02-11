@@ -27,13 +27,13 @@ end
 
 function symmetryOrbits(::Type{T}, ::Triangle) where {T<:Real}
   SymmetryOrbit[
-    SymmetryOrbit(0,1, () -> (
+    SymmetryOrbit(0,1, () -> (            # S3
       SVector{3,T}(1//3,1//3,1//3),) ),
-    SymmetryOrbit(1,4, (a::T) -> (
+    SymmetryOrbit(1,3, (a::T) -> (        # S21
       SVector{3,T}(a,a,T(1)-2*a),
       SVector{3,T}(a,T(1)-2*a,a),
       SVector{3,T}(T(1)-2*a,a,a)) ),
-    SymmetryOrbit(2,6, (a::T, b::T) -> (
+    SymmetryOrbit(2,6, (a::T, b::T) -> (  # S111
       SVector{3,T}(a,b,T(1)-a-b),
       SVector{3,T}(a,T(1)-a-b,b),
       SVector{3,T}(T(1)-a-b,a,b),
@@ -123,7 +123,7 @@ function symetryOrbits(::Type{T}, ::Tetrahedron) where {T<:Real}
       SVector{4,T}(T(1)-a-b-c,b,c,a)) )]
 end
 
-function symetryOrbits(::Type{T}, ::Heyahedron) where {T<:Real}
+function symetryOrbits(::Type{T}, ::Hexahedron) where {T<:Real}
   SymmetryOrbit[
     SymmetryOrbit(0,1, () -> (
       SVector{3,T}(0,0,0),) ),
@@ -297,7 +297,7 @@ function symetryOrbits(::Type{T}, ::Prism) where {T<:Real}
       SVector{4,T}(T(1)-a-b,b,a,-c)) )]
 end
 
-function symetryOrbits(::Type{T}, ::Prism) where {T<:Real}
+function symetryOrbits(::Type{T}, ::Pyramid) where {T<:Real}
   SymmetryOrbit[
     SymmetryOrbit(1,1, (c::T) -> (
       SVector{3,T}(0,0,c),) ),

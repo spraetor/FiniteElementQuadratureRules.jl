@@ -1,61 +1,69 @@
-using BibInternal: Entry
-using BibParser: parse_file
 using StaticArrays: SVector
 
 """
   QuadratureRule{T,D,Ω}
 """
-struct QuadratureRule{T<:Real, D, Ω<:AbstractDomain}
+struct QuadratureRule{Ω<:AbstractDomain, T<:Real, Point<:AbstractVector{T}}
+  domain::Ω
   degree::Int
-  points::Vector{SVector{D,T}}
+  points::Vector{Point}
   weights::Vector{T}
   properties::Vector{Symbol}
-  accuracy::T
-  bib::Entry
 end
 
-ctype(::QuadratureRule{T,D,Ω}) where {T,D,Ω<:AbstractDomain} = T
-dimension(::QuadratureRule{T,D,Ω}) where {T,D,Ω<:AbstractDomain} = D
-domaintype(::QuadratureRule{T,D,Ω}) where {T,D,Ω<:AbstractDomain} = Ω
+# Construct a new QuadratureRule and compute the properties of the rule
+function QuadratureRule(domain::Ω, degree::Integer, points::Vector{Point}, weights::Vector{T}) where {Ω<:AbstractDomain, Point<:AbstractVector, T<:Real}
+  properties = getProperties(domain,points,weights)
+  QuadratureRule(domain,degree,points,weights,properties)
+end
 
-import Base: parse
-parse(::Type{<:AbstractString}, x::AbstractString) = x
+# Construct a new QuadratureRule and compute the weights and properties of the rule
+function QuadratureRule(domain::Ω, degree::Integer, points::Vector{Point}) where {Ω<:AbstractDomain, Point<:AbstractVector}
+  weights = getWeights(domain,degree,points)
+  properties = getProperties(domain,points,weights)
+  QuadratureRule(domain,degree,points,weights,properties)
+end
 
+# The type of the coordinates
+ctype(::QuadratureRule{Ω,T,P}) where {Ω<:AbstractDomain,T,P} = T
+
+# The dimension of the domain the quadrature rule is defined in
+dimension(qr::QuadratureRule{Ω,T,P}) where {Ω<:AbstractDomain,T,P} = dimension(qr.domain)
+
+# The type of the domain the quadrature rule is defined in
+domaintype(::QuadratureRule{Ω,T,P}) where {Ω<:AbstractDomain,T,P} = Ω
+
+# convert a vector of coordinates represented as number or string into a static vector of type T
 function point(::Type{T}, ::Val{D}, coords::Vector{S}) where {T,D,S}
   @assert length(coords) == D
-  SVector{D,T}((parse(T,c) for c in coords))
+  SVector{D,T}((_parse(T,c) for c in coords))
 end
 
-function (QuadratureRule{T})(dim::Int, region::String, data::Dict; bibFilename::String="") where T
+# Create a quadrature rules read from a json file
+function (QuadratureRule{T})(dim::Integer, region::AbstractString, data::Dict) where T
   D::Val = Val(dim)
 
+  domain = domain(D,region)
   degree = data["degree"]
   points = [ point(T,D,coords) for coords in data["coordinates"] ]
-  weights = [ parse(T,w) for w in data["weights"] ]
+  weights = [ _parse(T,w) for w in data["weights"] ]
   properties = [ Symbol(p) for p in data["properties"] ]
-  accuracy = parse(T, data["accuracy"])
 
-  if length(bibFilename) > 0
-    bibFile = parse_file(bibFilename)
-    bib = bibFile[data["reference"]]
-  else
-    bib = Entry(data["reference"], Dict("_type" => "unknown"))
-  end
-
-  QuadratureRule{T,dim,domain(D,region)}(degree,points,weights,properties,accuracy,bib)
+  QuadratureRule(domain,degree,points,weights,properties)
 end
 
+# the length of a quadrature rule is equal to the number of quadrature points
 import Base: length
 length(qr::QuadratureRule) = length(qr.points)
 
 import Base: show
 function show(io::IO, qr::QuadratureRule)
-  print(io, "{")
-  print(io, "degree = $(qr.degree), ")
-  # println(io, "points  = $(qr.points), ")
-  # println(io, "weights = $(qr.weights), ")
-  print(io, "props = $(qr.properties), ")
-  # println(io, "accuracy= $(qr.accuracy), ")
-  print(io, "bib = $(qr.bib.id) (year=$(qr.bib.date.year))")
-  print(io, "}")
+  println(io, "{")
+  println(io, "  domain = $(qr.domain), ")
+  println(io, "  degree = $(qr.degree), ")
+  println(io, "  length = $(length(qr)), ")
+  println(io, "  points  = $(qr.points), ")
+  println(io, "  weights = $(qr.weights), ")
+  println(io, "  props = $(qr.properties), ")
+  println(io, "}")
 end

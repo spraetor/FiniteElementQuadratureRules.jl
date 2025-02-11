@@ -1,5 +1,5 @@
 # Transform a quadrature rule between reference elements
-function transform(qr::QuadratureRule{T,D,Ω}, refIn::ReferenceElement{D,Ω}, refOut::ReferenceElement{D,Ω}) where {T,D,Ω}
+function transform(qr::QuadratureRule{T,D,Ω}, refIn::ReferenceElement{D,Ω,P1}, refOut::ReferenceElement{D,Ω,P2}) where {T,D,Ω,P1,P2}
   geo = MultiLinearGeometry(refIn, refOut.coordinates)
   volIn = volume(refIn)
   volOut = volume(refOut)

@@ -1,0 +1,10 @@
+reference: 'CLLMT17'
+region: simplex
+dim: 2
+degree: 1
+points: 3
+orbits: [0, 1]
+positions:
+- '0.0'
+weights:
+- '0.33333333333333333333333333333333333333333333333333'

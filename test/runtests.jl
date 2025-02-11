@@ -6,3 +6,5 @@ using Test
     include("referenceelement.jl")
     include("geometry.jl")
 end
+
+include("compactrule.jl")

@@ -28,7 +28,8 @@ function default_chooser(qr1::QuadratureRule{T, D, Domain}, qr2::QuadratureRule{
   end
 end
 
-function generate(template::AbstractString, in_dir::AbstractString, out_dir::AbstractString; filter=(qr)->true, chooser=default_chooser, kwargs...)
+function generate(template::AbstractString, in_dir::AbstractString, out_dir::AbstractString;
+                  filter = (qr)->true, chooser=default_chooser, kwargs...)
   out_dir = Filesystem.mkpath(Filesystem.dirname(out_dir))
 
   qrs = Dict{Symbol, Vector{QuadratureRule}}()
