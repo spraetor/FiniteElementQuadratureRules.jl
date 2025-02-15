@@ -23,12 +23,13 @@ include("generate.jl")
 include("integrate.jl")
 include("transform.jl")
 include("properties.jl")
+include("dune.jl")
 
 export AbstractCube, AbstractDomain, AbstractGeometry, AbstractLocalBasis,
   AbstractSimplex, AffineGeometry, CompactQuadratureRule, CompactQuadratureRuleWithWeights,
   Hexahedron, LagrangeLocalBasis, Line, MultiLinearGeometry, Point, Prism, Pyramid,
   QuadratureRule, Quadrilateral, ReferenceElement, SymmetryOrbit, Tetrahedron, Triangle
-export ctype, dimension, domain, domaintype, expand, facets, generate, getProperties, integrate, order,
-  position, symmetryOrbits, transform, vertices, volume
+export ctype, dimension, domain, domaintype, duneReferenceElement, expand, facets, generate,
+  getProperties, integrate, order, position, symmetryOrbits, transform, vertices, volume
 
 end # end module FiniteElementQuadratureRules
