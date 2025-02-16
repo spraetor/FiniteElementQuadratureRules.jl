@@ -14,6 +14,7 @@
     end
   end
 
-  p = PolySet(Triangle(), 5)
-  println(length(p.basis))
+  tri = Triangle()
+  p = PolySet(tri, 5)
+  @test integrate(p.basis[1], tri) ≈ 1.0
 end

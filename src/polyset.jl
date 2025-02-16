@@ -22,10 +22,10 @@ function (m::BarycentricMonomials{dim})(λ::AbstractVector) where {dim}
   return prod(λ.^m.alpha)
 end
 
-# compute the integral of a barycentric monimial over a generic simplex of volume 1.
+# compute the integral of a barycentric monomial over a generic simplex of volume 1.
 # For a specific simplex, this integral needs to be scaled with its volume.
 function integrate(m::BarycentricMonomials{dim}, Ω::AbstractSimplex) where {dim}
-  prod(factorial.(m.alpha)) // factorial(dim + sum(m.alpha))
+  factorial(dim) * prod(factorial.(m.alpha)) // factorial(dim + sum(m.alpha))
 end
 
 function integrate(m::BarycentricMonomials{dim}, Ω::AbstractCube) where {dim}

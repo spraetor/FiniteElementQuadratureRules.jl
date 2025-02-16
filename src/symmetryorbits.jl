@@ -6,6 +6,9 @@ struct SymmetryOrbit
   orbit::Function
 end
 
+import Base: length
+length(so::SymmetryOrbit) = so.size
+
 function symmetryOrbits(Ω::AbstractDomain)
   symmetryOrbits(Float64, Ω)
 end
