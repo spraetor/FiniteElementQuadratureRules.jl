@@ -8,6 +8,7 @@
 
     for total in 0:5
       tuples = getTuples(len,total)
+      @test length(tuples) == binomial(total+len-1, len-1)
       @test all(length.(tuples) .== len)
       @test all(sum.(tuples) .== total)
     end
