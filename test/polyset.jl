@@ -1,0 +1,18 @@
+
+@testset "PolySet" begin
+
+  # check exponent tuples
+  for len in 1:4
+    @test length(getTuples(len,0)) == 1
+    @test length(getTuples(len,1)) == len
+
+    for total in 0:5
+      tuples = getTuples(len,total)
+      @test all(length.(tuples) .== len)
+      @test all(sum.(tuples) .== total)
+    end
+  end
+
+  p = PolySet(Triangle(), 5)
+  println(length(p.basis))
+end

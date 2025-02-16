@@ -5,7 +5,7 @@ struct CompactQuadratureRule{Ω<:AbstractDomain, T<:Real}
   domain::Ω
   degree::Int
   orbits::Vector{Int}
-  values::Vector{T}
+  positions::Vector{T}
 end
 
 ctype(::CompactQuadratureRule{Ω,T}) where {Ω<:AbstractDomain,T<:Real} = T
