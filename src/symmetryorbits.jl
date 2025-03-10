@@ -6,6 +6,9 @@ struct SymmetryOrbit
   orbit::Function
 end
 
+import Base: length
+length(so::SymmetryOrbit) = so.size
+
 function symmetryOrbits(Ω::AbstractDomain)
   symmetryOrbits(Float64, Ω)
 end
@@ -42,7 +45,7 @@ function symmetryOrbits(::Type{T}, ::Triangle) where {T<:Real}
       SVector{3,T}(T(1)-a-b,b,a)) )]
 end
 
-function symetryOrbits(::Type{T}, ::Quadrilateral) where {T<:Real}
+function symmetryOrbits(::Type{T}, ::Quadrilateral) where {T<:Real}
   SymmetryOrbit[
     SymmetryOrbit(0,1, () -> (
       SVector{2,T}(0,0),) ),
@@ -67,11 +70,11 @@ function symetryOrbits(::Type{T}, ::Quadrilateral) where {T<:Real}
       SVector{2,T}(-b,-a)) )]
 end
 
-function symetryOrbits(::Type{T}, ::Tetrahedron) where {T<:Real}
+function symmetryOrbits(::Type{T}, ::Tetrahedron) where {T<:Real}
   SymmetryOrbit[
     SymmetryOrbit(0,1, () -> (
       SVector{4,T}(1//4,1//4,1//4,1//4),) ),
-    SymmetryPrbit(1,4, (a::T) -> (
+    SymmetryOrbit(1,4, (a::T) -> (
       SVector{4,T}(a,a,a,T(1)-3*a),
       SVector{4,T}(a,a,T(1)-3*a,a),
       SVector{4,T}(a,T(1)-3*a,a,a),
@@ -123,7 +126,7 @@ function symetryOrbits(::Type{T}, ::Tetrahedron) where {T<:Real}
       SVector{4,T}(T(1)-a-b-c,b,c,a)) )]
 end
 
-function symetryOrbits(::Type{T}, ::Hexahedron) where {T<:Real}
+function symmetryOrbits(::Type{T}, ::Hexahedron) where {T<:Real}
   SymmetryOrbit[
     SymmetryOrbit(0,1, () -> (
       SVector{3,T}(0,0,0),) ),
@@ -257,7 +260,7 @@ function symetryOrbits(::Type{T}, ::Hexahedron) where {T<:Real}
       SVector{3,T}(-c,-b,-a)) )]
 end
 
-function symetryOrbits(::Type{T}, ::Prism) where {T<:Real}
+function symmetryOrbits(::Type{T}, ::Prism) where {T<:Real}
   SymmetryOrbit[
     SymmetryOrbit(0,1, () -> (
       SVector{4,T}(1//3,1//3,1//3,0),) ),
@@ -297,7 +300,7 @@ function symetryOrbits(::Type{T}, ::Prism) where {T<:Real}
       SVector{4,T}(T(1)-a-b,b,a,-c)) )]
 end
 
-function symetryOrbits(::Type{T}, ::Pyramid) where {T<:Real}
+function symmetryOrbits(::Type{T}, ::Pyramid) where {T<:Real}
   SymmetryOrbit[
     SymmetryOrbit(1,1, (c::T) -> (
       SVector{3,T}(0,0,c),) ),

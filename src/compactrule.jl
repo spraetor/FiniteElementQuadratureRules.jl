@@ -27,7 +27,8 @@ function expand(cqr::CompactQuadratureRule{Ω,T}) where {Ω<:AbstractDomain,T<:R
   end
 
   # maybe compute the weights here directly
-  QuadratureRule(cqr.domain, cqr.degree, points)
+  weights = getWeights(T,cqr.domain,cqr.degree,points,cqr.orbits)
+  QuadratureRule(cqr.domain, cqr.degree, points, weights)
 end
 
 """
