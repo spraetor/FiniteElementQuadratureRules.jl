@@ -66,36 +66,36 @@ struct LagrangeBasis{domain<:AbstractDomain}
   degree::Int
 end
 
-using LinearAlgebra: I
-function LagrangeBasis(domain::Triangle, degree::Integer)
-  pointSet = EquidistantPointSet{Rational}(domain, degree)
-  polySet = PolySet(domain, degree)
+# using LinearAlgebra: I
+# function LagrangeBasis(domain::Triangle, degree::Integer)
+#   pointSet = EquidistantPointSet{Rational}(domain, degree)
+#   polySet = PolySet(domain, degree)
 
-  @assert length(pointSet.points) == length(polySet.basis)
+#   @assert length(pointSet.points) == length(polySet.basis)
 
-  A = zeros(Rational, length(polyset.basis), length(pointSet.points))
-  for i in eachindex(polyset.basis)
-    f = polyset.basis[i]
-    for j in eachindex(pointSet.points)
-      A[i,j] = f(points[j])
-    end
-  end
-  B = I
-  coeffs = A\B
+#   A = zeros(Rational, length(polyset.basis), length(pointSet.points))
+#   for i in eachindex(polyset.basis)
+#     f = polyset.basis[i]
+#     for j in eachindex(pointSet.points)
+#       A[i,j] = f(points[j])
+#     end
+#   end
+#   B = I
+#   coeffs = A\B
 
-  LagrangeBasis{Triangle}(polySet.basis, coeffs, degree)
-end
+#   LagrangeBasis{Triangle}(polySet.basis, coeffs, degree)
+# end
 
-function evaluateFunctions(basis::LagrangeBasis{Triangle}, λ::AbstractVector)
-  b = zeros(eltype(λ), length(basis.basis))
-  for i in eachindex(basis.basis)
-    f = basis.basis[i]
-    b[i] = f(λ)
-  end
-  basis.coeffs * b
-end
+# function evaluateFunctions(basis::LagrangeBasis{Triangle}, λ::AbstractVector)
+#   b = zeros(eltype(λ), length(basis.basis))
+#   for i in eachindex(basis.basis)
+#     f = basis.basis[i]
+#     b[i] = f(λ)
+#   end
+#   basis.coeffs * b
+# end
 
-function interpolate(basis::LagrangeBasis{Triangle}, f::Function)
-  pointSet = EquidistantPointSet{Rational}(Triangle(), basis.degree)
-  map(f, pointSet.points)
-end
+# function interpolate(basis::LagrangeBasis{Triangle}, f::Function)
+#   pointSet = EquidistantPointSet{Rational}(Triangle(), basis.degree)
+#   map(f, pointSet.points)
+# end

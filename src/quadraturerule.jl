@@ -1,4 +1,5 @@
 using StaticArrays: SVector
+import YAML: write_file
 
 """
   QuadratureRule{T,D,Ω}
@@ -66,4 +67,17 @@ function show(io::IO, qr::QuadratureRule)
   println(io, "  weights = $(qr.weights), ")
   println(io, "  props = $(qr.properties), ")
   println(io, "}")
+end
+
+function write_file(file::AbstractString, qr::QuadratureRule, data::Dict)
+  qr_data = Dict(
+    "reference" => data["reference"],
+    "region" => data["region"],
+    "dim" => data["dim"],
+    "degree" => data["degree"],
+    "properties" => String[ String(prop) for prop in qp.properties ],
+    "coordinates" => [ String[ tostring(pᵢ) for pᵢ in p ] for p in qr.points ],
+    "weights" => String[ tostring(w) for w in qr.weights ]
+  )
+  YAML.write_file(file, qr_data)
 end

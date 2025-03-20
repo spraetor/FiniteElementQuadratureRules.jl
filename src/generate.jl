@@ -1,4 +1,4 @@
-using YAML: load_file
+import YAML: load_file
 using Base: Filesystem
 
 function default_chooser(qr1::QuadratureRule{T, D, Domain}, qr2::QuadratureRule{T, D, Domain}) where {T,D,Domain}
@@ -40,7 +40,7 @@ function generate(template::AbstractString, in_dir::AbstractString, out_dir::Abs
 
   for (root, _, files) in Filesystem.walkdir(in_dir)
     for file in (f for f in files if endswith(f, ".yml"))
-      data = load_file(joinpath(root, file))
+      data = YAML.load_file(joinpath(root, file))
       dim = data["dim"]
       qr = QuadratureRule{String}(dim, data["region"], data; kwargs...)
       if filter(qr)

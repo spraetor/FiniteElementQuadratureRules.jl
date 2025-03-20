@@ -23,7 +23,42 @@ function (lb::LagrangeLocalBasis{dim,<:AbstractSimplex})(x::AbstractVector{T}) w
   if order(lb) == 0
     SVector{1,T}(1.0)
   elseif order(lb) == 1
-    SVector{dim+1,T}(1.0 - sum(x), x)
+    barycentriccoordinates(x)
+  elseif order(lb) == 2
+    λ = barycentriccoordinates(x)
+    if dim == 2
+      SVector{length(lb),T}(
+        (λ.*(2 .* λ .- 1))...,             # vertex functions
+        4λ[2]*λ[3], 4λ[3]*λ[1], 4λ[1]*λ[2] # edge functions
+        )
+    elseif dim == 3
+      SVector{length(lb),T}(
+        (λ.*(2 .* λ .- 1))...,             # vertex functions
+        4λ[1]*λ[2], 4λ[1]*λ[3], 4λ[1]*λ[4], 4λ[2]*λ[3], 4λ[2]*λ[4], 4λ[3]*λ[4] # edge functions
+        )
+    end
+  elseif order(lb) == 3
+    λ = barycentriccoordinates(x)
+    if dim == 2
+      SVector{length(lb),T}(
+        ((3 .* λ .- 1).*(3 .* λ .- 2) .* λ ./ 2)...,    # vertex functions
+        9(3λ[2]-1)*λ[2]*λ[3]/2, 9(3λ[3]-1)*λ[3]*λ[2]/2, # edge 1 functions
+        9(3λ[3]-1)*λ[3]*λ[1]/2, 9(3λ[1]-1)*λ[1]*λ[3]/2, # edge 2 functions
+        9(3λ[1]-1)*λ[1]*λ[2]/2, 9(3λ[2]-1)*λ[2]*λ[1]/2, # edge 3 functions
+        27λ[1]*λ[2]*λ[3]                                # face functions
+        )
+    elseif dim == 3
+      SVector{length(lb),T}(
+        ((3 .* λ .- 1).*(3 .* λ .- 2) .* λ ./ 2)...,    # vertex functions
+        9(3λ[1]-1)*λ[1]*λ[2]/2, 9(3λ[2]-1)*λ[2]*λ[1]/2, # edge 1 functions
+        9(3λ[1]-1)*λ[1]*λ[3]/2, 9(3λ[3]-1)*λ[3]*λ[1]/2, # edge 2 functions
+        9(3λ[1]-1)*λ[1]*λ[4]/2, 9(3λ[4]-1)*λ[4]*λ[1]/2, # edge 3 functions
+        9(3λ[2]-1)*λ[2]*λ[3]/2, 9(3λ[3]-1)*λ[3]*λ[2]/2, # edge 4 functions
+        9(3λ[2]-1)*λ[2]*λ[4]/2, 9(3λ[4]-1)*λ[4]*λ[2]/2, # edge 5 functions
+        9(3λ[3]-1)*λ[3]*λ[4]/2, 9(3λ[4]-1)*λ[4]*λ[3]/2, # edge 6 functions
+        27λ[2]*λ[3]*λ[4], 27λ[3]*λ[4]*λ[1], 27λ[4]*λ[1]*λ[2], 27λ[1]*λ[2]*λ[3] # face functions
+        )
+    end
   else
     error("Not implemented")
   end
