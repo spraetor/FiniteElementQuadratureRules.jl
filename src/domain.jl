@@ -63,7 +63,7 @@ facets(::UnknownDomain) = 0
 
 
 
-function domain(dim, region::Symbol)
+function domaintype(dim::Int, region::Symbol)
   if dim == 0
     return Point
   elseif dim == 1
@@ -97,6 +97,8 @@ function domain(dim, region::Symbol)
   end
 end
 
-function domain(dim, region::AbstractString)
-  domain(dim, Symbol(region))
+function domaintype(dim::Int, region::AbstractString)
+  domaintype(dim, Symbol(region))
 end
+
+domain(dim, region) = domaintype(dim,region)()
