@@ -3,10 +3,10 @@ using StaticArrays: @SVector
 const F = Float64
 
 function test_quadrature_rule(qr::QuadratureRule{Ω,T,P}) where {Ω,T,P}
-  polyset = PolySet(qr.domain,qr.degree)
-  @test sum(qr.weights) ≈ 1.0
-  for f in polyset.basis
-    @test sum(qr.weights .* f.(qr.points)) ≈ integrate(f,qr.domain)
+  polyset = JacobiPolySet(qr.domain,qr.degree)
+  @test sum(qr.weights) ≈ volume(ReferenceElement(qr.domain))
+  for (f,I) in zip(polyset.basis, polyset.integrals)
+    @test sum(qr.weights .* f.(qr.points)) ≈ I atol=sqrt(eps(T))
   end
 end
 
@@ -166,4 +166,25 @@ let
   qr = expand(cqr)
   @test length(qr) == 236
   test_quadrature_rule(qr)
+end
+
+
+
+let
+  cqr = CompactQuadratureRule(tri, 5, [0,4,3],
+  F[ 0.00000000000000000000000000000000000,
+    0.05752768441141010566081751776543190,
+    0.25685910726195907606389083148220168,
+    0.45783683807916110193850321742406830,
+    0.00000000000000000000000000000000000,
+    0.36329807415368604570550633618418105,
+    0.00000000000000000000000000000000000,
+    0.13226458163271398535388822004364736,
+    0.22100121875989000797812820146484192,
+    0.07819258362551702199888597846982583 ])
+
+  oqr = optimize(cqr)
+
+  @test cqr.positions ≈ oqr.positions
+  println(oqr.positions)
 end

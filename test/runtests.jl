@@ -6,6 +6,7 @@ using Test
     include("referenceelement.jl")
     include("geometry.jl")
     include("polyset.jl")
+    include("jacobi.jl")
 end
 
 include("compactrule.jl")

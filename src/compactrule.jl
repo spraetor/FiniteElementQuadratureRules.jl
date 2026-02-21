@@ -27,6 +27,7 @@ end
 ctype(::CompactQuadratureRule{Ω,T}) where {Ω<:AbstractDomain,T<:Real} = T
 domaintype(::CompactQuadratureRule{Ω,T}) where {Ω<:AbstractDomain,T<:Real} = Ω
 
+
 # expand a compact rule into a quadrature rule
 function expand(cqr::CompactQuadratureRule{Ω,T}) where {Ω<:AbstractDomain,T<:Real}
   sos = symmetryOrbits(T,cqr.domain)
@@ -35,20 +36,21 @@ function expand(cqr::CompactQuadratureRule{Ω,T}) where {Ω<:AbstractDomain,T<:R
   end
 
   j = 1
-  Point = typeof(sos[1].orbit()[1])
+  Point = typeof(sos[1].expand()[1])
   points = Point[]
   for (i,orbits) in enumerate(cqr.orbits)
     so = sos[i]
     n = so.args
     for _ in 1:orbits
-      push!(points, so.orbit(cqr.positions[j:j+n-1]...)...)
+      push!(points, so.expand(cqr.positions[j:j+n-1]...)...)
       j = j + n
     end
   end
 
   # maybe compute the weights here directly
-  weights = getWeights(T,cqr.domain,cqr.degree,points,cqr.orbits)
-  QuadratureRule(cqr.domain, cqr.degree, points, weights)
+  coords = transformcoordinates(cqr.domain,points)
+  weights = getWeights(T,cqr.domain,cqr.degree,coords,cqr.orbits)
+  QuadratureRule(cqr.domain, cqr.degree, coords, weights)
 end
 
 """
@@ -86,14 +88,14 @@ function expand(cqr::CompactQuadratureRuleWithWeights{Ω,T}) where {Ω<:Abstract
   end
   j = 1
   k = 1
-  Point = typeof(sos[1].orbit()[1])
+  Point = typeof(sos[1].expand()[1])
   points = Point[]
   weights = T[]
   for (i,orbits) in enumerate(cqr.orbits)
     so = sos[i]
     n = so.args
     for _ in 1:orbits
-      push!(points, so.orbit(cqr.positions[j:j+n-1]...)...)
+      push!(points, so.expand(cqr.positions[j:j+n-1]...)...)
       append!(weights, fill(cqr.weights[k],so.size))
       j = j + n
       k = k + 1
@@ -101,7 +103,8 @@ function expand(cqr::CompactQuadratureRuleWithWeights{Ω,T}) where {Ω<:Abstract
   end
 
   @assert length(points) == length(weights)
-  QuadratureRule(cqr.domain, cqr.degree, points, weights)
+  QuadratureRule(cqr.domain, cqr.degree,
+    transformcoordinates(cqr.domain,points), transformweights(cqr.domain, weights))
 end
 
 

@@ -20,8 +20,10 @@ function ReferenceElement(::Line)
 end
 
 function ReferenceElement(::Triangle)
-  ReferenceElement{2,Triangle,SVector{3,Int}}([[1,0,0], [0,1,0], [0,0,1]],
+  ReferenceElement{2,Triangle,SVector{2,Int}}([[-1,-1], [1,-1], [-1,1]],
     [[1,2], [1,3], [2,3]])
+    # ReferenceElement{2,Triangle,SVector{3,Int}}([[1,0,0], [0,1,0], [0,0,1]],
+    #   [[1,2], [1,3], [2,3]])
 end
 
 function ReferenceElement(::Quadrilateral)
@@ -30,8 +32,10 @@ function ReferenceElement(::Quadrilateral)
 end
 
 function ReferenceElement(::Tetrahedron)
-  ReferenceElement{3,Tetrahedron,SVector{4,Int}}([[1,0,0,0], [0,1,0,0], [0,0,1,0], [0,0,0,1]],
+  ReferenceElement{3,Tetrahedron,SVector{3,Int}}([[-1,-1,-1], [1,-1,-1], [-1,1,-1], [-1,-1,1]],
     [[1,2,3], [1,2,4], [1,3,4], [2,3,4]])
+  # ReferenceElement{3,Tetrahedron,SVector{4,Int}}([[1,0,0,0], [0,1,0,0], [0,0,1,0], [0,0,0,1]],
+  #   [[1,2,3], [1,2,4], [1,3,4], [2,3,4]])
 end
 
 function ReferenceElement(::Hexahedron)
@@ -40,8 +44,10 @@ function ReferenceElement(::Hexahedron)
 end
 
 function ReferenceElement(::Prism)
-  ReferenceElement{3,Prism,SVector{4,Int}}([[1,0,0,-1], [0,1,0,-1], [0,0,1,-1], [1,0,0,1], [0,1,0,1], [0,0,1,1]],
+  ReferenceElement{3,Prism,SVector{3,Int}}([[-1,-1,-1], [1,-1,-1], [-1,1,-1], [-1,-1,1], [1,-1,1], [-1,1,1]],
     [[1,2,4,5], [1,3,4,6], [2,3,5,6], [1,2,3], [4,5,6]])
+  # ReferenceElement{3,Prism,SVector{4,Int}}([[1,0,0,-1], [0,1,0,-1], [0,0,1,-1], [1,0,0,1], [0,1,0,1], [0,0,1,1]],
+  #   [[1,2,4,5], [1,3,4,6], [2,3,5,6], [1,2,3], [4,5,6]])
 end
 
 function ReferenceElement(::Pyramid)
@@ -53,10 +59,10 @@ volume(::Type{T}, ::ReferenceElement{0,Point,P}) where {T<:Real,P} = T(1)
 volume(::Type{T}, ::ReferenceElement{1,Line,P}) where {T<:Real,P} = T(2)
 volume(::Type{T}, ::ReferenceElement{2,Triangle,P}) where {T<:Real,P} = T(2)
 volume(::Type{T}, ::ReferenceElement{2,Quadrilateral,P}) where {T<:Real,P} = T(4)
-volume(::Type{T}, ::ReferenceElement{3,Tetrahedron,P}) where {T<:Real,P} = T(4//6)
+volume(::Type{T}, ::ReferenceElement{3,Tetrahedron,P}) where {T<:Real,P} = T(4//3)
 volume(::Type{T}, ::ReferenceElement{3,Hexahedron,P}) where {T<:Real,P} = T(8)
 volume(::Type{T}, ::ReferenceElement{3,Prism,P}) where {T<:Real,P} = T(4)
-volume(::Type{T}, ::ReferenceElement{3,Pyramid,P}) where {T<:Real,P} = T(4//3)
+volume(::Type{T}, ::ReferenceElement{3,Pyramid,P}) where {T<:Real,P} = T(8//3)
 
 volume(ref::ReferenceElement{D,Ω,P}) where {D,Ω,P} = volume(Rational,ref)
 

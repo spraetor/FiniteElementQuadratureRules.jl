@@ -1,6 +1,6 @@
 function getWeights(::Type{T}, domain::Ω, degree::Integer, points::AbstractVector{P}) where {T<:Real,Ω<:AbstractDomain,P<:AbstractVector}
 
-  polyset = PolySet(domain, degree)
+  polyset = JacobiPolySet(domain, degree)
   A = zeros(T, length(polyset.basis), length(points))
   b = zeros(T, length(polyset.basis))
 
@@ -9,7 +9,7 @@ function getWeights(::Type{T}, domain::Ω, degree::Integer, points::AbstractVect
     for j in eachindex(points)
       A[i,j] = f(points[j])
     end
-    b[i] = T(integrate(f,domain))
+    b[i] = T(polyset.integrals[i])
   end
 
   weights = A\b
@@ -25,7 +25,7 @@ end
 
 function getWeights(::Type{T}, domain::AbstractDomain, degree::Integer, points::AbstractVector{<:AbstractVector}, orbits::AbstractVector{<:Integer}) where {T<:Real}
 
-  polyset = PolySet(domain, degree)
+  polyset = JacobiPolySet(domain, degree)
   so = symmetryOrbits(T,domain)
   nDifferentWeights = sum(orbits)
   A = zeros(T, length(polyset.basis), nDifferentWeights)
@@ -46,7 +46,7 @@ function getWeights(::Type{T}, domain::AbstractDomain, degree::Integer, points::
         j = j+1
       end
     end
-    b[i] = T(integrate(f,domain))
+    b[i] = T(polyset.integrals[i])
   end
 
   w = A\b

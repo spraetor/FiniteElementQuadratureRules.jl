@@ -20,21 +20,23 @@ include("geometry.jl")
 include("symmetryorbits.jl")
 include("polyset.jl")
 include("pointset.jl")
+include("jacobi.jl")
 include("weights.jl")
 include("quadraturerule.jl")
+include("transform.jl")
 include("compactrule.jl")
 include("generate.jl")
 include("integrate.jl")
-include("transform.jl")
 include("properties.jl")
+include("optimize.jl")
 include("dune.jl")
 
 export AbstractCube, AbstractDomain, AbstractGeometry, AbstractLocalBasis,
   AbstractSimplex, AffineGeometry, BarycentricMonomial, CompactQuadratureRule, CompactQuadratureRuleWithWeights,
-  Hexahedron, LagrangeLocalBasis, Line, MultiLinearGeometry, Point, PolySet, Prism, Pyramid,
+  Hexahedron, JacobiPolySet, LagrangeLocalBasis, Line, MultiLinearGeometry, Point, PolySet, Prism, Pyramid,
   QuadratureRule, Quadrilateral, ReferenceElement, SymmetryOrbit, Tetrahedron, Triangle
 export ctype, dimension, domain, domaintype, duneReferenceElement, expand, expandall, facets, generate,
-  getProperties, getTuples, getWeights, integrate, order, position, symmetryOrbits, transform, vertices, volume,
+  getProperties, getTuples, getWeights, integrate, jacobi, djacobi, optimize, order, position, symmetryOrbits, transform, vertices, volume,
   write_file
 
 export LagrangeBasis

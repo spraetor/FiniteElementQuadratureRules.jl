@@ -1,0 +1,262 @@
+using StaticArrays: SVector
+
+# Implement Jacobi polynomials P^{a,b}_n on the interval [-1,1]
+struct JacobiPolynomial
+  n::Int
+  a::Float64
+  b::Float64
+end
+
+JacobiPolynomial(n::Integer) = JacobiPolynomial(Int(n),0.0,0.0)
+
+(P::JacobiPolynomial)(x) = jacobi(P.n,P.a,P.b,x)
+
+
+# Evaluate all jacobi polynomials P_n^{a,b}(x) for n∈{0:N} and x∈X
+function jacobitable(N::Integer,a,b,X::AbstractVector)
+  @assert N >= 0
+  @assert a > -1 && b > -1
+
+  P0 = ones(eltype(X),length(X))
+  if N == 0
+    return [P0]
+  end
+
+  P1 = collect((a .- b .+ (a + b + 2).*x)./2)
+  if N == 1
+    return [P0,P1]
+  end
+
+  P = zeros(eltype(X),(N+1,length(X)))
+  P[1,:] .= P0
+  P[2,:] .= P1
+  for n in 1:N-1
+    a1 = 2(n+1)*(n+a+b+1)*(2n+a+b)
+    a2 = (2n+a+b+1)*(a^2-b^2)
+    a3 = (2n+a+b)*(2n+a+b+1)*(2n+a+b+2)
+    a4 = 2(n+a)*(n+b)*(2n+a+b+2)
+
+    P0, P1 = P1, collect(((a2.+a3.*x).*P1 .- a4.*P0)./a1)
+    P[n+2,:] .= P1
+  end
+
+  return P
+end
+
+# Evaluate the jacobi polynomial P_N^{a,b}(x) in all x∈X
+function jacobi(N::Integer,a,b,x)
+  @assert N >= 0
+  @assert a > -1 && b > -1
+
+  P0 = one(x)
+  if N == 0
+    return P0
+  end
+
+  P1 = ((a - b) + (a + b + 2)*x)/2
+  if N == 1
+    return P1
+  end
+
+  P2 = zero(x)
+  for n in 1:N-1
+    a1 = 2(n+1)*(n+a+b+1)*(2n+a+b)
+    a2 = (2n+a+b+1)*(a^2-b^2)
+    a3 = (2n+a+b)*(2n+a+b+1)*(2n+a+b+2)
+    a4 = 2(n+a)*(n+b)*(2n+a+b+2)
+
+    P2 = ((a2 + a3*x)*P1 - a4*P0)/a1
+    P0, P1 = P1, P2
+  end
+
+  return P2
+end
+
+function jacobi(N::Integer,a,b,X::AbstractVector)
+  map(x -> jacobi(N,a,b,x), X)
+end
+
+# Evaluate the jacobi polynomial P_N^{0,0}(x) in all x∈X
+function jacobi(N::Integer,x)
+  @assert N >= 0
+
+  P0 = one(x)
+  if N == 0
+    return P0
+  end
+
+  P1 = copy(x)
+  if N == 1
+    return P1
+  end
+
+  P2 = zero(x)
+  for n in 1:N-1
+    P2 = (((2n+1)*x)*P1 - n*P0)/(n+1)
+    P0, P1 = P1, P2
+  end
+
+  return P2
+end
+
+function jacobi(N::Integer,X::AbstractVector)
+  map(x -> jacobi(N,x), X)
+end
+
+function djacobi(N::Integer,a,b,x)
+  @assert N >= 0
+  @assert a > -1 && b > -1
+
+  if N == 0
+    return zero(x)
+  end
+
+  if N == 1
+    return (a+b+2)/2 * one(x)
+  end
+
+  P0 = one(x)
+  P1 = (a - b + (a + b + 2)*x)/2
+  P2 = zero(x)
+
+  dP = zero(x)
+  for n in 1:N-1
+    a1 = 2(n+1)*(n+a+b+1)*(2n+a+b)
+    a2 = (2n+a+b+1)*(a^2-b^2)
+    a3 = (2n+a+b)*(2n+a+b+1)*(2n+a+b+2)
+    a4 = 2(n+a)*(n+b)*(2n+a+b+2)
+
+    P2 = ((a2+a3*x)*P1 - a4*P0)/a1
+    P0, P1 = P1, P2
+
+    b1 = (2n+a+b) * (1 - x^2)
+    b2 = n((a - b) - (2n+a+b)*x)
+    b3 = 2(n+a)*(n+b)
+
+    dP = (b2*P1 + b3*P0)/b1
+  end
+
+  return dP
+end
+
+
+struct JacobiPolySet{Ω<:AbstractDomain,R<:Real}
+  domain::Ω
+  basis::Vector{Function}
+  integrals::Vector{R}
+end
+
+function JacobiPolySet(::Type{T}, domain::Line, degree::Integer) where T
+  basis = Function[]
+  for i in 0:degree
+    push!(basis, (x) -> jacobi(i, x[1]))
+  end
+
+  integrals = zeros(T,length(basis))
+  integrals[1] = 2
+  return JacobiPolySet(domain, basis, integrals)
+end
+
+function JacobiPolySet(::Type{T}, domain::Triangle, degree::Integer) where T
+  basis = Function[]
+  for i in 0:degree
+    for j in i:degree-i
+      push!(basis, (x) -> let a = 2(1+x[1])/max(1-x[2], eps(T))-1,
+                              b = x[2]
+        sqrt(T(2))*jacobi(i, a)*jacobi(j,2i+1,0, b)*(1-b)^i
+        end)
+    end
+  end
+
+  integrals = zeros(T,length(basis))
+  integrals[1] = 2*sqrt(T(2))
+  return JacobiPolySet(domain, basis, integrals)
+end
+
+function JacobiPolySet(::Type{T}, domain::Quadrilateral, degree::Integer) where T
+  basis = Function[]
+  for i in 0:2:degree
+    for j in i:2:degree-i
+      push!(basis, (x) -> jacobi(i, x[1])*jacobi(j, x[2]))
+    end
+  end
+
+  integrals = zeros(T,length(basis))
+  integrals[1] = 4
+  return JacobiPolySet(domain, basis, integrals)
+end
+
+function JacobiPolySet(::Type{T}, domain::Tetrahedron, degree::Integer) where T
+  basis = Function[]
+  for i in 0:degree
+    for j in i:degree-i
+      for k in j:degree-i-j
+        push!(basis, (x) -> let a = -2(1+x[1])/(x[2]+x[3])-1,
+                                b = 2(1+x[2])/max(1-x[3], eps(T))-1,
+                                c = x[3]
+          sqrt(T(8))*jacobi(i, a)*jacobi(j,2i+1,0, b)*jacobi(k,2i+2j+2,0, c) * (1-b)^i * (1-c)^(i+j)
+          end)
+      end
+    end
+  end
+
+  integrals = zeros(T,length(basis))
+  integrals[1] = 4*sqrt((8))/T(3)
+  return JacobiPolySet(domain, basis, integrals)
+end
+
+function JacobiPolySet(::Type{T}, domain::Prism, degree::Integer) where T
+  basis = Function[]
+  for i in 0:degree
+    for j in i:degree-i
+      for k in 0:2:degree-i-j
+        push!(basis, (x) -> let a = 2(1+x[1])/max(1-x[2], eps(T))-1,
+                                b = x[2],
+                                c = x[3]
+          sqrt(T(2))*jacobi(i, a)*jacobi(j,2i+1,0, b)*jacobi(k, c)*(1-b)^i
+          end)
+      end
+    end
+  end
+
+  integrals = zeros(T,length(basis))
+  integrals[1] = 4*sqrt(T(2))
+  return JacobiPolySet(domain, basis, integrals)
+end
+
+function JacobiPolySet(::Type{T}, domain::Pyramid, degree::Integer) where T
+  basis = Function[]
+  for i in 0:2:degree
+    for j in i:2:degree-i
+      for k in 0:degree-i-j
+        push!(basis, (x) -> let a = 2x[1]/max(1-x[3], eps(T)),
+                                b = 2x[2]/max(1-x[3], eps(T)),
+                                c = x[3]
+          2*jacobi(i, a)*jacobi(j, b)*jacobi(k,2i+2j+2,0, c)*(1-c)^(i+j)
+          end)
+      end
+    end
+  end
+
+  integrals = zeros(T,length(basis))
+  integrals[1] = T(16)/T(3)
+  return JacobiPolySet(domain, basis, integrals)
+end
+
+function JacobiPolySet(::Type{T}, domain::Hexahedron, degree::Integer) where T
+  basis = Function[]
+  for i in 0:2:degree
+    for j in i:2:degree-i
+      for k in j:2:degree-i-j
+        push!(basis, (x) -> jacobi(i, x[1])*jacobi(j, x[2])*jacobi(k, x[3]))
+      end
+    end
+  end
+
+  integrals = zeros(T,length(basis))
+  integrals[1] = 8
+  return JacobiPolySet(domain, basis, integrals)
+end
+
+
+JacobiPolySet(domain::AbstractDomain, degree::Integer) = JacobiPolySet(Float64, domain, degree)

@@ -3,7 +3,7 @@ using StaticArrays: SVector
 struct SymmetryOrbit
   args::Int
   size::Int
-  orbit::Function
+  expand::Function
 end
 
 import Base: length
