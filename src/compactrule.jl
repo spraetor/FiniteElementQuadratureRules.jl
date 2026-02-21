@@ -32,6 +32,7 @@ domaintype(::CompactQuadratureRule{Ω,T}) where {Ω<:AbstractDomain,T<:Real} = �
 function expand(cqr::CompactQuadratureRule{Ω,T}) where {Ω<:AbstractDomain,T<:Real}
   sos = symmetryOrbits(T,cqr.domain)
   if length(cqr.orbits) > length(sos)
+    error("Number of orbits incompatible with available symmetric orbits.")
     return nothing
   end
 
