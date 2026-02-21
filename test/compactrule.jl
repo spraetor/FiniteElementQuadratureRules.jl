@@ -3,14 +3,31 @@ using StaticArrays: @SVector
 const F = Float64
 
 function test_quadrature_rule(qr::QuadratureRule{Ω,T,P}) where {Ω,T,P}
-  polyset = PolySet(qr.domain,qr.degree)
-  @test sum(qr.weights) ≈ 1.0
-  for f in polyset.basis
-    @test sum(qr.weights .* f.(qr.points)) ≈ integrate(f,qr.domain)
+  polyset = JacobiPolySet(qr.domain,qr.degree)
+  @test sum(qr.weights) ≈ volume(ReferenceElement(qr.domain))
+  max_error = zero(T)
+  for (f,I) in zip(polyset.basis, polyset.integrals)
+    Q = sum(qr.weights .* f.(qr.points))
+    @test Q ≈ I atol=sqrt(eps(T))
+    max_error = max(max_error, abs(Q-I))
   end
+  return max_error
 end
 
 tri = Triangle()
+line = Line()
+
+let
+  cqr = CompactQuadratureRuleWithWeights(line, 1, [1,0], F[], F[2.0])
+  qr = expand(cqr)
+
+  cqr2 = CompactQuadratureRule(line, 1, [1,0], F[])
+  qr2 = expand(cqr2)
+
+  @test qr.weights ≈ qr2.weights
+  test_quadrature_rule(qr)
+  test_quadrature_rule(qr2)
+end
 
 let
   cqr = CompactQuadratureRuleWithWeights(tri, 1, [0,1,0], F[0.0], F[1/3])
@@ -166,4 +183,33 @@ let
   qr = expand(cqr)
   @test length(qr) == 236
   test_quadrature_rule(qr)
+end
+
+let
+  # Exactly representable orbit parameters on triangle should be optimizer fixed points.
+  cqr = CompactQuadratureRule(tri, 1, [0,1,0], F[0.0])
+  oqr = optimize(cqr)
+  @test cqr.positions ≈ oqr.positions atol=1e-12
+end
+
+let
+  # Another minimal case with binary-representable values.
+  cqr = CompactQuadratureRule(tri, 2, [1,2,0], F[0.5,0.0])
+  oqr = optimize(cqr)
+  @test cqr.positions ≈ oqr.positions atol=1e-12
+end
+
+let F = BigFloat
+  cqr = CompactQuadratureRule(tri, 5, [1,2,0],
+  F[ 4.70142064105115e-01,
+     1.01286507323456e-01])
+  qr = expand(cqr)
+
+  ocqr = optimize(cqr)
+  oqr = expand(ocqr)
+
+  @test getProperties(qr) == getProperties(oqr)
+  @test cqr.positions ≈ ocqr.positions atol=1e-12
+
+  test_quadrature_rule(oqr)
 end

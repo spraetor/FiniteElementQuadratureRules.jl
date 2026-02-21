@@ -1,5 +1,5 @@
 struct Point <: AbstractSimplex end
-struct Line <: AbstractSimplex end
+struct Line <: AbstractCube end
 struct Triangle <: AbstractSimplex end
 struct Quadrilateral <: AbstractCube end
 struct Tetrahedron <: AbstractSimplex end
@@ -21,49 +21,55 @@ Symbol(::Type{Hexahedron}) = :hexahedron
 Symbol(::Type{Prism}) = :prism
 Symbol(::Type{Pyramid}) = :pyramid
 Symbol(::Type{UnknownDomain}) = :unknown
+Symbol(::Ω) where {Ω<:AbstractDomain} = Symbol(Ω)
 
-dimension(::Point) = 0
 dimension(::Type{Point}) = 0
-dimension(::Line) = 1
 dimension(::Type{Line}) = 1
-dimension(::Triangle) = 2
 dimension(::Type{Triangle}) = 2
-dimension(::Quadrilateral) = 2
 dimension(::Type{Quadrilateral}) = 2
-dimension(::Tetrahedron) = 3
 dimension(::Type{Tetrahedron}) = 3
-dimension(::Hexahedron) = 3
 dimension(::Type{Hexahedron}) = 3
-dimension(::Prism) = 3
 dimension(::Type{Prism}) = 3
-dimension(::Pyramid) = 3
 dimension(::Type{Pyramid}) = 3
-dimension(::UnknownDomain) = 0
 dimension(::Type{UnknownDomain}) = 0
+dimension(::Ω) where {Ω<:AbstractDomain} = dimension(Ω)
 
-vertices(::Point) = 1
-vertices(::Line) = 2
-vertices(::Triangle) = 3
-vertices(::Quadrilateral) = 4
-vertices(::Tetrahedron) = 4
-vertices(::Hexahedron) = 8
-vertices(::Prism) = 6
-vertices(::Pyramid) = 5
-vertices(::UnknownDomain) = 0
+vertices(::Type{Point}) = 1
+vertices(::Type{Line}) = 2
+vertices(::Type{Triangle}) = 3
+vertices(::Type{Quadrilateral}) = 4
+vertices(::Type{Tetrahedron}) = 4
+vertices(::Type{Hexahedron}) = 8
+vertices(::Type{Prism}) = 6
+vertices(::Type{Pyramid}) = 5
+vertices(::Type{UnknownDomain}) = 0
+vertices(::Ω) where {Ω<:AbstractDomain} = vertices(Ω)
 
-facets(::Point) = 0
-facets(::Line) = 2
-facets(::Triangle) = 3
-facets(::Quadrilateral) = 4
-facets(::Tetrahedron) = 4
-facets(::Hexahedron) = 6
-facets(::Prism) = 5
-facets(::Pyramid) = 5
-facets(::UnknownDomain) = 0
+facets(::Type{Point}) = 0
+facets(::Type{Line}) = 2
+facets(::Type{Triangle}) = 3
+facets(::Type{Quadrilateral}) = 4
+facets(::Type{Tetrahedron}) = 4
+facets(::Type{Hexahedron}) = 6
+facets(::Type{Prism}) = 5
+facets(::Type{Pyramid}) = 5
+facets(::Type{UnknownDomain}) = 0
+facets(::Ω) where {Ω<:AbstractDomain} = facets(Ω)
+
+region(::Type{Point}) = "point"
+region(::Type{Line}) = "cube"
+region(::Type{Triangle}) = "simplex"
+region(::Type{Quadrilateral}) = "cube"
+region(::Type{Tetrahedron}) = "simplex"
+region(::Type{Hexahedron}) = "cube"
+region(::Type{Prism}) = "prism"
+region(::Type{Pyramid}) = "pyramid"
+region(::Type{UnknownDomain}) = "unknown"
+region(::Ω) where {Ω<:AbstractDomain} = region(Ω)
 
 
-
-function domaintype(dim::Int, region::Symbol)
+# map a dim+region to a domain
+function domaintype(dim::Int, region::Symbol)::Type{<:AbstractDomain}
   if dim == 0
     return Point
   elseif dim == 1
@@ -97,8 +103,10 @@ function domaintype(dim::Int, region::Symbol)
   end
 end
 
-function domaintype(dim::Int, region::AbstractString)
+# map a dim+region to a domain, where the region might be given as a string
+function domaintype(dim::Int, region::AbstractString)::Type{<:AbstractDomain}
   domaintype(dim, Symbol(region))
 end
 
-domain(dim, region) = domaintype(dim,region)()
+# construct a domain from dim + region
+domain(dim, region)::AbstractDomain = domaintype(dim,region)()

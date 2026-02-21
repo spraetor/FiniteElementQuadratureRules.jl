@@ -1,35 +1,37 @@
-function getWeights(::Type{T}, domain::Ω, degree::Integer, points::AbstractVector{P}) where {T<:Real,Ω<:AbstractDomain,P<:AbstractVector}
+function getWeights(::Type{T}, domain::AbstractDomain, degree::Integer, points::AbstractVector) where {T<:Real}
 
-  polyset = PolySet(domain, degree)
-  A = zeros(T, length(polyset.basis), length(points))
-  b = zeros(T, length(polyset.basis))
+  polyset = JacobiPolySet(domain, degree)
+  A = Matrix{T}(undef, length(polyset.basis), length(points))
+  b = Vector{T}(undef, length(polyset.basis))
 
-  for i in eachindex(polyset.basis)
-    f = polyset.basis[i]
-    for j in eachindex(points)
+  for j in eachindex(points)
+    for i in eachindex(polyset.basis)
+      f = polyset.basis[i]
       A[i,j] = f(points[j])
     end
-    b[i] = T(integrate(f,domain))
+  end
+  for i in eachindex(polyset.basis)
+    b[i] = T(polyset.integrals[i])
   end
 
   weights = A\b
   return weights
 end
 
-function getWeights(domain::Ω, degree::Integer, points::AbstractVector{P}) where {Ω<:AbstractDomain,P<:AbstractVector}
+function getWeights(domain::AbstractDomain, degree::Integer, points::AbstractVector{P}) where {P<:AbstractVector}
   T = eltype(P)
   getWeights(T, domain, degree, points)
 end
 
 
 
-function getWeights(::Type{T}, domain::AbstractDomain, degree::Integer, points::AbstractVector{<:AbstractVector}, orbits::AbstractVector{<:Integer}) where {T<:Real}
+function getWeights(::Type{T}, domain::AbstractDomain, degree::Integer, points::AbstractVector, orbits::AbstractVector) where {T<:Real}
 
-  polyset = PolySet(domain, degree)
+  polyset = JacobiPolySet(domain, degree)
   so = symmetryOrbits(T,domain)
   nDifferentWeights = sum(orbits)
-  A = zeros(T, length(polyset.basis), nDifferentWeights)
-  b = zeros(T, length(polyset.basis))
+  A = Matrix{T}(undef, length(polyset.basis), nDifferentWeights)
+  b = Vector{T}(undef, length(polyset.basis))
 
   for i in eachindex(polyset.basis)
     f = polyset.basis[i]
@@ -46,7 +48,7 @@ function getWeights(::Type{T}, domain::AbstractDomain, degree::Integer, points::
         j = j+1
       end
     end
-    b[i] = T(integrate(f,domain))
+    b[i] = T(polyset.integrals[i])
   end
 
   w = A\b
@@ -62,7 +64,7 @@ function getWeights(::Type{T}, domain::AbstractDomain, degree::Integer, points::
   return weights
 end
 
-function getWeights(domain::AbstractDomain, degree::Integer, points::AbstractVector{P}, orbits::AbstractVector{<:Integer}) where {P<:AbstractVector}
+function getWeights(domain::AbstractDomain, degree::Integer, points::AbstractVector{P}, orbits::AbstractVector) where {P<:AbstractVector}
   T = eltype(P)
   getWeights(T, domain, degree, points, orbits)
 end

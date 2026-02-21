@@ -19,13 +19,13 @@ domaintype(::LagrangeLocalBasis{dim,Ω}) where {dim,Ω<:AbstractSimplex} = Ω
 
 
 # evaluate all basis functions in a point x
-function (lb::LagrangeLocalBasis{dim,<:AbstractSimplex})(x::AbstractVector{T}) where {dim,T<:Real}
+function (lb::LagrangeLocalBasis{dim,Ω})(x::AbstractVector{T}) where {dim,Ω<:AbstractSimplex,T<:Real}
   if order(lb) == 0
     SVector{1,T}(1.0)
   elseif order(lb) == 1
-    barycentriccoordinates(x)
+    barycentricCoordinates(Ω(), x)
   elseif order(lb) == 2
-    λ = barycentriccoordinates(x)
+    λ = barycentricCoordinates(Ω(), x)
     if dim == 2
       SVector{length(lb),T}(
         (λ.*(2 .* λ .- 1))...,             # vertex functions
@@ -38,7 +38,7 @@ function (lb::LagrangeLocalBasis{dim,<:AbstractSimplex})(x::AbstractVector{T}) w
         )
     end
   elseif order(lb) == 3
-    λ = barycentriccoordinates(x)
+    λ = barycentricCoordinates(Ω(), x)
     if dim == 2
       SVector{length(lb),T}(
         ((3 .* λ .- 1).*(3 .* λ .- 2) .* λ ./ 2)...,    # vertex functions
@@ -76,7 +76,7 @@ function (lb::LagrangeLocalBasis{dim,<:AbstractCube})(x::AbstractVector{T}) wher
     out = MVector{2^dim,T}(ones(T,length(lb)))
     for i in eachindex(out)
       for j in 1:dim
-        out[i] *= bit_is_set(i,j) ? x[j] : 1-x[j];
+        out[i] *= bit_is_set(i,j) ? (one(T)+x[j])/2 : (one(T)-x[j])/2
       end
     end
     SVector(out)
@@ -91,13 +91,15 @@ function (lb::LagrangeLocalBasis{3,Prism})(x::AbstractVector{T}) where {T<:Real}
   if order(lb) == 0
     SVector{1,T}(1.0)
   elseif order(lb) == 1
+    λ = barycentricCoordinates(Triangle(), x[1:2])
+    z = (one(T) + x[3]) / 2
     SVector{6,T}(
-      (1.0-x[1]-x[2])*(1.0-x[3]),
-      x[1]*(1-x[3]),
-      x[2]*(1-x[3]),
-      x[3]*(1.0-x[1]-x[2]),
-      x[1]*x[3],
-      x[2]*x[3]
+      λ[1]*(one(T)-z),
+      λ[2]*(one(T)-z),
+      λ[3]*(one(T)-z),
+      λ[1]*z,
+      λ[2]*z,
+      λ[3]*z,
     )
   else
     error("Not implemented")
@@ -110,21 +112,23 @@ function (lb::LagrangeLocalBasis{3,Pyramid})(x::AbstractVector{T}) where {T<:Rea
   if order(lb) == 0
     SVector{1,T}(1.0)
   elseif order(lb) == 1
-    if x[1] > x[2]
-      SVector{5,T}(
-        (1-x[1])*(1-x[2])-x[3]*(1-x[2]),
-        x[1]*(1-x[2])-x[3]*x[2],
-        (1-x[1])*x[2]-x[3]*x[2],
-        x[1]*x[2]+x[3]*x[2],
-        x[3]
-      )
+    ζ = (x[3] + one(T)) / 2
+    d = one(T) - ζ
+
+    # At the apex (z = 1), the four base shape functions vanish.
+    if iszero(d)
+      SVector{5,T}(zero(T), zero(T), zero(T), zero(T), one(T))
     else
+      # Map from FEQ reference pyramid to the standard unit pyramid.
+      ξ = (x[1] + d) / 2
+      η = (x[2] + d) / 2
+
       SVector{5,T}(
-        (1-x[1])*(1-x[2])-x[3]*(1-x[1]),
-        x[1]*(1-x[2])-x[3]*x[1],
-        (1-x[1])*x[2]-x[3]*x[1],
-        x[1]*x[2]+x[3]*x[1],
-        x[3]
+        ((d-ξ)*(d-η))/d,
+        (ξ*(d-η))/d,
+        ((d-ξ)*η)/d,
+        (ξ*η)/d,
+        ζ
       )
     end
   else

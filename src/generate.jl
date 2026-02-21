@@ -1,4 +1,4 @@
-import YAML: load_file
+import YAML: load_file, write_file
 using Base: Filesystem
 
 function default_chooser(qr1::QuadratureRule{T, D, Domain}, qr2::QuadratureRule{T, D, Domain}) where {T,D,Domain}
@@ -60,4 +60,29 @@ function generate(template::AbstractString, in_dir::AbstractString, out_dir::Abs
     maxdegree[domain] = maximum(qr.degree for qr in qrs[domain]; init=0)
   end
   println(maxdegree)
+end
+
+
+
+function expandall(in_dir::AbstractString, out_dir::AbstractString)
+  out_dir = Filesystem.mkpath(Filesystem.dirname(out_dir))
+
+  for (root, _, files) in Filesystem.walkdir(in_dir)
+    for file in (f for f in files if endswith(f, ".yml"))
+      println("read $(joinpath(root, file))")
+      data = YAML.load_file(joinpath(root, file))
+      out_root = joinpath(out_dir, relpath(root, in_dir))
+      out_file = joinpath(out_root, file)
+      if haskey(data, "weights")
+        cqr = CompactQuadratureRuleWithWeights(Float64, data)
+      else
+        cqr = CompactQuadratureRule(Float64, data)
+      end
+      qr = expand(cqr)
+      if !isnothing(qr)
+        mkpath(out_root)
+        YAML.write_file(out_file, Dict(qr, data["reference"]))
+      end
+    end
+  end
 end
