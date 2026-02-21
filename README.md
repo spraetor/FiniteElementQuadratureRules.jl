@@ -32,20 +32,20 @@ This rule can be converted into a full expanded quadrature rules by
 
 ```julia
 using FiniteElementQuadratureRules
-using YAML: load_file
+using YAML: load_file, write_file
 
 # read the compact rule from a file and store it in a Dict
 data = load_file("rules/compact/CCGV22/2d/dd2o04_06.yml")
 
 # generate the CompactQuadratureRule from the data
-cqr = makeCompactQuadratureRule(Float64, data["dim"], data["region"], data)
+cqr = CompactQuadratureRule(data)
 
 # expand the compat rule to generate points and weights
 qr = expand(cqr)
 
 # the expanded rule can be written to a .yml file again
 mkpath("rules/expanded/CCGV22/2d/")
-write_file("rules/expanded/CCGV22/2d/dd2o04_06.yml", qr, data)
+write_file("rules/expanded/CCGV22/2d/dd2o04_06.yml", Dict(qr, data["reference"]))
 ```
 
 # Optimizing existing rules
@@ -61,7 +61,7 @@ using YAML: load_file
 data = load_file("rules/compact/CCGV22/2d/dd2o04_06.yml")
 
 # generate the CompactQuadratureRule from the data
-cqr = makeCompactQuadratureRule(Float64, data["dim"], data["region"], data)
+cqr = CompactQuadratureRule(BigFloat, data)
 
 # now we optimize this rule, resulting in a modified compact rule
 oqr = optimize(cqr)

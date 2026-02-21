@@ -5,9 +5,13 @@ const F = Float64
 function test_quadrature_rule(qr::QuadratureRule{Ω,T,P}) where {Ω,T,P}
   polyset = JacobiPolySet(qr.domain,qr.degree)
   @test sum(qr.weights) ≈ volume(ReferenceElement(qr.domain))
+  max_error = zero(T)
   for (f,I) in zip(polyset.basis, polyset.integrals)
-    @test sum(qr.weights .* f.(qr.points)) ≈ I atol=sqrt(eps(T))
+    Q = sum(qr.weights .* f.(qr.points))
+    @test Q ≈ I atol=sqrt(eps(T))
+    max_error = max(max_error, abs(Q-I))
   end
+  return max_error
 end
 
 tri = Triangle()
@@ -181,8 +185,6 @@ let
   test_quadrature_rule(qr)
 end
 
-
-
 let
   # Exactly representable orbit parameters on triangle should be optimizer fixed points.
   cqr = CompactQuadratureRule(tri, 1, [0,1,0], F[0.0])
@@ -197,7 +199,7 @@ let
   @test cqr.positions ≈ oqr.positions atol=1e-12
 end
 
-let
+let F = BigFloat
   cqr = CompactQuadratureRule(tri, 5, [0,4,3],
   F[ 0.00000000000000000000000000000000000,
     0.05752768441141010566081751776543190,
@@ -211,6 +213,9 @@ let
     0.07819258362551702199888597846982583 ])
 
   oqr = optimize(cqr)
+  qr = expand(oqr)
 
-  @test cqr.positions ≈ oqr.positions
+  println( test_quadrature_rule(qr) )
+
+  # @test cqr.positions ≈ oqr.positions atol=1e-12
 end

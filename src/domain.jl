@@ -56,6 +56,17 @@ facets(::Type{Pyramid}) = 5
 facets(::Type{UnknownDomain}) = 0
 facets(::Ω) where {Ω<:AbstractDomain} = facets(Ω)
 
+region(::Type{Point}) = "point"
+region(::Type{Line}) = "cube"
+region(::Type{Triangle}) = "simplex"
+region(::Type{Quadrilateral}) = "cube"
+region(::Type{Tetrahedron}) = "simplex"
+region(::Type{Hexahedron}) = "cube"
+region(::Type{Prism}) = "prism"
+region(::Type{Pyramid}) = "pyramid"
+region(::Type{UnknownDomain}) = "unknown"
+region(::Ω) where {Ω<:AbstractDomain} = region(Ω)
+
 
 # map a dim+region to a domain
 function domaintype(dim::Int, region::Symbol)::Type{<:AbstractDomain}

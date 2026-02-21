@@ -1,7 +1,7 @@
 using StaticArrays: SVector
 
 struct SymmetryOrbit
-  args::Int
+  args::Union{Val{0},Val{1},Val{2},Val{3}}
   size::Int
   expand::Function
 end
@@ -9,34 +9,51 @@ end
 import Base: length
 length(so::SymmetryOrbit) = so.size
 
+_args(::Val{0})::Int = 0
+_args(::Val{1})::Int = 1
+_args(::Val{2})::Int = 2
+_args(::Val{3})::Int = 3
+
+# Get the number of arguments
+args(so::SymmetryOrbit)::Int = _args(so.args)
+
+_expand(so::SymmetryOrbit, ::Val{0}, ::AbstractVector) = so.expand()
+_expand(so::SymmetryOrbit, ::Val{1}, x::AbstractVector) = so.expand(x[1])
+_expand(so::SymmetryOrbit, ::Val{2}, x::AbstractVector) = so.expand(x[1],x[2])
+_expand(so::SymmetryOrbit, ::Val{3}, x::AbstractVector) = so.expand(x[1],x[2],x[3])
+
+# Expand the symmetric orbit using the arguments
+expand(so::SymmetryOrbit, x::AbstractVector) = _expand(so,so.args,x)
+
+
 function symmetryOrbits(Ω::AbstractDomain)
   symmetryOrbits(Float64, Ω)
 end
 
 function symmetryOrbits(::Type{T}, ::Point) where {T<:Real}
   SymmetryOrbit[
-    SymmetryOrbit(0,1, () -> (
+    SymmetryOrbit(Val(0),1, () -> (
       SVector{1,T}(1),) )]
 end
 
 function symmetryOrbits(::Type{T}, ::Line) where {T<:Real}
   SymmetryOrbit[
-    SymmetryOrbit(0,1, () -> (
+    SymmetryOrbit(Val(0),1, () -> (
       SVector{1,T}(0),) ),
-    SymmetryOrbit(1,2, (a::T) -> (
+    SymmetryOrbit(Val(1),2, (a::T) -> (
       SVector{1,T}(a),
       SVector{1,T}(-a)) )]
 end
 
 function symmetryOrbits(::Type{T}, ::Triangle) where {T<:Real}
   SymmetryOrbit[
-    SymmetryOrbit(0,1, () -> (            # S3
+    SymmetryOrbit(Val(0),1, () -> (            # S3
       SVector{3,T}(1//3,1//3,1//3),) ),
-    SymmetryOrbit(1,3, (a::T) -> (        # S21
+    SymmetryOrbit(Val(1),3, (a::T) -> (        # S21
       SVector{3,T}(a,a,T(1)-2*a),
       SVector{3,T}(a,T(1)-2*a,a),
       SVector{3,T}(T(1)-2*a,a,a)) ),
-    SymmetryOrbit(2,6, (a::T, b::T) -> (  # S111
+    SymmetryOrbit(Val(2),6, (a::T, b::T) -> (  # S111
       SVector{3,T}(a,b,T(1)-a-b),
       SVector{3,T}(a,T(1)-a-b,b),
       SVector{3,T}(T(1)-a-b,a,b),
@@ -47,19 +64,19 @@ end
 
 function symmetryOrbits(::Type{T}, ::Quadrilateral) where {T<:Real}
   SymmetryOrbit[
-    SymmetryOrbit(0,1, () -> (
+    SymmetryOrbit(Val(0),1, () -> (
       SVector{2,T}(0,0),) ),
-    SymmetryOrbit(1,4, (a::T) -> (
+    SymmetryOrbit(Val(1),4, (a::T) -> (
       SVector{2,T}(a,0),
       SVector{2,T}(-a,0),
       SVector{2,T}(0,a),
       SVector{2,T}(0,-a)) ),
-    SymmetryOrbit(1,4, (a::T) -> (
+    SymmetryOrbit(Val(1),4, (a::T) -> (
       SVector{2,T}(a,a),
       SVector{2,T}(-a,a),
       SVector{2,T}(a,-a),
       SVector{2,T}(-a,-a)) ),
-    SymmetryOrbit(2,8, (a::T, b::T) -> (
+    SymmetryOrbit(Val(2),8, (a::T, b::T) -> (
       SVector{2,T}(a,b),
       SVector{2,T}(b,a),
       SVector{2,T}(-a,b),
@@ -72,21 +89,21 @@ end
 
 function symmetryOrbits(::Type{T}, ::Tetrahedron) where {T<:Real}
   SymmetryOrbit[
-    SymmetryOrbit(0,1, () -> (
+    SymmetryOrbit(Val(0),1, () -> (
       SVector{4,T}(1//4,1//4,1//4,1//4),) ),
-    SymmetryOrbit(1,4, (a::T) -> (
+    SymmetryOrbit(Val(1),4, (a::T) -> (
       SVector{4,T}(a,a,a,T(1)-3*a),
       SVector{4,T}(a,a,T(1)-3*a,a),
       SVector{4,T}(a,T(1)-3*a,a,a),
       SVector{4,T}(T(1)-3*a,a,a,a)) ),
-    SymmetryOrbit(1,6, (a::T) -> (
+    SymmetryOrbit(Val(1),6, (a::T) -> (
       SVector{4,T}(a,a,1//2-a,1//2-a),
       SVector{4,T}(a,1//2-a,a,1//2-a),
       SVector{4,T}(1//2-a,a,a,1//2-a),
       SVector{4,T}(a,1//2-a,1//2-a,a),
       SVector{4,T}(1//2-a,a,1//2-a,a),
       SVector{4,T}(1//2-a,1//2-a,a,a)) ),
-    SymmetryOrbit(2,12, (a::T, b::T) -> (
+    SymmetryOrbit(Val(2),12, (a::T, b::T) -> (
       SVector{4,T}(a,a,b,T(1)-2*a-b),
       SVector{4,T}(a,b,a,T(1)-2*a-b),
       SVector{4,T}(b,a,a,T(1)-2*a-b),
@@ -99,7 +116,7 @@ function symmetryOrbits(::Type{T}, ::Tetrahedron) where {T<:Real}
       SVector{4,T}(b,T(1)-2*a-b,a,a),
       SVector{4,T}(T(1)-2*a-b,a,b,a),
       SVector{4,T}(T(1)-2*a-b,b,a,a)) ),
-    SymmetryOrbit(3,24, (a::T, b::T, c::T) -> (
+    SymmetryOrbit(Val(3),24, (a::T, b::T, c::T) -> (
       SVector{4,T}(a,b,c,T(1)-a-b-c),
       SVector{4,T}(a,c,b,T(1)-a-b-c),
       SVector{4,T}(c,a,b,T(1)-a-b-c),
@@ -128,16 +145,16 @@ end
 
 function symmetryOrbits(::Type{T}, ::Hexahedron) where {T<:Real}
   SymmetryOrbit[
-    SymmetryOrbit(0,1, () -> (
+    SymmetryOrbit(Val(0),1, () -> (
       SVector{3,T}(0,0,0),) ),
-    SymmetryOrbit(1,6, (a::T) -> (
+    SymmetryOrbit(Val(1),6, (a::T) -> (
       SVector{3,T}(a,0,0),
       SVector{3,T}(-a,0,0),
       SVector{3,T}(0,a,0),
       SVector{3,T}(0,-a,0),
       SVector{3,T}(0,0,a),
       SVector{3,T}(0,0,-a)) ),
-    SymmetryOrbit(1,8, (a::T) -> (
+    SymmetryOrbit(Val(1),8, (a::T) -> (
       SVector{3,T}(a,a,a),
       SVector{3,T}(-a,a,a),
       SVector{3,T}(a,-a,a),
@@ -146,7 +163,7 @@ function symmetryOrbits(::Type{T}, ::Hexahedron) where {T<:Real}
       SVector{3,T}(-a,a,-a),
       SVector{3,T}(a,-a,-a),
       SVector{3,T}(-a,-a,-a)) ),
-    SymmetryOrbit(1,12, (a::T) -> (
+    SymmetryOrbit(Val(1),12, (a::T) -> (
       SVector{3,T}(a,a,0),
       SVector{3,T}(a,0,a),
       SVector{3,T}(0,a,a),
@@ -159,7 +176,7 @@ function symmetryOrbits(::Type{T}, ::Hexahedron) where {T<:Real}
       SVector{3,T}(-a,-a,0),
       SVector{3,T}(-a,0,-a),
       SVector{3,T}(0,-a,-a)) ),
-    SymmetryOrbit(2,24, (a::T, b::T) -> (
+    SymmetryOrbit(Val(2),24, (a::T, b::T) -> (
       SVector{3,T}(a,b,0),
       SVector{3,T}(a,0,b),
       SVector{3,T}(b,a,0),
@@ -184,7 +201,7 @@ function symmetryOrbits(::Type{T}, ::Hexahedron) where {T<:Real}
       SVector{3,T}(-b,0,-a),
       SVector{3,T}(0,-a,-b),
       SVector{3,T}(0,-b,-a)) ),
-    SymmetryOrbit(2,24, (a::T, b::T) -> (
+    SymmetryOrbit(Val(2),24, (a::T, b::T) -> (
       SVector{3,T}(a,a,b),
       SVector{3,T}(a,b,a),
       SVector{3,T}(b,a,a),
@@ -209,7 +226,7 @@ function symmetryOrbits(::Type{T}, ::Hexahedron) where {T<:Real}
       SVector{3,T}(-a,-a,-b),
       SVector{3,T}(-a,-b,-a),
       SVector{3,T}(-b,-a,-a)) ),
-    SymmetryOrbit(3,48, (a::T, b::T, c::T) -> (
+    SymmetryOrbit(Val(3),48, (a::T, b::T, c::T) -> (
       SVector{3,T}(a,b,c),
       SVector{3,T}(a,c,b),
       SVector{3,T}(b,a,c),
@@ -262,30 +279,30 @@ end
 
 function symmetryOrbits(::Type{T}, ::Prism) where {T<:Real}
   SymmetryOrbit[
-    SymmetryOrbit(0,1, () -> (
+    SymmetryOrbit(Val(0),1, () -> (
       SVector{4,T}(1//3,1//3,1//3,0),) ),
-    SymmetryOrbit(1,2, (c::T) -> (
+    SymmetryOrbit(Val(1),2, (c::T) -> (
       SVector{4,T}(1//3,1//3,1//3,c),
       SVector{4,T}(1//3,1//3,1//3,-c)) ),
-    SymmetryOrbit(1,3, (a::T) -> (
+    SymmetryOrbit(Val(1),3, (a::T) -> (
       SVector{4,T}(a,a,T(1)-2*a,0),
       SVector{4,T}(a,T(1)-2*a,a,0),
       SVector{4,T}(T(1)-2*a,a,a,0)) ),
-    SymmetryOrbit(2,6, (a::T, c::T) -> (
+    SymmetryOrbit(Val(2),6, (a::T, c::T) -> (
       SVector{4,T}(a,a,T(1)-2*a,c),
       SVector{4,T}(a,T(1)-2*a,a,c),
       SVector{4,T}(T(1)-2*a,a,a,c),
       SVector{4,T}(a,a,T(1)-2*a,-c),
       SVector{4,T}(a,T(1)-2*a,a,-c),
       SVector{4,T}(T(1)-2*a,a,a,-c)) ),
-    SymmetryOrbit(2,6, (a::T, b::T) -> (
+    SymmetryOrbit(Val(2),6, (a::T, b::T) -> (
       SVector{4,T}(a,b,T(1)-a-b,0),
       SVector{4,T}(a,T(1)-a-b,b,0),
       SVector{4,T}(T(1)-a-b,a,b,0),
       SVector{4,T}(b,a,T(1)-a-b,0),
       SVector{4,T}(b,T(1)-a-b,a,0),
       SVector{4,T}(T(1)-a-b,b,a,0)) ),
-    SymmetryOrbit(3,12, (a::T, b::T, c::T) -> (
+    SymmetryOrbit(Val(3),12, (a::T, b::T, c::T) -> (
       SVector{4,T}(a,b,T(1)-a-b,c),
       SVector{4,T}(a,T(1)-a-b,b,c),
       SVector{4,T}(T(1)-a-b,a,b,c),
@@ -302,19 +319,19 @@ end
 
 function symmetryOrbits(::Type{T}, ::Pyramid) where {T<:Real}
   SymmetryOrbit[
-    SymmetryOrbit(1,1, (c::T) -> (
+    SymmetryOrbit(Val(1),1, (c::T) -> (
       SVector{3,T}(0,0,c),) ),
-    SymmetryOrbit(2,4, (a::T, c::T) -> (
+    SymmetryOrbit(Val(2),4, (a::T, c::T) -> (
       SVector{3,T}(a,0,c),
       SVector{3,T}(-a,0,c),
       SVector{3,T}(0,a,c),
       SVector{3,T}(0,-a,c)) ),
-    SymmetryOrbit(2,4, (a::T, c::T) -> (
+    SymmetryOrbit(Val(2),4, (a::T, c::T) -> (
       SVector{3,T}(a,a,c),
       SVector{3,T}(-a,a,c),
       SVector{3,T}(a,-a,c),
       SVector{3,T}(-a,-a,c)) ),
-    SymmetryOrbit(3,8, (a::T, b::T, c::T) -> (
+    SymmetryOrbit(Val(3),8, (a::T, b::T, c::T) -> (
       SVector{3,T}(a,b,c),
       SVector{3,T}(b,a,c),
       SVector{3,T}(-a,b,c),

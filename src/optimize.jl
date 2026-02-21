@@ -1,10 +1,5 @@
 using Optim
-
-# Expand the orbital parameters r in the given symmetry orbit `so`
-function _expandorbit(so::SymmetryOrbit, r::AbstractVector)
-  @assert length(r) == so.args # number or parameters
-  return so.expand(r...)
-end
+using StaticArrays: SVector
 
 function _clamporbit(so::SymmetryOrbit, r::AbstractVector)
   return r # TODO
@@ -26,15 +21,12 @@ function _residual(positions::AbstractVector{T}, params) where {T}
     j = 1
     l = 1
     for k in eachindex(orbits)     # types of symmetry orbits
-      n = so[k].args               # number of orbital parameters
+      n = args(so[k])              # number of orbital parameters
       for _ = 1:orbits[k]          # number of orbits of this type
-        r = _clamporbit(so[k],positions[l:l+n-1])
+        r = _clamporbit(so[k],view(positions,l:l+n-1))
         # Evaluate on the domain reference element, consistent with `getWeights`.
-        points = transformCoordinates(domain, collect(_expandorbit(so[k],r)))
-        A[i,j] = T(0)
-        for x in points
-          A[i,j] += pᵢ(x)
-        end
+        points = transformCoordinates(domain, SVector(expand(so[k],r)))
+        A[i,j] = sum(pᵢ.(points))
         l = l + n
         j = j + 1
       end
@@ -42,12 +34,12 @@ function _residual(positions::AbstractVector{T}, params) where {T}
   end
 
   w = A\b
-  return sum((A*w - b).^2)
+  return sqrt(sum((A*w - b).^2))
 end
 
 
 
-function optimize(qr::CompactQuadratureRule{Ω,T}) where {Ω<:AbstractDomain, T<:Real}
+function optimize(qr::CompactQuadratureRule)
   domain = qr.domain
   degree = qr.degree
   orbits = qr.orbits
@@ -55,7 +47,6 @@ function optimize(qr::CompactQuadratureRule{Ω,T}) where {Ω<:AbstractDomain, T<
 
   let f = (p) -> _residual(p,(domain,degree,orbits))
     result = Optim.optimize(f, positions; autodiff = :forward)
-    println("residuum = $(result.minimum)")
     return CompactQuadratureRule(domain,degree,orbits,result.minimizer)
   end
 end

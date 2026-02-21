@@ -14,7 +14,7 @@ end
 
 
 # transform the coordinates from the internal (barycentric) to the reference element domain
-transformCoordinates(::D, X::AbstractVector{P}) where {D<:AbstractCube, P<:AbstractVector} = X
+transformCoordinates(::AbstractCube, X::AbstractVector{P}) where {P<:AbstractVector} = X
 function transformCoordinates(::Triangle, X::AbstractVector{P}) where {P<:AbstractVector}
   let A = @SMatrix [-1 1 -1; -1 -1 1]
     map(λ -> A*λ, X)
@@ -33,9 +33,10 @@ function transformCoordinates(::Prism, X::AbstractVector{P}) where {P<:AbstractV
 end
 transformCoordinates(::Pyramid, X::AbstractVector{P}) where {P<:AbstractVector} = X
 
+transformCoordinates(domain::AbstractDomain, X::NTuple{N,T}) where {N,T} = transformCoordinates(domain, SVector{N,T}(X))
 
 # transform the quadrature weights when changing the coordinates from barycentric to reference domain
-transformWeights(::D, W::AbstractVector{<:Real}) where {D<:AbstractCube} = W
+transformWeights(::AbstractCube, W::AbstractVector{<:Real}) = W
 transformWeights(::Triangle, W::AbstractVector{<:Real}) = map(w -> 2*w, W)
 transformWeights(::Tetrahedron, W::AbstractVector{<:Real}) = map(w -> 2*w, W)
 transformWeights(::Prism, W::AbstractVector{<:Real}) = map(w -> 2*w, W)
