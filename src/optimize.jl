@@ -25,7 +25,7 @@ function _residual(positions::AbstractVector{T}, params) where {T}
       for _ = 1:orbits[k]          # number of orbits of this type
         r = _clamporbit(so[k],view(positions,l:l+n-1))
         # Evaluate on the domain reference element, consistent with `getWeights`.
-        points = transformCoordinates(domain, SVector(expand(so[k],r)))
+        points = transformCoordinates(domain, expand(so[k],r))
         A[i,j] = sum(pᵢ.(points))
         l = l + n
         j = j + 1
@@ -34,7 +34,7 @@ function _residual(positions::AbstractVector{T}, params) where {T}
   end
 
   w = A\b
-  return sqrt(sum((A*w - b).^2))
+  return sum((A*w - b).^2)
 end
 
 
@@ -43,10 +43,23 @@ function optimize(qr::CompactQuadratureRule)
   domain = qr.domain
   degree = qr.degree
   orbits = qr.orbits
-  positions = qr.positions
+  T = ctype(qr)
+  positions = Vector{T}(qr.positions)
 
   let f = (p) -> _residual(p,(domain,degree,orbits))
-    result = Optim.optimize(f, positions; autodiff = :forward)
+    options = Optim.Options(
+      x_abstol = sqrt(eps(float(T))),
+      g_abstol = sqrt(eps(float(T))),
+      f_abstol = eps(float(T)),
+      iterations = 10_000,
+    )
+
+    # Use a gradient-based method explicitly. The Optim default for scalar
+    # objectives is Nelder-Mead, which is too weak here and often stalls early.
+    result = Optim.optimize(
+      f, positions, BFGS(), options;
+      autodiff = :forward,
+    )
     return CompactQuadratureRule(domain,degree,orbits,result.minimizer)
   end
 end

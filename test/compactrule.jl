@@ -200,22 +200,16 @@ let
 end
 
 let F = BigFloat
-  cqr = CompactQuadratureRule(tri, 5, [0,4,3],
-  F[ 0.00000000000000000000000000000000000,
-    0.05752768441141010566081751776543190,
-    0.25685910726195907606389083148220168,
-    0.45783683807916110193850321742406830,
-    0.00000000000000000000000000000000000,
-    0.36329807415368604570550633618418105,
-    0.00000000000000000000000000000000000,
-    0.13226458163271398535388822004364736,
-    0.22100121875989000797812820146484192,
-    0.07819258362551702199888597846982583 ])
+  cqr = CompactQuadratureRule(tri, 5, [1,2,0],
+  F[ 4.70142064105115e-01,
+     1.01286507323456e-01])
+  qr = expand(cqr)
 
-  oqr = optimize(cqr)
-  qr = expand(oqr)
+  ocqr = optimize(cqr)
+  oqr = expand(ocqr)
 
-  println( test_quadrature_rule(qr) )
+  @test getProperties(qr) == getProperties(oqr)
+  @test cqr.positions ≈ ocqr.positions atol=1e-12
 
-  # @test cqr.positions ≈ oqr.positions atol=1e-12
+  test_quadrature_rule(oqr)
 end
