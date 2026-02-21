@@ -171,6 +171,20 @@ end
 
 
 let
+  # Exactly representable orbit parameters on triangle should be optimizer fixed points.
+  cqr = CompactQuadratureRule(tri, 1, [0,1,0], F[0.0])
+  oqr = optimize(cqr)
+  @test cqr.positions ≈ oqr.positions atol=1e-12
+end
+
+let
+  # Another minimal case with binary-representable values.
+  cqr = CompactQuadratureRule(tri, 2, [1,2,0], F[0.5,0.0])
+  oqr = optimize(cqr)
+  @test cqr.positions ≈ oqr.positions atol=1e-12
+end
+
+let
   cqr = CompactQuadratureRule(tri, 5, [0,4,3],
   F[ 0.00000000000000000000000000000000000,
     0.05752768441141010566081751776543190,
