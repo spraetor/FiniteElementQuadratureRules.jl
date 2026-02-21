@@ -1,7 +1,8 @@
-function integrate(f::Function, qr::QuadratureRule{Ω,T,P}) where {Ω<:AbstractDomain,T<:Real,P<:AbstractVector{T}}
-  value::T = T(0)
-  for i in 1:length(qr)
-    value += f(qr.points[i]) * qr.weights[i]
-  end
-  return value
+"""
+  integrate(f::Function, qr::QuadratureRule)
+
+Compute the integral ∫f(x)dx over a domain `Ω=domain(qr)` using a quadrature rule.
+"""
+function integrate(f::Function, qr::QuadratureRule)
+  sum(f.(qr.points) .* qr.weights)
 end

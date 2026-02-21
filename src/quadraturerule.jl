@@ -33,6 +33,7 @@ dimension(qr::QuadratureRule{Ω,T,P}) where {Ω<:AbstractDomain,T,P} = dimension
 
 # The type of the domain the quadrature rule is defined in
 domaintype(::QuadratureRule{Ω,T,P}) where {Ω<:AbstractDomain,T,P} = Ω
+domain(::QuadratureRule{Ω,T,P}) where {Ω<:AbstractDomain,T,P} = domain(Ω)
 
 # convert a vector of coordinates represented as number or string into a static vector of type T
 function point(::Type{T}, ::Val{D}, coords::Vector{S}) where {T,D,S}
