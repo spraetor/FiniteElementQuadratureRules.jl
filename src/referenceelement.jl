@@ -120,7 +120,7 @@ end
 checkInside(::ReferenceElement{0,Point,P}, ::AbstractVector, ::Real) where P = true
 
 function checkInside(ref::ReferenceElement{1,Line,P}, x::AbstractVector, tol::Real) where P
-  ref.coordinates[1]-tol <= x <= ref.coordinates[2]+tol
+  ref.coordinates[1][1]-tol <= x[1] <= ref.coordinates[2][1]+tol
 end
 
 function checkInside(ref::ReferenceElement{dim,Ω,P}, x::AbstractVector, tol::Real) where {dim,Ω<:AbstractSimplex,P}
@@ -135,12 +135,15 @@ end
 function checkInside(ref::ReferenceElement{dim,Ω,P}, x::AbstractVector{T}) where {dim,Ω<:AbstractSimplex,P,T<:Real}
   checkInside(ref,x,eps(T))
 end
+function checkInside(ref::ReferenceElement{dim,Ω,P}, x::AbstractVector{T}) where {dim,Ω<:AbstractCube,P,T<:Real}
+  checkInside(ref,x,eps(T))
+end
 
 
 checkStrictlyInside(::ReferenceElement{0,Point,P}, ::AbstractVector, ::Real) where P = false
 
 function checkStrictlyInside(ref::ReferenceElement{1,Line,P}, x::AbstractVector, tol::Real) where P
-  ref.coordinates[1]+tol < x < ref.coordinates[2]-tol
+  ref.coordinates[1][1]+tol < x[1] < ref.coordinates[2][1]-tol
 end
 
 function checkStrictlyInside(ref::ReferenceElement{dim,Ω,P}, x::AbstractVector, tol::Real) where {dim,Ω<:AbstractSimplex,P}
@@ -153,5 +156,8 @@ end
 
 # Check whether a point x is strictly inside the domain of the reference element `ref`
 function checkStrictlyInside(ref::ReferenceElement{dim,Ω,P}, x::AbstractVector{T}) where {dim,Ω<:AbstractSimplex,P,T<:Real}
+  checkStrictlyInside(ref,x,eps(T))
+end
+function checkStrictlyInside(ref::ReferenceElement{dim,Ω,P}, x::AbstractVector{T}) where {dim,Ω<:AbstractCube,P,T<:Real}
   checkStrictlyInside(ref,x,eps(T))
 end

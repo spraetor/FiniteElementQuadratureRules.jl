@@ -1,5 +1,5 @@
 struct Point <: AbstractSimplex end
-struct Line <: AbstractSimplex end
+struct Line <: AbstractCube end
 struct Triangle <: AbstractSimplex end
 struct Quadrilateral <: AbstractCube end
 struct Tetrahedron <: AbstractSimplex end

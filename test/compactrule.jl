@@ -11,6 +11,19 @@ function test_quadrature_rule(qr::QuadratureRule{Ω,T,P}) where {Ω,T,P}
 end
 
 tri = Triangle()
+line = Line()
+
+let
+  cqr = CompactQuadratureRuleWithWeights(line, 1, [1,0], F[], F[2.0])
+  qr = expand(cqr)
+
+  cqr2 = CompactQuadratureRule(line, 1, [1,0], F[])
+  qr2 = expand(cqr2)
+
+  @test qr.weights ≈ qr2.weights
+  test_quadrature_rule(qr)
+  test_quadrature_rule(qr2)
+end
 
 let
   cqr = CompactQuadratureRuleWithWeights(tri, 1, [0,1,0], F[0.0], F[1/3])
@@ -200,5 +213,4 @@ let
   oqr = optimize(cqr)
 
   @test cqr.positions ≈ oqr.positions
-  println(oqr.positions)
 end

@@ -26,8 +26,8 @@ function transformcoordinates(::Tetrahedron, X::AbstractVector{P}) where {P<:Abs
   end
 end
 function transformcoordinates(::Prism, X::AbstractVector{P}) where {P<:AbstractVector}
-  let A = SMatrix{3,4}(-1,-1,0, 1,-1,0, -1,1,0, 0,0,2),
-      b = SVector{3}(0, 0, -1)
+  let A = SMatrix{3,4}(-1,-1,0, 1,-1,0, -1,1,0, 0,0,1),
+      b = SVector{3}(0, 0, 0)
     map(x -> A*x + b, X)
   end
 end
