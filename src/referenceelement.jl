@@ -22,8 +22,6 @@ end
 function ReferenceElement(::Triangle)
   ReferenceElement{2,Triangle,SVector{2,Int}}([[-1,-1], [1,-1], [-1,1]],
     [[1,2], [1,3], [2,3]])
-    # ReferenceElement{2,Triangle,SVector{3,Int}}([[1,0,0], [0,1,0], [0,0,1]],
-    #   [[1,2], [1,3], [2,3]])
 end
 
 function ReferenceElement(::Quadrilateral)
@@ -34,20 +32,16 @@ end
 function ReferenceElement(::Tetrahedron)
   ReferenceElement{3,Tetrahedron,SVector{3,Int}}([[-1,-1,-1], [1,-1,-1], [-1,1,-1], [-1,-1,1]],
     [[1,2,3], [1,2,4], [1,3,4], [2,3,4]])
-  # ReferenceElement{3,Tetrahedron,SVector{4,Int}}([[1,0,0,0], [0,1,0,0], [0,0,1,0], [0,0,0,1]],
-  #   [[1,2,3], [1,2,4], [1,3,4], [2,3,4]])
 end
 
 function ReferenceElement(::Hexahedron)
   ReferenceElement{3,Hexahedron,SVector{3,Int}}([[-1,-1,-1], [1,-1,-1], [-1,1,-1], [1,1,-1], [-1,-1,1], [1,-1,1], [-1,1,1], [1,1,1]],
-    [[1,3,5,7], [2,4,6,8], [1,2,5,6], [3,4,7,8], [1,2,3,4], [6,7,8,9]])
+    [[1,3,5,7], [2,4,6,8], [1,2,5,6], [3,4,7,8], [1,2,3,4], [5,6,7,8]])
 end
 
 function ReferenceElement(::Prism)
   ReferenceElement{3,Prism,SVector{3,Int}}([[-1,-1,-1], [1,-1,-1], [-1,1,-1], [-1,-1,1], [1,-1,1], [-1,1,1]],
     [[1,2,4,5], [1,3,4,6], [2,3,5,6], [1,2,3], [4,5,6]])
-  # ReferenceElement{3,Prism,SVector{4,Int}}([[1,0,0,-1], [0,1,0,-1], [0,0,1,-1], [1,0,0,1], [0,1,0,1], [0,0,1,1]],
-  #   [[1,2,4,5], [1,3,4,6], [2,3,5,6], [1,2,3], [4,5,6]])
 end
 
 function ReferenceElement(::Pyramid)
@@ -124,19 +118,29 @@ function checkInside(ref::ReferenceElement{1,Line,P}, x::AbstractVector, tol::Re
 end
 
 function checkInside(ref::ReferenceElement{dim,Ω,P}, x::AbstractVector, tol::Real) where {dim,Ω<:AbstractSimplex,P}
-  true # TODO
+  λ = barycentricCoordinates(Ω(), x)
+  all(-tol <= λᵢ <= 1+tol for λᵢ in λ)
 end
 
 function checkInside(ref::ReferenceElement{dim,Ω,P}, x::AbstractVector, tol::Real) where {dim,Ω<:AbstractCube,P}
   all(ref.coordinates[1] .- tol .<= x .<= ref.coordinates[end] .+ tol)
 end
 
-# Check whether a point x is inside the domain of the reference element `ref` or on the boundary
-function checkInside(ref::ReferenceElement{dim,Ω,P}, x::AbstractVector{T}) where {dim,Ω<:AbstractSimplex,P,T<:Real}
-  checkInside(ref,x,eps(T))
+function checkInside(::ReferenceElement{3,Prism,P}, x::AbstractVector, tol::Real) where P
+  λ = barycentricCoordinates(Prism(), x)
+  all(-tol <= λᵢ <= 1+tol for λᵢ in λ[1:3]) && (-1-tol <= λ[4] <= 1+tol)
 end
-function checkInside(ref::ReferenceElement{dim,Ω,P}, x::AbstractVector{T}) where {dim,Ω<:AbstractCube,P,T<:Real}
-  checkInside(ref,x,eps(T))
+
+function checkInside(::ReferenceElement{3,Pyramid,P}, x::AbstractVector, tol::Real) where P
+  z = x[3]
+  s = (1 - z)/2
+  -1-tol <= z <= 1+tol && abs(x[1]) <= s + tol && abs(x[2]) <= s + tol
+end
+
+# Check whether a point x is inside the domain of the reference element `ref` or on the boundary
+function checkInside(ref::ReferenceElement, x::AbstractVector{T}) where {T<:Real}
+  tol::T = (T <: AbstractFloat) ? eps(T) : zero(T)
+  checkInside(ref,x,tol)
 end
 
 
@@ -147,17 +151,27 @@ function checkStrictlyInside(ref::ReferenceElement{1,Line,P}, x::AbstractVector,
 end
 
 function checkStrictlyInside(ref::ReferenceElement{dim,Ω,P}, x::AbstractVector, tol::Real) where {dim,Ω<:AbstractSimplex,P}
-  true # TODO
+  λ = barycentricCoordinates(Ω(), x)
+  all(tol < λᵢ < 1-tol for λᵢ in λ)
 end
 
 function checkStrictlyInside(ref::ReferenceElement{dim,Ω,P}, x::AbstractVector, tol::Real) where {dim,Ω<:AbstractCube,P}
   all(ref.coordinates[1] .+ tol .< x .< ref.coordinates[end] .- tol)
 end
 
-# Check whether a point x is strictly inside the domain of the reference element `ref`
-function checkStrictlyInside(ref::ReferenceElement{dim,Ω,P}, x::AbstractVector{T}) where {dim,Ω<:AbstractSimplex,P,T<:Real}
-  checkStrictlyInside(ref,x,eps(T))
+function checkStrictlyInside(::ReferenceElement{3,Prism,P}, x::AbstractVector, tol::Real) where P
+  λ = barycentricCoordinates(Prism(), x)
+  all(tol < λᵢ < 1-tol for λᵢ in λ[1:3]) && (-1+tol < λ[4] < 1-tol)
 end
-function checkStrictlyInside(ref::ReferenceElement{dim,Ω,P}, x::AbstractVector{T}) where {dim,Ω<:AbstractCube,P,T<:Real}
-  checkStrictlyInside(ref,x,eps(T))
+
+function checkStrictlyInside(::ReferenceElement{3,Pyramid,P}, x::AbstractVector, tol::Real) where P
+  z = x[3]
+  s = (1 - z)/2
+  -1+tol < z < 1-tol && abs(x[1]) < s - tol && abs(x[2]) < s - tol
+end
+
+# Check whether a point x is strictly inside the domain of the reference element `ref`
+function checkStrictlyInside(ref::ReferenceElement, x::AbstractVector{T}) where {T<:Real}
+  tol::T = (T <: AbstractFloat) ? eps(T) : zero(T)
+  checkStrictlyInside(ref,x,tol)
 end

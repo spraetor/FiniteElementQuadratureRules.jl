@@ -23,9 +23,9 @@ function (lb::LagrangeLocalBasis{dim,<:AbstractSimplex})(x::AbstractVector{T}) w
   if order(lb) == 0
     SVector{1,T}(1.0)
   elseif order(lb) == 1
-    barycentriccoordinates(x)
+    barycentricCoordinates(x)
   elseif order(lb) == 2
-    λ = barycentriccoordinates(x)
+    λ = barycentricCoordinates(x)
     if dim == 2
       SVector{length(lb),T}(
         (λ.*(2 .* λ .- 1))...,             # vertex functions
@@ -38,7 +38,7 @@ function (lb::LagrangeLocalBasis{dim,<:AbstractSimplex})(x::AbstractVector{T}) w
         )
     end
   elseif order(lb) == 3
-    λ = barycentriccoordinates(x)
+    λ = barycentricCoordinates(x)
     if dim == 2
       SVector{length(lb),T}(
         ((3 .* λ .- 1).*(3 .* λ .- 2) .* λ ./ 2)...,    # vertex functions

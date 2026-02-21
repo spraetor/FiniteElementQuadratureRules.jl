@@ -30,7 +30,7 @@ function _residual(positions::AbstractVector{T}, params) where {T}
       for _ = 1:orbits[k]          # number of orbits of this type
         r = _clamporbit(so[k],positions[l:l+n-1])
         # Evaluate on the domain reference element, consistent with `getWeights`.
-        points = transformcoordinates(domain, collect(_expandorbit(so[k],r)))
+        points = transformCoordinates(domain, collect(_expandorbit(so[k],r)))
         A[i,j] = T(0)
         for x in points
           A[i,j] += pᵢ(x)

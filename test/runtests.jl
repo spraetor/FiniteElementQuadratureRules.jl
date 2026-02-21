@@ -11,4 +11,3 @@ using Test
     include("jacobi.jl")
     include("compactrule.jl")
 end
-
