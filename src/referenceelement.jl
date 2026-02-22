@@ -141,7 +141,7 @@ end
 Check whether a point `x` lies inside the reference element `ref` or on its boundary.
 This check is performed with a given tolerance `tol`.
 """
-function checkInside(::ReferenceElement, ::AbstractVector, ::Real) end
+function checkInside end
 
 """
     checkInside(ref::ReferenceElement, x::AbstractVector{T})
@@ -187,7 +187,7 @@ end
 Check whether a point `x` lies strictly inside the reference element `ref`.
 This check is performed with a given tolerance `tol`.
 """
-function checkStrictlyInside(::ReferenceElement, ::AbstractVector, ::Real) end
+function checkStrictlyInside end
 
 """
     checkStrictlyInside(ref::ReferenceElement, x::AbstractVector{T})

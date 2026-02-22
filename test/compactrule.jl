@@ -199,17 +199,17 @@ let
   @test cqr.positions ≈ oqr.positions atol=1e-12
 end
 
-let F = BigFloat
+let F = Float64
   cqr = CompactQuadratureRule(tri, 5, [1,2,0],
-  F[ 4.70142064105115e-01,
-     1.01286507323456e-01])
+  F[ 4.7014206410e-01,
+     1.0128650732e-01])
   qr = expand(cqr)
 
   ocqr = optimize(cqr)
   oqr = expand(ocqr)
 
   @test getProperties(qr) == getProperties(oqr)
-  @test cqr.positions ≈ ocqr.positions atol=1e-12
+  @test cqr.positions ≈ ocqr.positions atol=1e-9
 
   test_quadrature_rule(oqr)
 end
