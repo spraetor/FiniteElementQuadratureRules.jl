@@ -200,6 +200,7 @@ let
 end
 
 let F = Float64
+  # Test the optimization on a more advanced example
   cqr = CompactQuadratureRule(tri, 5, [1,2,0],
   F[ 4.7014206410e-01,
      1.0128650732e-01])
@@ -212,4 +213,71 @@ let F = Float64
   @test cqr.positions ≈ ocqr.positions atol=1e-9
 
   test_quadrature_rule(oqr)
+end
+
+
+let domain = Quadrilateral()
+  # Test compact rules on a Quadrilateral
+  cqr = CompactQuadratureRule(domain, 5, [0,1,1],
+    F[ 6.83130051063973225548e-01,
+       8.81917103688196863500e-01 ])
+  qr = expand(cqr)
+  oqr = optimize(cqr)
+
+  test_quadrature_rule(qr)
+end
+
+let domain = Tetrahedron()
+  # Test compact rules on a Tetrahedron
+  cqr = CompactQuadratureRule(domain, 5, [0,2,1,0],
+    F[ 3.10885919263300609797e-01,
+       9.27352503108912264023e-02,
+       4.55037041256496494918e-02 ])
+  qr = expand(cqr)
+  oqr = optimize(cqr)
+
+  test_quadrature_rule(qr)
+end
+
+let domain = Pyramid()
+  # Test compact rules on a Pyramid
+  cqr = CompactQuadratureRule(domain, 5, [3,1,2,0],
+    F[ 4.59715761565013385861e-01,
+      -3.99197958372461985933e-01,
+      -9.99999987016455692414e-01,
+       7.06526031546324574207e-01,
+      -7.50000000000000000000e-01,
+       7.05117122778827601810e-01,
+      -8.77776185875954071084e-01,
+       4.32882864103540976850e-01,
+      -1.52797325760550388420e-01 ])
+  qr = expand(cqr)
+  oqr = optimize(cqr)
+
+  test_quadrature_rule(qr)
+end
+
+let domain = Prism()
+  # Test compact rules on a Prism
+  cqr = CompactQuadratureRule(domain, 5, [1,0,1,2,0,0],
+    F[ 4.87299964550245666116e-01,
+       4.45598104670372003762e-01,
+       8.71002934865444052729e-01,
+       1.00858945982708530915e-01,
+       5.70426980705159272061e-01 ])
+  qr = expand(cqr)
+  oqr = optimize(cqr)
+
+  test_quadrature_rule(qr)
+end
+
+let domain = Hexahedron()
+  # Test compact rules on a Hexahedron
+  cqr = CompactQuadratureRule(domain, 5, [0,1,1,0,0,0,0],
+    F[ 7.95822425754221463264e-01,
+       7.58786910639328146269e-01 ])
+  qr = expand(cqr)
+  oqr = optimize(cqr)
+
+  test_quadrature_rule(qr)
 end

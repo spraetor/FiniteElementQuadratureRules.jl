@@ -23,4 +23,10 @@ using FiniteElementQuadratureRules: barycentricCoordinates
     @test barycentricCoordinates(domain, [-1.0, 1.0, 0.75]) ≈ [0.0, 0.0, 1.0, 0.75]
     @test barycentricCoordinates(domain, [-1/3, -1/3, 0.1]) ≈ [1/3, 1/3, 1/3, 0.1]
   end
+
+  for domain in (Point(),Line(),Quadrilateral(),Hexahedron(),Pyramid())
+    ref = ReferenceElement(domain)
+    x = position(ref,1,0)
+    @test barycentricCoordinates(domain, x) == x
+  end
 end

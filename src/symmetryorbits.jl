@@ -101,7 +101,7 @@ function symmetryOrbits(::Type{T}, ::Tetrahedron) where {T<:Real}
       P(a,a,T(1)-3*a,a),
       P(a,T(1)-3*a,a,a),
       P(T(1)-3*a,a,a,a)) ),
-    SymmetryOrbit(Val(1),6, (a::T) -> SVector{4,P}(
+    SymmetryOrbit(Val(1),6, (a::T) -> SVector{6,P}(
       P(a,a,1//2-a,1//2-a),
       P(a,1//2-a,a,1//2-a),
       P(1//2-a,a,a,1//2-a),

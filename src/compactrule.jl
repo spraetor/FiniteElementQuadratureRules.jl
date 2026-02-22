@@ -70,7 +70,8 @@ function expand(cqr::CompactQuadratureRule{Ω,T}) where {Ω<:AbstractDomain,T<:R
   end
 
   j = 1
-  Point = typeof(sos[1].expand()[1])
+  PointRef = SVector{dimension(Ω),T}
+  Point = typeof(barycentricCoordinates(Ω(), zero(PointRef)))
   points = Point[]
   for (i,orbits) in enumerate(cqr.orbits)
     so = sos[i]
@@ -156,7 +157,8 @@ function expand(cqr::CompactQuadratureRuleWithWeights{Ω,T}) where {Ω<:Abstract
   end
   j = 1
   k = 1
-  Point = typeof(sos[1].expand()[1])
+  PointRef = SVector{dimension(Ω),T}
+  Point = typeof(barycentricCoordinates(Ω(), zero(PointRef)))
   points = Point[]
   weights = T[]
   for (i,orbits) in enumerate(cqr.orbits)
