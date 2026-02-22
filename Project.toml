@@ -1,24 +1,18 @@
 name = "FiniteElementQuadratureRules"
 uuid = "71eef4e9-2bb4-491b-8481-b9d297660189"
-authors = ["Simon Praetorius <simon.praetorius@tu-dresden.de> and contributors"]
 version = "0.1.0-dev"
+authors = ["Simon Praetorius <simon.praetorius@tu-dresden.de> and contributors"]
 
 [deps]
-BibInternal = "2027ae74-3657-4b95-ae00-e2f7d55c3e64"
-BibParser = "13533e5b-e1c2-4e57-8cef-cac5e52f6474"
-FastLevenbergMarquardt = "7a0df574-e128-4d35-8cbd-3d84502bf7ce"
 Optim = "429524aa-4258-5aef-a3af-852621145aeb"
-OteraEngine = "b2d7f28f-acd6-4007-8b26-bc27716e5513"
+Printf = "de0858da-6303-5e67-8744-51eddeeeb8d7"
 StaticArrays = "90137ffa-7385-5640-81b9-e52037218182"
 Symbolics = "0c5d862f-8b57-4792-8d23-62f2024744c7"
 YAML = "ddb6d928-2868-570f-bddf-ab3f9cf99eb6"
 
 [compat]
-BibInternal = "0.3"
-BibParser = "0.2"
-FastLevenbergMarquardt = "0.1.0"
 Optim = "1.12.0"
-OteraEngine = "1.0"
+Printf = "1.11.0"
 StaticArrays = "1.8"
 Symbolics = "6.3, 7.15"
 YAML = "0.4"

@@ -1,4 +1,5 @@
 using StaticArrays: SVector
+using Printf: @sprintf
 
 """
     QuadratureRule{Ω,T,Point}
@@ -70,13 +71,13 @@ particular the fields
 function QuadratureRule(::Type{T}, data::Dict) where T
   D::Val = Val(data["dim"])
 
-  domain::AbstractDomain = domain(D,data["region"])
+  dom::AbstractDomain = domain(data["dim"],data["region"])
   degree::Integer = data["degree"]
   points = [ point(T,D,coords) for coords in data["coordinates"] ]
   weights = [ _parse(T,w) for w in data["weights"] ]
   properties = [ Symbol(p) for p in data["properties"] ]
 
-  QuadratureRule(domain,degree,points,weights,properties)
+  QuadratureRule(dom,degree,points,weights,properties)
 end
 
 """
@@ -112,14 +113,14 @@ Convert the given `QuadratureRule` into a Dict for exporting into a YAML file.
 The optional parameter `ref` refers to a bibtex key used to reference a publication
 where the quadrature rule is extracted from.
 """
-function Base.Dict(qr::QuadratureRule, ref::String = "unknown")
+function Base.Dict(qr::QuadratureRule; reference::String="unknown", precision::Int=50)
   Dict(
-    "reference" => ref,
+    "reference" => reference,
     "region" => region(qr.domain),
     "dim" => dimension(qr.domain),
     "degree" => qr.degree,
     "properties" => String[ string(prop) for prop in qr.properties ],
-    "coordinates" => [ String[ string(pᵢ) for pᵢ in p ] for p in qr.points ],
-    "weights" => String[ string(w) for w in qr.weights ]
+    "coordinates" => [ String[ @sprintf("%0.*e", precision,pᵢ) for pᵢ in p ] for p in qr.points ],
+    "weights" => String[ @sprintf("%0.*e", precision,w) for w in qr.weights ]
     )
 end
