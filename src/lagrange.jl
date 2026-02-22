@@ -1,7 +1,7 @@
 using StaticArrays: SVector, MVector
 
 """
-  LagrangePolySet{Ω<:AbstractDomain,R<:Real}
+    LagrangePolySet{Ω<:AbstractDomain,R<:Real}
 
 A `LagrangePolySet` represents a set of polynomials on a domain `Ω` in terms of a
 set of basis polynomials, hereby given as Lagrange polynomials. As an `AbstractPolySet`
@@ -15,7 +15,7 @@ end
 
 
 """
-  LagrangePolySet(::Type{T}, domain::AbstractDomain, degree::Integer)
+    LagrangePolySet(::Type{T}, domain::AbstractDomain, degree::Integer)
 
 Construct a `LagrangePolySet` on a given domain of given polynomial degree, with
 `T` the data type used for the integral values.
@@ -31,7 +31,7 @@ end
 
 
 """
-  LagrangePolySet(domain::AbstractDomain, degree::Integer)
+    LagrangePolySet(domain::AbstractDomain, degree::Integer)
 
 Construct a `LagrangePolySet` on the given `domain` of given polynomial degree, with
 `Float64` as data type used for the integral values.

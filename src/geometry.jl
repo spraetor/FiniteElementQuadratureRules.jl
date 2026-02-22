@@ -1,7 +1,7 @@
 using StaticArrays: SVector, SMatrix, MMatrix
 
 """
-  AffineGeometry{Ω,mydim,cdom,T} <: AbstractGeometry
+    AffineGeometry{Ω,mydim,cdom,T} <: AbstractGeometry
 
 An `AffineGeometry` is a parametrization using an affine map of the form `x → A*x + b`.
 As an `AbstractGeometry` it is itself a mapping.
@@ -21,7 +21,7 @@ end
 
 
 """
-  AffineGeometry(ref::ReferenceElement, coordVector::AbstractVector)
+    AffineGeometry(ref::ReferenceElement, coordVector::AbstractVector)
 
 Given a reference element `ref` and a vector of corner coordinates `coordVector`,
 construct an `AffineGeometry`.
@@ -55,7 +55,7 @@ domain(::AffineGeometry{Ω,mydim,cdim,T}) where {Ω<:AbstractDomain,mydim,cdim,T
 
 
 """
-  (geo::AffineGeometry)(λ::AbstractVector)
+    (geo::AffineGeometry)(λ::AbstractVector)
 
 Evaluate the affine geometry mapping `geo` in the reference element coordinate `λ`.
 """
@@ -65,7 +65,7 @@ end
 
 
 """
-  MultiLinearGeometry{T,cdim,Ω} <: AbstractGeometry
+    MultiLinearGeometry{T,cdim,Ω} <: AbstractGeometry
 
 A `MultiLinearGeometry` is a geometry mapping defined in terms of linear Lagrange
 basis function associated to the domain Ω. It can be constructed from a reference
@@ -78,7 +78,7 @@ end
 
 
 """
-  MultiLinearGeometry(ref::ReferenceElement, coordVector::AbstractVector)
+    MultiLinearGeometry(ref::ReferenceElement, coordVector::AbstractVector)
 
 Construct a `MultiLinearGeometry` as an affine geometry if the domain is a simplex.
 """
@@ -90,7 +90,7 @@ domaintype(::MultiLinearGeometry{Ω,cdim,T}) where {Ω<:AbstractDomain,cdim,T} =
 domain(::MultiLinearGeometry{Ω,cdim,T}) where {Ω<:AbstractDomain,cdim,T} = Ω()
 
 """
-  (geo::MultiLinearGeometry)(λ::AbstractVector)
+    (geo::MultiLinearGeometry)(λ::AbstractVector)
 
 Evaluate the multilinear geometry mapping `geo` in the reference element coordinates `λ`,
 by linear combination of the associated Lagrange basis functions and corner vertices.

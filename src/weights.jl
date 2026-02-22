@@ -1,5 +1,5 @@
 """
-  getWeights(::Type{T}, domain::AbstractDomain, degree::Integer, points::AbstractVector)
+    getWeights(::Type{T}, domain::AbstractDomain, degree::Integer, points::AbstractVector)
 
 Compute the quadrature weight associated to given quadrature `points` for quadrature
 in a given `domain`, such that polynomial up to `degree` are integrated exactly. The
@@ -27,7 +27,7 @@ end
 
 
 """
-  getWeights(::Type{T}, domain::AbstractDomain, degree::Integer, points::AbstractVector)
+    getWeights(::Type{T}, domain::AbstractDomain, degree::Integer, points::AbstractVector)
 
 Compute the quadrature weight using Float64 precision.
 """
@@ -38,7 +38,7 @@ end
 
 
 """
-  getWeights(::Type{T}, domain::AbstractDomain, degree::Integer, points::AbstractVector, orbits::AbstractVector)
+    getWeights(::Type{T}, domain::AbstractDomain, degree::Integer, points::AbstractVector, orbits::AbstractVector)
 
 Compute the quadrature weight associated to given quadrature `points` for quadrature
 in a given `domain`, such that polynomial up to `degree` are integrated exactly. This
@@ -87,7 +87,7 @@ function getWeights(::Type{T}, domain::AbstractDomain, degree::Integer, points::
 end
 
 """
-  getWeights(::Type{T}, domain::AbstractDomain, degree::Integer, points::AbstractVector, orbits::AbstractVector)
+    getWeights(::Type{T}, domain::AbstractDomain, degree::Integer, points::AbstractVector, orbits::AbstractVector)
 
 Compute the quadrature weight using Float64 precision.
 """

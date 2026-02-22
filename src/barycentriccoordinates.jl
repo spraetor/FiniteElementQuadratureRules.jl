@@ -1,7 +1,7 @@
 using StaticArrays: SVector
 
 """
-  barycentricCoordinates(domain::AbstractDomain, x::AbstractVector)
+    barycentricCoordinates(domain::AbstractDomain, x::AbstractVector)
 
 Transform reference element coordinates in a given domain into
 barycentric coordinates. This is in particular useful for simplex

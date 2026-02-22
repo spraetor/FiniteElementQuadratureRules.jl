@@ -1,7 +1,7 @@
 using StaticArrays: SVector
 
 """
-  QuadratureRule{Ω,T,Point}
+    QuadratureRule{Ω,T,Point}
 
 A `QuadratureRule` on a given domain Ω is a collection of points {xᵢ} in the associated
 reference element and weights {wᵢ}, such that for a given polynomial p the quadrature
@@ -16,7 +16,7 @@ struct QuadratureRule{Ω<:AbstractDomain, T<:Real, Point<:AbstractVector{T}}
 end
 
 """
-  QuadratureRule(domain::AbstractDomain, degree::Integer, points::Vector, weights::Vector)
+    QuadratureRule(domain::AbstractDomain, degree::Integer, points::Vector, weights::Vector)
 
 Construct a new `QuadratureRule` and compute the properties of the rule automatically.
 """
@@ -26,7 +26,7 @@ function QuadratureRule(domain::AbstractDomain, degree::Integer, points::Vector{
 end
 
 """
-  QuadratureRule(domain::AbstractDomain, degree::Integer, points::Vector)
+    QuadratureRule(domain::AbstractDomain, degree::Integer, points::Vector)
 
 Construct a new `QuadratureRule` and compute the weights and properties of the
 rule automatically.
@@ -55,7 +55,7 @@ end
 
 
 """
-  QuadratureRule(::Type{T}, data::Dict)
+    QuadratureRule(::Type{T}, data::Dict)
 
 Construct a `QuadratureRule` from a YAML/Dict of strings and
 string arrays. This is a convenience constructor typically used when reading a
@@ -80,7 +80,7 @@ function QuadratureRule(::Type{T}, data::Dict) where T
 end
 
 """
-  QuadratureRule(data::Dict)
+    QuadratureRule(data::Dict)
 
 Construct a `QuadratureRule` from parsed YAML/Dict data using `Float64`.
 """
@@ -106,7 +106,7 @@ end
 import Base: Dict
 
 """
-  Dict(qr::QuadratureRule, ref::String = "unknown")
+    Dict(qr::QuadratureRule, ref::String = "unknown")
 
 Convert the given `QuadratureRule` into a Dict for exporting into a YAML file.
 The optional parameter `ref` refers to a bibtex key used to reference a publication

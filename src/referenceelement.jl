@@ -1,7 +1,7 @@
 using StaticArrays: SVector
 
 """
-  ReferenceElement{Ω,Point}
+    ReferenceElement{Ω,Point}
 
 A reference representation of a given domain Ω in terms of corner coordinates
 and a list of facets connecting the corners.
@@ -66,6 +66,23 @@ volume(ref::ReferenceElement{Ω,P}) where {Ω,P} = volume(Rational,ref)
 
 
 import Base: position
+
+"""
+    position(ref::ReferenceElement{Ω,P}, i::Integer, c::Integer)
+
+Compute the center of the `i`th sub-entity of codimension `c` of the reference
+element `ref`.
+"""
+function position(ref::ReferenceElement{Ω,P}, i::Integer, c::Integer) where {Ω<:AbstractDomain, P}
+  if dimension(Ω) == 2
+    _position2d(ref,i,c)
+  elseif dimension(Ω) == 3
+    _position3d(ref,i,c)
+  else
+    error("Not implemented!")
+  end
+end
+
 function position(ref::ReferenceElement{Point,P}, i::Integer, c::Integer) where P
   @assert c == 0 && i == 1
   return ref.coordinates[1]
@@ -82,15 +99,6 @@ function position(ref::ReferenceElement{Line,P}, i::Integer, c::Integer) where P
   end
 end
 
-function position(ref::ReferenceElement{Ω,P}, i::Integer, c::Integer) where {Ω<:AbstractDomain, P}
-  if dimension(Ω) == 2
-    _position2d(ref,i,c)
-  elseif dimension(Ω) == 3
-    _position3d(ref,i,c)
-  else
-    error("Not implemented!")
-  end
-end
 
 function _position2d(ref::ReferenceElement, i::Integer, c::Integer)
   @assert dimension(ref) == 2
@@ -127,6 +135,25 @@ function _position3d(ref::ReferenceElement, i::Integer, c::Integer)
 end
 
 
+"""
+    checkInside(ref::ReferenceElement, x::AbstractVector, tol::Real)
+
+Check whether a point `x` lies inside the reference element `ref` or on its boundary.
+This check is performed with a given tolerance `tol`.
+"""
+function checkInside(::ReferenceElement, ::AbstractVector, ::Real) end
+
+"""
+    checkInside(ref::ReferenceElement, x::AbstractVector{T})
+
+Check whether a point `x` lies inside the reference element `ref` or on its boundary.
+This check is performed with a tolerance `tol=eps(T)`.
+"""
+function checkInside(ref::ReferenceElement, x::AbstractVector{T}) where {T<:Real}
+  tol::T = (T <: AbstractFloat) ? eps(T) : zero(T)
+  checkInside(ref,x,tol)
+end
+
 checkInside(::ReferenceElement{Point,P}, ::AbstractVector, ::Real) where P = true
 
 function checkInside(ref::ReferenceElement{Line,P}, x::AbstractVector, tol::Real) where P
@@ -153,10 +180,24 @@ function checkInside(::ReferenceElement{Pyramid,P}, x::AbstractVector, tol::Real
   -1-tol <= z <= 1+tol && abs(x[1]) <= s + tol && abs(x[2]) <= s + tol
 end
 
-# Check whether a point x is inside the domain of the reference element `ref` or on the boundary
-function checkInside(ref::ReferenceElement, x::AbstractVector{T}) where {T<:Real}
+
+"""
+    checkStrictlyInside(ref::ReferenceElement, x::AbstractVector, tol::Real)
+
+Check whether a point `x` lies strictly inside the reference element `ref`.
+This check is performed with a given tolerance `tol`.
+"""
+function checkStrictlyInside(::ReferenceElement, ::AbstractVector, ::Real) end
+
+"""
+    checkStrictlyInside(ref::ReferenceElement, x::AbstractVector{T})
+
+Check whether a point `x` lies strictly inside the reference element `ref`.
+This check is performed with a tolerance `tol=eps(T)`.
+"""
+function checkStrictlyInside(ref::ReferenceElement, x::AbstractVector{T}) where {T<:Real}
   tol::T = (T <: AbstractFloat) ? eps(T) : zero(T)
-  checkInside(ref,x,tol)
+  checkStrictlyInside(ref,x,tol)
 end
 
 
@@ -184,10 +225,4 @@ function checkStrictlyInside(::ReferenceElement{Pyramid,P}, x::AbstractVector, t
   z = x[3]
   s = (1 - z)/2
   -1+tol < z < 1-tol && abs(x[1]) < s - tol && abs(x[2]) < s - tol
-end
-
-# Check whether a point x is strictly inside the domain of the reference element `ref`
-function checkStrictlyInside(ref::ReferenceElement, x::AbstractVector{T}) where {T<:Real}
-  tol::T = (T <: AbstractFloat) ? eps(T) : zero(T)
-  checkStrictlyInside(ref,x,tol)
 end

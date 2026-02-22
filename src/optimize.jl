@@ -1,7 +1,7 @@
 using Optim
 
 """
-  optimize(qr::CompactQuadratureRule)
+    optimize(qr::CompactQuadratureRule)
 
 Optimize the position of the quadrature points given as symmetric orbits in the
 compact rule, by minimizing the quadrature residual on a set of polynomial basis

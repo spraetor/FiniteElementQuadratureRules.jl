@@ -1,5 +1,5 @@
 """
-  getProperties(domain::AbstractDomain, points::AbstractVector, weights::AbstractVector)
+    getProperties(domain::AbstractDomain, points::AbstractVector, weights::AbstractVector)
 
 Collect properties of a quadrature given as vector of points and weights.
 Currently, three properties are checked:
@@ -28,7 +28,7 @@ end
 
 
 """
-  getProperties(qr::QuadratureRule)
+    getProperties(qr::QuadratureRule)
 
 Collect properties of a quadrature rule.
 """

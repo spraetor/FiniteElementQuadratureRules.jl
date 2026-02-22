@@ -1,7 +1,7 @@
 using StaticArrays: SVector
 
 """
-  MonomialPolySet{Ω<:AbstractDomain,R<:Real}
+    MonomialPolySet{Ω<:AbstractDomain,R<:Real}
 
 A `MonomialPolySet` represents a set of polynomials on a domain `Ω` in terms of a
 set of basis polynomials, hereby given as a monomial basis. As an `AbstractPolySet`
@@ -14,7 +14,7 @@ struct MonomialPolySet{Ω<:AbstractDomain,R<:Real} <: AbstractPolySet
 end
 
 """
-  BarycentricMonomials <: Function
+    BarycentricMonomials <: Function
 
 A representation of a multi-dimensional monomial basis function of the form
 `λ[1]^α[1] * λ[2]^α[2] * ...` with `λ` the barycentric coordinate vector
@@ -32,7 +32,7 @@ end
 
 
 """
-  (m::BarycentricMonomials)(λ::AbstractVector)
+    (m::BarycentricMonomials)(λ::AbstractVector)
 
 Evaluate the monomial basis function `m` in a given barycentric coordinate `λ`, i.e.,
 compute `λ -> λ[1]^α[1] * λ[2]^α[2] * ...`
@@ -44,7 +44,7 @@ end
 
 
 """
-  integrate(m::BarycentricMonomials, Ω::AbstractSimplex)
+    integrate(m::BarycentricMonomials, Ω::AbstractSimplex)
 
 Compute the integral of a barycentric monomial `m` over a generic simplex of volume 1.
 For a specific simplex, this integral needs to be scaled with its volume.
@@ -59,7 +59,7 @@ end
 
 
 """
-  MonomialPolySet(::Type{T}, domain::AbstractSimplex, degree::Integer)
+    MonomialPolySet(::Type{T}, domain::AbstractSimplex, degree::Integer)
 
 Construct a `MonomialPolySet` on a simplex domain of given polynomial degree, with
 `T` the data type used for the integral values.
@@ -79,7 +79,7 @@ function MonomialPolySet(::Type{T}, domain::AbstractSimplex, degree::Integer) wh
 end
 
 """
-  MonomialPolySet(domain::AbstractDomain, degree::Integer)
+    MonomialPolySet(domain::AbstractDomain, degree::Integer)
 
 Construct a `MonomialPolySet` on the given `domain` of given polynomial degree, with
 `Float64` as data type used for the integral values.

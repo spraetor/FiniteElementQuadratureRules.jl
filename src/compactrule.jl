@@ -1,5 +1,5 @@
 """
-  CompactQuadratureRule{T,Ω}
+    CompactQuadratureRule{T,Ω}
 
 A compact (quadrature) rule is defined in terms of a vector of symmetry orbits
 and their corresponding arguments, which allows to generate a list of quadrature
@@ -17,7 +17,7 @@ end
 
 
 """
-  CompactQuadratureRule(::Type{T}, data::Dict)
+    CompactQuadratureRule(::Type{T}, data::Dict)
 
 Construct a `CompactQuadratureRuleWithWeights` from a YAML/Dict of strings and
 string arrays. This is a convenience constructor typically used when reading a
@@ -45,7 +45,7 @@ end
 
 
 """
-  CompactQuadratureRule(data::Dict)
+    CompactQuadratureRule(data::Dict)
 
 Construct a `CompactQuadratureRule` from parsed YAML/Dict data using `Float64`.
 """
@@ -56,7 +56,7 @@ domaintype(::CompactQuadratureRule{Ω,T}) where {Ω<:AbstractDomain,T<:Real} = �
 
 
 """
-  expand(cqr::CompactQuadratureRule{Ω,T})
+    expand(cqr::CompactQuadratureRule{Ω,T})
 
 Expand a compact rule into a full quadrature rule. This first expands the symmetry
 orbits to generate a list of quadrature points and then computes the associated
@@ -89,7 +89,7 @@ end
 
 
 """
-  CompactQuadratureRuleWithWeights{T,Ω}
+    CompactQuadratureRuleWithWeights{T,Ω}
 
 A compact (quadrature) rule with weights is defined in terms of a vector of
 symmetry orbits, their corresponding arguments, and a list of associated weights.
@@ -132,7 +132,7 @@ end
 
 
 """
-  CompactQuadratureRuleWithWeights(data::Dict)
+    CompactQuadratureRuleWithWeights(data::Dict)
 
 Construct a `CompactQuadratureRuleWithWeights` from parsed YAML/Dict data using `Float64`.
 """
@@ -143,7 +143,7 @@ domaintype(::CompactQuadratureRuleWithWeights{Ω,T}) where {Ω<:AbstractDomain,T
 
 
 """
-  expand(cqr::CompactQuadratureRuleWithWeights{Ω,T})
+    expand(cqr::CompactQuadratureRuleWithWeights{Ω,T})
 
 Expand a compact rule into a full quadrature rule. This first expands the symmetry
 orbits to generate a list of quadrature points and combines it with the given

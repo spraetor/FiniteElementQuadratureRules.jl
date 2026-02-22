@@ -1,7 +1,7 @@
 using StaticArrays: SVector
 
 """
-  JacobiPolySet{Ω<:AbstractDomain,R<:Real}
+    JacobiPolySet{Ω<:AbstractDomain,R<:Real}
 
 A `JacobiPolySet` represents a set of polynomials on a domain `Ω` in terms of a
 set of basis polynomials, hereby given as Jacobi polynomials. As an `AbstractPolySet`
@@ -15,7 +15,7 @@ end
 
 
 """
-  JacobiPolySet(::Type{T}, domain::Line, degree::Integer)
+    JacobiPolySet(::Type{T}, domain::Line, degree::Integer)
 
 Construct a `JacobiPolySet` on the `Line` domain of given polynomial degree, with
 `T` the data type used for the integral values.
@@ -33,7 +33,7 @@ end
 
 
 """
-  JacobiPolySet(::Type{T}, domain::Triangle, degree::Integer)
+    JacobiPolySet(::Type{T}, domain::Triangle, degree::Integer)
 
 Construct a `JacobiPolySet` on the `Triangle` domain of given polynomial degree, with
 `T` the data type used for the integral values.
@@ -56,7 +56,7 @@ end
 
 
 """
-  JacobiPolySet(::Type{T}, domain::Quadrilateral, degree::Integer)
+    JacobiPolySet(::Type{T}, domain::Quadrilateral, degree::Integer)
 
 Construct a `JacobiPolySet` on the `Quadrilateral` domain of given polynomial degree, with
 `T` the data type used for the integral values.
@@ -76,7 +76,7 @@ end
 
 
 """
-  JacobiPolySet(::Type{T}, domain::Tetrahedron, degree::Integer)
+    JacobiPolySet(::Type{T}, domain::Tetrahedron, degree::Integer)
 
 Construct a `JacobiPolySet` on the `Tetrahedron` domain of given polynomial degree, with
 `T` the data type used for the integral values.
@@ -102,7 +102,7 @@ end
 
 
 """
-  JacobiPolySet(::Type{T}, domain::Prism, degree::Integer)
+    JacobiPolySet(::Type{T}, domain::Prism, degree::Integer)
 
 Construct a `JacobiPolySet` on the `Prism` domain of given polynomial degree, with
 `T` the data type used for the integral values.
@@ -128,7 +128,7 @@ end
 
 
 """
-  JacobiPolySet(::Type{T}, domain::Pyramid, degree::Integer)
+    JacobiPolySet(::Type{T}, domain::Pyramid, degree::Integer)
 
 Construct a `JacobiPolySet` on the `Pyramid` domain of given polynomial degree, with
 `T` the data type used for the integral values.
@@ -154,7 +154,7 @@ end
 
 
 """
-  JacobiPolySet(::Type{T}, domain::Hexahedron, degree::Integer)
+    JacobiPolySet(::Type{T}, domain::Hexahedron, degree::Integer)
 
 Construct a `JacobiPolySet` on the `Hexahedron` domain of given polynomial degree, with
 `T` the data type used for the integral values.
@@ -176,7 +176,7 @@ end
 
 
 """
-  JacobiPolySet(domain::AbstractDomain, degree::Integer)
+    JacobiPolySet(domain::AbstractDomain, degree::Integer)
 
 Construct a `JacobiPolySet` on the given `domain` of given polynomial degree, with
 `Float64` as data type used for the integral values.
