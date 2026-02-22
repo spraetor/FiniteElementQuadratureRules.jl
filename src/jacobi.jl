@@ -15,11 +15,24 @@ end
 
 
 """
-    JacobiPolySet(::Type{T}, domain::Line, degree::Integer)
+    JacobiPolySet(::Type, domain::AbstractDomain, degree::Integer)
 
-Construct a `JacobiPolySet` on the `Line` domain of given polynomial degree, with
+Construct a `JacobiPolySet` on the given `domain` of given polynomial `degree`, with
 `T` the data type used for the integral values.
 """
+function JacobiPolySet(::Type, domain::AbstractDomain, degree::Integer) end
+
+
+"""
+    JacobiPolySet(domain::AbstractDomain, degree::Integer)
+
+Construct a `JacobiPolySet` on the given `domain` of given polynomial degree, with
+`Float64` as data type used for the integral values.
+"""
+JacobiPolySet(domain::AbstractDomain, degree::Integer) = JacobiPolySet(Float64, domain, degree)
+
+
+# Specialization for Line domain
 function JacobiPolySet(::Type{T}, domain::Line, degree::Integer) where T
   basis = Function[]
   for i in 0:degree
@@ -32,12 +45,7 @@ function JacobiPolySet(::Type{T}, domain::Line, degree::Integer) where T
 end
 
 
-"""
-    JacobiPolySet(::Type{T}, domain::Triangle, degree::Integer)
-
-Construct a `JacobiPolySet` on the `Triangle` domain of given polynomial degree, with
-`T` the data type used for the integral values.
-"""
+# Specialization for Triangle domain
 function JacobiPolySet(::Type{T}, domain::Triangle, degree::Integer) where T
   basis = Function[]
   for i in 0:degree
@@ -55,12 +63,7 @@ function JacobiPolySet(::Type{T}, domain::Triangle, degree::Integer) where T
 end
 
 
-"""
-    JacobiPolySet(::Type{T}, domain::Quadrilateral, degree::Integer)
-
-Construct a `JacobiPolySet` on the `Quadrilateral` domain of given polynomial degree, with
-`T` the data type used for the integral values.
-"""
+# Specialization for Quadrilateral domain
 function JacobiPolySet(::Type{T}, domain::Quadrilateral, degree::Integer) where T
   basis = Function[]
   for i in 0:2:degree
@@ -75,12 +78,7 @@ function JacobiPolySet(::Type{T}, domain::Quadrilateral, degree::Integer) where 
 end
 
 
-"""
-    JacobiPolySet(::Type{T}, domain::Tetrahedron, degree::Integer)
-
-Construct a `JacobiPolySet` on the `Tetrahedron` domain of given polynomial degree, with
-`T` the data type used for the integral values.
-"""
+# Specialization for Tetrahedron domain
 function JacobiPolySet(::Type{T}, domain::Tetrahedron, degree::Integer) where T
   basis = Function[]
   for i in 0:degree
@@ -101,12 +99,7 @@ function JacobiPolySet(::Type{T}, domain::Tetrahedron, degree::Integer) where T
 end
 
 
-"""
-    JacobiPolySet(::Type{T}, domain::Prism, degree::Integer)
-
-Construct a `JacobiPolySet` on the `Prism` domain of given polynomial degree, with
-`T` the data type used for the integral values.
-"""
+# Specialization for Prism domain
 function JacobiPolySet(::Type{T}, domain::Prism, degree::Integer) where T
   basis = Function[]
   for i in 0:degree
@@ -127,12 +120,7 @@ function JacobiPolySet(::Type{T}, domain::Prism, degree::Integer) where T
 end
 
 
-"""
-    JacobiPolySet(::Type{T}, domain::Pyramid, degree::Integer)
-
-Construct a `JacobiPolySet` on the `Pyramid` domain of given polynomial degree, with
-`T` the data type used for the integral values.
-"""
+# Specialization for Pyramid domain
 function JacobiPolySet(::Type{T}, domain::Pyramid, degree::Integer) where T
   basis = Function[]
   for i in 0:2:degree
@@ -153,12 +141,7 @@ function JacobiPolySet(::Type{T}, domain::Pyramid, degree::Integer) where T
 end
 
 
-"""
-    JacobiPolySet(::Type{T}, domain::Hexahedron, degree::Integer)
-
-Construct a `JacobiPolySet` on the `Hexahedron` domain of given polynomial degree, with
-`T` the data type used for the integral values.
-"""
+# Specialization for Hexahedron domain
 function JacobiPolySet(::Type{T}, domain::Hexahedron, degree::Integer) where T
   basis = Function[]
   for i in 0:2:degree
@@ -173,15 +156,6 @@ function JacobiPolySet(::Type{T}, domain::Hexahedron, degree::Integer) where T
   integrals[1] = 8
   return JacobiPolySet(domain, basis, integrals)
 end
-
-
-"""
-    JacobiPolySet(domain::AbstractDomain, degree::Integer)
-
-Construct a `JacobiPolySet` on the given `domain` of given polynomial degree, with
-`Float64` as data type used for the integral values.
-"""
-JacobiPolySet(domain::AbstractDomain, degree::Integer) = JacobiPolySet(Float64, domain, degree)
 
 
 # Evaluate all jacobi polynomials P_n^{a,b}(x) for n∈{0:N} and x∈X
