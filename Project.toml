@@ -12,7 +12,7 @@ YAML = "ddb6d928-2868-570f-bddf-ab3f9cf99eb6"
 
 [compat]
 Optim = "1.12.0"
-Printf = "1.11.0"
+Printf = "1.9.0"
 StaticArrays = "1.8"
 Symbolics = "6.3, 7.15"
 YAML = "0.4"
