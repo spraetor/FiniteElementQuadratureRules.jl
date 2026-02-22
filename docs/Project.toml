@@ -1,3 +1,6 @@
 [deps]
 Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
 FiniteElementQuadratureRules = "71eef4e9-2bb4-491b-8481-b9d297660189"
+
+[compat]
+Documenter = "1"

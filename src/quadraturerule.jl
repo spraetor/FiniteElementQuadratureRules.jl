@@ -1,7 +1,11 @@
 using StaticArrays: SVector
 
 """
-  QuadratureRule{T,D,Ω}
+  QuadratureRule{Ω,T,Point}
+
+A `QuadratureRule` on a given domain Ω is a collection of points {xᵢ} in the associated
+reference element and weights {wᵢ}, such that for a given polynomial p the quadrature
+formula ∑ᵢ p(xᵢ) wᵢ = ∫p(x) dΩ is exact, up to polynomials of a certain degree.
 """
 struct QuadratureRule{Ω<:AbstractDomain, T<:Real, Point<:AbstractVector{T}}
   domain::Ω
@@ -11,13 +15,22 @@ struct QuadratureRule{Ω<:AbstractDomain, T<:Real, Point<:AbstractVector{T}}
   properties::Vector{Symbol}
 end
 
-# Construct a new QuadratureRule and compute the properties of the rule
+"""
+  QuadratureRule(domain::AbstractDomain, degree::Integer, points::Vector, weights::Vector)
+
+Construct a new `QuadratureRule` and compute the properties of the rule automatically.
+"""
 function QuadratureRule(domain::AbstractDomain, degree::Integer, points::Vector{Point}, weights::Vector{T}) where {Point<:AbstractVector, T<:Real}
   properties = getProperties(domain,points,weights)
   QuadratureRule(domain,degree,points,weights,properties)
 end
 
-# Construct a new QuadratureRule and compute the weights and properties of the rule
+"""
+  QuadratureRule(domain::AbstractDomain, degree::Integer, points::Vector)
+
+Construct a new `QuadratureRule` and compute the weights and properties of the
+rule automatically.
+"""
 function QuadratureRule(domain::AbstractDomain, degree::Integer, points::Vector{Point}) where {Point<:AbstractVector}
   weights = getWeights(domain,degree,points)
   properties = getProperties(domain,points,weights)
@@ -40,7 +53,20 @@ function point(::Type{T}, ::Val{D}, coords::Vector{S}) where {T,D,S}
   SVector{D,T}((_parse(T,c) for c in coords))
 end
 
-# Create a quadrature rules read from a json file
+
+"""
+  QuadratureRule(::Type{T}, data::Dict)
+
+Construct a `QuadratureRule` from a YAML/Dict of strings and
+string arrays. This is a convenience constructor typically used when reading a
+quadrature rule from a YAML file. All information is encoded in the Dict, in
+particular the fields
+- `dim` and `region`: characterizing the domain
+- `degree`: the quadrature degree
+- `coordinates`: representing the quadrature points
+- `weights`: for the quadrature weights
+- `properties`: characterizing properties of the quadrature rule
+"""
 function QuadratureRule(::Type{T}, data::Dict) where T
   D::Val = Val(data["dim"])
 
@@ -53,6 +79,11 @@ function QuadratureRule(::Type{T}, data::Dict) where T
   QuadratureRule(domain,degree,points,weights,properties)
 end
 
+"""
+  QuadratureRule(data::Dict)
+
+Construct a `QuadratureRule` from parsed YAML/Dict data using `Float64`.
+"""
 QuadratureRule(data::Dict) = QuadratureRule(Float64, data)
 
 # the length of a quadrature rule is equal to the number of quadrature points
@@ -72,8 +103,15 @@ function show(io::IO, qr::QuadratureRule)
   println(io, "}")
 end
 
-# Convert the quadrature rule into a Dict
 import Base: Dict
+
+"""
+  Dict(qr::QuadratureRule, ref::String = "unknown")
+
+Convert the given `QuadratureRule` into a Dict for exporting into a YAML file.
+The optional parameter `ref` refers to a bibtex key used to reference a publication
+where the quadrature rule is extracted from.
+"""
 function Base.Dict(qr::QuadratureRule, ref::String = "unknown")
   Dict(
     "reference" => ref,

@@ -1,15 +1,17 @@
+using FiniteElementQuadratureRules: _jacobi
+
 @testset "Jacobi" begin
   for n in 0:5
     for a = 0:5
       for b in 0:5
-        @test jacobi(n,a,b,1.0) == binomial(n+a,n)
+        @test _jacobi(n,a,b,1.0) == binomial(n+a,n)
 
         X = range(-1,1,7)
-        @test jacobi(n,a,b,X) ≈ map((x) -> jacobi(n,a,b,x), X)
-        @test jacobi(n,a,b,-X) ≈ (-1)^n .* jacobi(n,b,a,X)
+        @test _jacobi(n,a,b,X) ≈ map((x) -> _jacobi(n,a,b,x), X)
+        @test _jacobi(n,a,b,-X) ≈ (-1)^n .* _jacobi(n,b,a,X)
 
         if n > 0 && b > 0
-          @test (2n+a+b).*jacobi(n,a,b-1,X) ≈ (n+a+b).*jacobi(n,a,b,X) .+ (n+a).*jacobi(n-1,a,b,X)
+          @test (2n+a+b).*_jacobi(n,a,b-1,X) ≈ (n+a+b).*_jacobi(n,a,b,X) .+ (n+a).*_jacobi(n-1,a,b,X)
         end
       end
     end

@@ -1,5 +1,12 @@
 """
   CompactQuadratureRule{T,Ω}
+
+A compact (quadrature) rule is defined in terms of a vector of symmetry orbits
+and their corresponding arguments, which allows to generate a list of quadrature
+points in the reference element and also their corresponding quadrature weights.
+
+The rule is defined on a domain, e.g., a triangle or quad, has an expected degree,
+which means the maximal polynomial degree up to which the quadrature rule is exact.
 """
 struct CompactQuadratureRule{Ω<:AbstractDomain, T<:Real}
   domain::Ω
@@ -8,7 +15,19 @@ struct CompactQuadratureRule{Ω<:AbstractDomain, T<:Real}
   positions::Vector{T}
 end
 
-# Create a quadrature rule from a Dict of strings and string arrays
+
+"""
+  CompactQuadratureRule(::Type{T}, data::Dict)
+
+Construct a `CompactQuadratureRuleWithWeights` from a YAML/Dict of strings and
+string arrays. This is a convenience constructor typically used when reading a
+quadrature rule from a YAML file. All information is encoded in the Dict, in
+particular the fields
+- `dim` and `region`: characterizing the domain
+- `degree`: the quadrature degree
+- `orbits`: the symmetry orbits
+- `positions` or `arguments`: representing the arguments to the symmetry orbits
+"""
 function CompactQuadratureRule(::Type{T}, data::Dict) where T<:Real
   dom = domain(data["dim"],data["region"])
   degree = Int(data["degree"])
@@ -24,13 +43,25 @@ function CompactQuadratureRule(::Type{T}, data::Dict) where T<:Real
   CompactQuadratureRule{typeof(dom),T}(dom,degree,orbits,positions)
 end
 
+
+"""
+  CompactQuadratureRule(data::Dict)
+
+Construct a `CompactQuadratureRule` from parsed YAML/Dict data using `Float64`.
+"""
 CompactQuadratureRule(data::Dict) = CompactQuadratureRule(Float64, data)
 
 ctype(::CompactQuadratureRule{Ω,T}) where {Ω<:AbstractDomain,T<:Real} = T
 domaintype(::CompactQuadratureRule{Ω,T}) where {Ω<:AbstractDomain,T<:Real} = Ω
 
 
-# expand a compact rule into a quadrature rule
+"""
+  expand(cqr::CompactQuadratureRule{Ω,T})
+
+Expand a compact rule into a full quadrature rule. This first expands the symmetry
+orbits to generate a list of quadrature points and then computes the associated
+quadrature weights.
+"""
 function expand(cqr::CompactQuadratureRule{Ω,T}) where {Ω<:AbstractDomain,T<:Real}
   sos = symmetryOrbits(T,cqr.domain)
   if length(cqr.orbits) > length(sos)
@@ -56,10 +87,16 @@ function expand(cqr::CompactQuadratureRule{Ω,T}) where {Ω<:AbstractDomain,T<:R
   QuadratureRule(cqr.domain, cqr.degree, coords, weights)
 end
 
+
 """
   CompactQuadratureRuleWithWeights{T,Ω}
 
-Compact rule that stores also weights.
+A compact (quadrature) rule with weights is defined in terms of a vector of
+symmetry orbits, their corresponding arguments, and a list of associated weights.
+This allows to generate a list of quadrature points in the reference element.
+
+The rule is defined on a domain, e.g., a triangle or quad, has an expected degree,
+which means the maximal polynomial degree up to which the quadrature rule is exact.
 """
 struct CompactQuadratureRuleWithWeights{Ω<:AbstractDomain, T<:Real}
   domain::Ω
@@ -69,7 +106,20 @@ struct CompactQuadratureRuleWithWeights{Ω<:AbstractDomain, T<:Real}
   weights::Vector{T}
 end
 
-# Create a quadrature rule from a Dict of strings and string arrays
+
+"""
+  CompactQuadratureRuleWithWeights(::Type{T}, data::Dict)
+
+Construct a `CompactQuadratureRuleWithWeights` from a YAML/Dict of strings and
+string arrays. This is a convenience constructor typically used when reading a
+quadrature rule from a YAML file. All information is encoded in the Dict, in
+particular the fields
+- `dim` and `region`: characterizing the domain
+- `degree`: the quadrature degree
+- `orbits`: the symmetry orbits
+- `positions`: representing the arguments to the symmetry orbits
+- `weights`: for the quadrature weights
+"""
 function CompactQuadratureRuleWithWeights(::Type{T}, data::Dict) where T
   dom = domain(data["dim"],data["region"])
   degree = Int(data["degree"])
@@ -80,12 +130,25 @@ function CompactQuadratureRuleWithWeights(::Type{T}, data::Dict) where T
   CompactQuadratureRuleWithWeights(dom,degree,orbits,positions,weights)
 end
 
+
+"""
+  CompactQuadratureRuleWithWeights(data::Dict)
+
+Construct a `CompactQuadratureRuleWithWeights` from parsed YAML/Dict data using `Float64`.
+"""
 CompactQuadratureRuleWithWeights(data::Dict) = CompactQuadratureRuleWithWeights(Float64,data)
 
 ctype(::CompactQuadratureRuleWithWeights{Ω,T}) where {Ω<:AbstractDomain,T<:Real} = T
 domaintype(::CompactQuadratureRuleWithWeights{Ω,T}) where {Ω<:AbstractDomain,T<:Real} = Ω
 
-# expand a compact rule with weights into a full quadrature rule
+
+"""
+  expand(cqr::CompactQuadratureRuleWithWeights{Ω,T})
+
+Expand a compact rule into a full quadrature rule. This first expands the symmetry
+orbits to generate a list of quadrature points and combines it with the given
+quadrature weights.
+"""
 function expand(cqr::CompactQuadratureRuleWithWeights{Ω,T}) where {Ω<:AbstractDomain,T<:Real}
   sos = symmetryOrbits(T,cqr.domain)
   if length(cqr.orbits) > length(sos)

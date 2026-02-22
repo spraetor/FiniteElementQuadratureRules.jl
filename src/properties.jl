@@ -26,4 +26,10 @@ function getProperties(domain::AbstractDomain, points::AbstractVector, weights::
   return properties
 end
 
+
+"""
+  getProperties(qr::QuadratureRule)
+
+Collect properties of a quadrature rule.
+"""
 getProperties(qr::QuadratureRule) = getProperties(qr.domain,qr.points,qr.weights)

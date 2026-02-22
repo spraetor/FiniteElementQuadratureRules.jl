@@ -8,7 +8,7 @@ makedocs(;
     authors="Simon Praetorius <simon.praetorius@tu-dresden.de> and contributors",
     sitename="FiniteElementQuadratureRules.jl",
     format=Documenter.HTML(;
-        canonical="https://spraetor.github.io/FiniteElementQuadratureRules.jl",
+        canonical="https://spraetor.github.io/FiniteElementQuadratureRules.jl/stable",
         edit_link="main",
         assets=String[],
     ),
@@ -20,4 +20,5 @@ makedocs(;
 deploydocs(;
     repo="github.com/spraetor/FiniteElementQuadratureRules.jl",
     devbranch="main",
+    versions=["stable" => "v^", "v#.#", "dev" => "dev"],
 )

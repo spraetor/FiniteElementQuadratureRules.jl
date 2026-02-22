@@ -1,13 +1,14 @@
+using FiniteElementQuadratureRules: _allexponents
 
-@testset "PolySet" begin
+@testset "MonomialPolySet" begin
 
   # check exponent tuples
   for len in 1:4
-    @test length(getTuples(len,0)) == 1
-    @test length(getTuples(len,1)) == len
+    @test length(_allexponents(len,0)) == 1
+    @test length(_allexponents(len,1)) == len
 
     for total in 0:5
-      tuples = getTuples(len,total)
+      tuples = _allexponents(len,total)
       @test length(tuples) == binomial(total+len-1, len-1)
       @test all(length.(tuples) .== len)
       @test all(sum.(tuples) .== total)
@@ -15,6 +16,6 @@
   end
 
   tri = Triangle()
-  p = PolySet(tri, 5)
+  p = MonomialPolySet(tri, 5)
   @test integrate(p.basis[1], tri) ≈ 1.0
 end

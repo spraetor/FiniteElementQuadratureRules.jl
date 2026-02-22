@@ -1,3 +1,10 @@
+"""
+  getWeights(::Type{T}, domain::AbstractDomain, degree::Integer, points::AbstractVector)
+
+Compute the quadrature weight associated to given quadrature `points` for quadrature
+in a given `domain`, such that polynomial up to `degree` are integrated exactly. The
+parameter `T` represents the number type to be used for the computation.
+"""
 function getWeights(::Type{T}, domain::AbstractDomain, degree::Integer, points::AbstractVector) where {T<:Real}
 
   polyset = JacobiPolySet(domain, degree)
@@ -18,13 +25,28 @@ function getWeights(::Type{T}, domain::AbstractDomain, degree::Integer, points::
   return weights
 end
 
+
+"""
+  getWeights(::Type{T}, domain::AbstractDomain, degree::Integer, points::AbstractVector)
+
+Compute the quadrature weight using Float64 precision.
+"""
 function getWeights(domain::AbstractDomain, degree::Integer, points::AbstractVector{P}) where {P<:AbstractVector}
   T = eltype(P)
   getWeights(T, domain, degree, points)
 end
 
 
+"""
+  getWeights(::Type{T}, domain::AbstractDomain, degree::Integer, points::AbstractVector, orbits::AbstractVector)
 
+Compute the quadrature weight associated to given quadrature `points` for quadrature
+in a given `domain`, such that polynomial up to `degree` are integrated exactly. This
+overload takes into account that the points are associated to symmetry orbits and thus
+points in the same orbit share a quadrature weight. This makes the computation more
+stable and faster. The parameter `T` represents the number type to be used for the
+computation.
+"""
 function getWeights(::Type{T}, domain::AbstractDomain, degree::Integer, points::AbstractVector, orbits::AbstractVector) where {T<:Real}
 
   polyset = JacobiPolySet(domain, degree)
@@ -64,6 +86,11 @@ function getWeights(::Type{T}, domain::AbstractDomain, degree::Integer, points::
   return weights
 end
 
+"""
+  getWeights(::Type{T}, domain::AbstractDomain, degree::Integer, points::AbstractVector, orbits::AbstractVector)
+
+Compute the quadrature weight using Float64 precision.
+"""
 function getWeights(domain::AbstractDomain, degree::Integer, points::AbstractVector{P}, orbits::AbstractVector) where {P<:AbstractVector}
   T = eltype(P)
   getWeights(T, domain, degree, points, orbits)
