@@ -1,4 +1,4 @@
-import YAML: load_file, write_file
+using YAML: load_file, write_file
 using Base: Filesystem
 
 function default_chooser(qr1::QuadratureRule{T, D, Domain}, qr2::QuadratureRule{T, D, Domain}) where {T,D,Domain}
@@ -15,16 +15,18 @@ function default_chooser(qr1::QuadratureRule{T, D, Domain}, qr2::QuadratureRule{
     # check whether a rule has only positive weights
     return :positive in qr1.properties
   else
-    # compare the publication years
-    if length(qr2.bib.date.year) == 0
-      return true
-    elseif length(qr1.bib.date.year) == 0
-      return false
-    else
-      year1 = parse(Int, qr1.bib.date.year)
-      year2 = parse(Int, qr2.bib.date.year)
-      return year1 < year2
-    end
+    return true
+    # TODO: connect to BibFormatter/BibParser...
+    # # compare the publication years
+    # if length(qr2.bib.date.year) == 0
+    #   return true
+    # elseif length(qr1.bib.date.year) == 0
+    #   return false
+    # else
+    #   year1 = parse(Int, qr1.bib.date.year)
+    #   year2 = parse(Int, qr2.bib.date.year)
+    #   return year1 < year2
+    # end
   end
 end
 
@@ -34,15 +36,16 @@ function generate(template::AbstractString, in_dir::AbstractString, out_dir::Abs
 
   qrs = Dict{Symbol, Vector{QuadratureRule}}()
   for Domain in Base.uniontypes(AllDomains)
-    qrs[Symbol(Domain)] = QuadratureRule{String,dimension(Domain),Domain}[]
+    qrs[Symbol(Domain)] = QuadratureRule[]
   end
   println(typeof(qrs))
 
   for (root, _, files) in Filesystem.walkdir(in_dir)
     for file in (f for f in files if endswith(f, ".yml"))
-      data = YAML.load_file(joinpath(root, file))
-      dim = data["dim"]
-      qr = QuadratureRule{String}(dim, data["region"], data; kwargs...)
+      println("Parsing '$(joinpath(root, file))'")
+      data = load_file(joinpath(root, file))
+      cqr = CompactQuadratureRule(BigFloat, data; kwargs...)
+      qr = expand(cqr)
       if filter(qr)
         push!(qrs[Symbol(domaintype(qr))], qr)
       end
@@ -52,8 +55,6 @@ function generate(template::AbstractString, in_dir::AbstractString, out_dir::Abs
   for domain in map(Symbol, Base.uniontypes(AllDomains))
     sort!(qrs[domain]; lt=chooser)
   end
-
-  println(qrs)
 
   maxdegree = Dict{Symbol, Int}()
   for domain in map(Symbol, Base.uniontypes(AllDomains))
