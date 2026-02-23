@@ -1,15 +1,14 @@
 using StaticArrays: @SMatrix, @SVector, SMatrix, SVector
 
 # Transform a quadrature rule between reference elements
-function transform(qr::QuadratureRule{T,D,Ω}, refIn::ReferenceElement{Ω,P1}, refOut::ReferenceElement{Ω,P2}) where {T,D,Ω,P1,P2}
+function transform(qr::QuadratureRule{Ω,T,P}, refIn::ReferenceElement{Ω,P1}, refOut::ReferenceElement{Ω,P2}) where {Ω,T,P,P1,P2}
   geo = MultiLinearGeometry(refIn, refOut.coordinates)
   volIn = volume(refIn)
   volOut = volume(refOut)
 
-  QuadratureRule{T,D,Ω}(qr.degree,
+  QuadratureRule(qr.domain, qr.degree,
     map(geo, qr.points),
-    map(w -> w*volOut/volIn, qr.weights),
-    qr.properties, qr.accuracy, qr.bib)
+    map(w -> w*volOut/volIn, qr.weights))
 end
 
 

@@ -3,5 +3,5 @@ region: prism
 dim: 3
 degree: 1
 orbits: [1, 0, 0, 0, 0, 0]
-arguments:
+positions:
 

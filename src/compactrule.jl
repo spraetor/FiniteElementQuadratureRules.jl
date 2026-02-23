@@ -26,20 +26,13 @@ particular the fields
 - `dim` and `region`: characterizing the domain
 - `degree`: the quadrature degree
 - `orbits`: the symmetry orbits
-- `positions` or `arguments`: representing the arguments to the symmetry orbits
+- `positions`: representing the arguments to the symmetry orbits
 """
 function CompactQuadratureRule(::Type{T}, data::Dict) where T<:Real
   dom = domain(data["dim"],data["region"])
   degree = Int(data["degree"])
   orbits = Int[ o for o in data["orbits"] ]
-  if haskey(data, "positions")
-    positions = isnothing(data["positions"]) ? T[] : T[ _parse(T,p) for p in data["positions"] ]
-  elseif haskey(data, "arguments")
-    positions = isnothing(data["arguments"]) ? T[] : T[ _parse(T,p) for p in data["arguments"] ]
-  else
-    return nothing
-  end
-
+  positions = isnothing(data["positions"]) ? T[] : T[ _parse(T,p) for p in data["positions"] ]
   CompactQuadratureRule{typeof(dom),T}(dom,degree,orbits,positions)
 end
 

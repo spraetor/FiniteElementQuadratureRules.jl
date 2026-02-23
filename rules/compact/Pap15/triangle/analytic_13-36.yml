@@ -3,7 +3,7 @@ region: simplex
 dim: 2
 degree: 13
 orbits: [0, 6, 3, 0]
-arguments:
+positions:
   - '2.710002955244747e-01'
   - '4.403238744780613e-01'
   - '4.882878507334053e-01'
