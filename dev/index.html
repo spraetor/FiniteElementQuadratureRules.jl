@@ -8,23 +8,13 @@ qr = expand(cqr)
 
 mkpath(&quot;rules/expanded/CCGV22/triangle&quot;)
 write_file(&quot;rules/expanded/CCGV22/triangle/4-6.yml&quot;, Dict(qr; reference=data[&quot;reference&quot;]))</code></pre><h2 id="Transform-to-another-reference-element-convention"><a class="docs-heading-anchor" href="#Transform-to-another-reference-element-convention">Transform to another reference-element convention</a><a id="Transform-to-another-reference-element-convention-1"></a><a class="docs-heading-anchor-permalink" href="#Transform-to-another-reference-element-convention" title="Permalink"></a></h2><p>Finite-element libraries may define different reference-element coordinates for the same topological domain. Use <code>transform</code> to map rules between conventions.</p><p>Example (to Dune triangle convention):</p><pre><code class="language-julia hljs">using FiniteElementQuadratureRules
-using StaticArrays: SVector
 using YAML: load_file
 
 data = load_file(&quot;rules/compact/CCGV22/triangle/4-6.yml&quot;)
 qr = expand(CompactQuadratureRule(Float64, data))
 
-ref_in_int = ReferenceElement(Triangle())
-ref_in = ReferenceElement{Triangle,SVector{2,Float64}}(
-  [SVector{2,Float64}(x) for x in ref_in_int.coordinates],
-  ref_in_int.facets
-)
-ref_dune_int = duneReferenceElement(Triangle())
-ref_dune = ReferenceElement{Triangle,SVector{2,Float64}}(
-  [SVector{2,Float64}(x) for x in ref_dune_int.coordinates],
-  ref_dune_int.facets
-)
-
+ref_in = ReferenceElement(Triangle())
+ref_dune = duneReferenceElement(Triangle())
 qr_dune = transform(qr, ref_in, ref_dune)</code></pre><h2 id="Generate-library-specific-code-from-templates"><a class="docs-heading-anchor" href="#Generate-library-specific-code-from-templates">Generate library-specific code from templates</a><a id="Generate-library-specific-code-from-templates-1"></a><a class="docs-heading-anchor-permalink" href="#Generate-library-specific-code-from-templates" title="Permalink"></a></h2><p><code>generate</code> renders source/header files from an Otera template with rule data grouped by domain and degree.</p><p>Example (Dune):</p><pre><code class="language-julia hljs">using FiniteElementQuadratureRules
 
 generate(&quot;dune.templ.hh&quot;, &quot;rules/compact/CCGV22/&quot;, &quot;dune/&quot;; precision=80)</code></pre><h2 id="Optional:-optimize-rule-accuracy"><a class="docs-heading-anchor" href="#Optional:-optimize-rule-accuracy">Optional: optimize rule accuracy</a><a id="Optional:-optimize-rule-accuracy-1"></a><a class="docs-heading-anchor-permalink" href="#Optional:-optimize-rule-accuracy" title="Permalink"></a></h2><p>Improving rule accuracy is an additional feature. Use it when published coefficients are low precision and you need a high-precision variant.</p><pre><code class="language-julia hljs">using FiniteElementQuadratureRules
@@ -32,4 +22,4 @@ using YAML: load_file
 
 data = load_file(&quot;rules/compact/CCGV22/triangle/4-6.yml&quot;)
 cqr = CompactQuadratureRule(BigFloat, data)
-oqr = optimize(cqr)</code></pre></article><nav class="docs-footer"><a class="docs-footer-nextpage" href="api/">API »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.17.0 on <span class="colophon-date" title="Monday 23 February 2026 22:39">Monday 23 February 2026</span>. Using Julia version 1.12.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+oqr = optimize(cqr)</code></pre></article><nav class="docs-footer"><a class="docs-footer-nextpage" href="api/">API »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.17.0 on <span class="colophon-date" title="Monday 23 February 2026 22:58">Monday 23 February 2026</span>. Using Julia version 1.12.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
