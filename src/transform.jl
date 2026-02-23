@@ -1,10 +1,18 @@
 using StaticArrays: @SMatrix, @SVector, SMatrix, SVector
 
+function _promote_reference_element(ref::ReferenceElement{Ω,P}, ::Type{T}) where {Ω,P,T<:Real}
+  d = isempty(ref.coordinates) ? 0 : length(first(ref.coordinates))
+  coords = [SVector{d,T}(x) for x in ref.coordinates]
+  ReferenceElement{Ω,SVector{d,T}}(coords, ref.facets)
+end
+
 # Transform a quadrature rule between reference elements
 function transform(qr::QuadratureRule{Ω,T,P}, refIn::ReferenceElement{Ω,P1}, refOut::ReferenceElement{Ω,P2}) where {Ω,T,P,P1,P2}
-  geo = MultiLinearGeometry(refIn, refOut.coordinates)
-  volIn = volume(refIn)
-  volOut = volume(refOut)
+  refInT = _promote_reference_element(refIn, T)
+  refOutT = _promote_reference_element(refOut, T)
+  geo = MultiLinearGeometry(refInT, refOutT.coordinates)
+  volIn = volume(refInT)
+  volOut = volume(refOutT)
 
   QuadratureRule(qr.domain, qr.degree,
     map(geo, qr.points),

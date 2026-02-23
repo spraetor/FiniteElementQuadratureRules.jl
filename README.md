@@ -41,23 +41,13 @@ Example (transforming to Dune coordinates):
 
 ```julia
 using FiniteElementQuadratureRules
-using StaticArrays: SVector
 using YAML: load_file
 
 data = load_file("rules/compact/CCGV22/triangle/4-6.yml")
 qr = expand(CompactQuadratureRule(Float64, data))
 
-ref_in_int = ReferenceElement(Triangle())    # internal convention
-ref_in = ReferenceElement{Triangle,SVector{2,Float64}}(
-  [SVector{2,Float64}(x) for x in ref_in_int.coordinates],
-  ref_in_int.facets
-)
-ref_dune_int = duneReferenceElement(Triangle())
-ref_dune = ReferenceElement{Triangle,SVector{2,Float64}}(
-  [SVector{2,Float64}(x) for x in ref_dune_int.coordinates],
-  ref_dune_int.facets
-)
-
+ref_in = ReferenceElement(Triangle())        # internal convention
+ref_dune = duneReferenceElement(Triangle())
 qr_dune = transform(qr, ref_in, ref_dune)
 ```
 

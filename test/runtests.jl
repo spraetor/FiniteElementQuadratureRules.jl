@@ -10,4 +10,5 @@ using Test
     include("polyset.jl")
     include("jacobi.jl")
     include("compactrule.jl")
+    include("readme_examples.jl")
 end
