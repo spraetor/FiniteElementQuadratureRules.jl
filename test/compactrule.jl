@@ -3,8 +3,8 @@ using StaticArrays: @SVector
 const F = Float64
 
 function test_quadrature_rule(qr::QuadratureRule{Ω,T,P}) where {Ω,T,P}
-  polyset = JacobiPolySet(qr.domain,qr.degree)
-  @test sum(qr.weights) ≈ volume(ReferenceElement(qr.domain))
+  polyset = JacobiPolySet(domain(qr),qr.degree)
+  @test sum(qr.weights) ≈ volume(ReferenceElement(domain(qr)))
   max_error = zero(T)
   for (f,I) in zip(polyset.basis, polyset.integrals)
     Q = sum(qr.weights .* f.(qr.points))

@@ -7,19 +7,22 @@ Optimize the position of the quadrature points given as symmetric orbits in the
 compact rule, by minimizing the quadrature residual on a set of polynomial basis
 functions. We use basis functions and their integrals given by a `JacobiPolySet`.
 """
-function optimize(qr::CompactQuadratureRule)
+function optimize(qr::CompactQuadratureRule{Ω,T};
+                  x_abstol = sqrt(eps(float(T))),
+                  g_abstol = sqrt(eps(float(T))),
+                  f_abstol = eps(float(T)),
+                  iterations = 1_000) where {Ω,T}
   domain = qr.domain
   degree = qr.degree
   orbits = qr.orbits
-  T = ctype(qr)
   positions = Vector{T}(qr.positions)
 
   let f = (p) -> _residual(p,(domain,degree,orbits))
     options = Optim.Options(
-      x_abstol = sqrt(eps(float(T))),
-      g_abstol = sqrt(eps(float(T))),
-      f_abstol = eps(float(T)),
-      iterations = 10_000,
+      x_abstol=T(x_abstol),
+      g_abstol=T(g_abstol),
+      f_abstol=T(f_abstol),
+      iterations = iterations,
     )
 
     # Use a gradient-based method explicitly. The Optim default for scalar

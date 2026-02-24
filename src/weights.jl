@@ -1,13 +1,13 @@
 """
-    getWeights(::Type{T}, domain::AbstractDomain, degree::Integer, points::AbstractVector)
+    getWeights(::Type{T}, ref::ReferenceElement, degree::Integer, points::AbstractVector)
 
 Compute the quadrature weight associated to given quadrature `points` for quadrature
-in a given `domain`, such that polynomial up to `degree` are integrated exactly. The
-parameter `T` represents the number type to be used for the computation.
+in a given reference element `ref`, such that polynomial up to `degree` are integrated
+exactly. The parameter `T` represents the number type to be used for the computation.
 """
-function getWeights(::Type{T}, domain::AbstractDomain, degree::Integer, points::AbstractVector) where {T<:Real}
+function getWeights(::Type{T}, ref::ReferenceElement, degree::Integer, points::AbstractVector) where {T<:Real}
 
-  polyset = JacobiPolySet(domain, degree)
+  polyset = JacobiPolySet(domain(ref), degree)
   A = Matrix{T}(undef, length(polyset.basis), length(points))
   b = Vector{T}(undef, length(polyset.basis))
 
@@ -23,6 +23,13 @@ function getWeights(::Type{T}, domain::AbstractDomain, degree::Integer, points::
 
   weights = A\b
   return weights
+  # volIn = volume(ReferenceElement(domain(ref)))
+  # volOut = volume(ref)
+  # return map(w -> w*volOut/volIn, weights)
+end
+
+function getWeights(::Type{T}, domain::AbstractDomain, degree::Integer, points::AbstractVector) where {T<:Real}
+  getWeights(T, ReferenceElement(domain), degree, points)
 end
 
 
@@ -33,24 +40,28 @@ Compute the quadrature weight using Float64 precision.
 """
 function getWeights(domain::AbstractDomain, degree::Integer, points::AbstractVector{P}) where {P<:AbstractVector}
   T = eltype(P)
-  getWeights(T, domain, degree, points)
+  getWeights(T, ReferenceElement(domain), degree, points)
 end
 
+function getWeights(ref::ReferenceElement, degree::Integer, points::AbstractVector)
+  T = eltype(P)
+  getWeights(T, ref, degree, points)
+end
 
 """
-    getWeights(::Type{T}, domain::AbstractDomain, degree::Integer, points::AbstractVector, orbits::AbstractVector)
+    getWeights(::Type{T}, ref::ReferenceElement, degree::Integer, points::AbstractVector, orbits::AbstractVector)
 
 Compute the quadrature weight associated to given quadrature `points` for quadrature
-in a given `domain`, such that polynomial up to `degree` are integrated exactly. This
-overload takes into account that the points are associated to symmetry orbits and thus
-points in the same orbit share a quadrature weight. This makes the computation more
-stable and faster. The parameter `T` represents the number type to be used for the
-computation.
+in a given reference element `ref`, such that polynomial up to `degree` are integrated
+exactly. This overload takes into account that the points are associated to symmetry
+orbits and thus points in the same orbit share a quadrature weight. This makes the
+computation more stable and faster. The parameter `T` represents the number type to be
+used for the computation.
 """
-function getWeights(::Type{T}, domain::AbstractDomain, degree::Integer, points::AbstractVector, orbits::AbstractVector) where {T<:Real}
+function getWeights(::Type{T}, ref::ReferenceElement, degree::Integer, points::AbstractVector, orbits::AbstractVector) where {T<:Real}
 
-  polyset = JacobiPolySet(domain, degree)
-  so = symmetryOrbits(T,domain)
+  polyset = JacobiPolySet(domain(ref), degree)
+  so = symmetryOrbits(T,domain(ref))
   nDifferentWeights = sum(orbits)
   A = Matrix{T}(undef, length(polyset.basis), nDifferentWeights)
   b = Vector{T}(undef, length(polyset.basis))
@@ -83,7 +94,15 @@ function getWeights(::Type{T}, domain::AbstractDomain, degree::Integer, points::
       j = j+1
     end
   end
+
   return weights
+  # volIn = volume(ReferenceElement(domain(ref)))
+  # volOut = volume(ref)
+  # return map(w -> w*volOut/volIn, weights)
+end
+
+function getWeights(::Type{T}, domain::AbstractDomain, degree::Integer, points::AbstractVector, orbits::AbstractVector) where {T<:Real}
+  getWeights(T, ReferenceElement(domain), degree, points, orbits)
 end
 
 """
@@ -93,5 +112,10 @@ Compute the quadrature weight using Float64 precision.
 """
 function getWeights(domain::AbstractDomain, degree::Integer, points::AbstractVector{P}, orbits::AbstractVector) where {P<:AbstractVector}
   T = eltype(P)
-  getWeights(T, domain, degree, points, orbits)
+  getWeights(T, ReferenceElement(domain), degree, points, orbits)
+end
+
+function getWeights(ref::ReferenceElement, degree::Integer, points::AbstractVector, orbits::AbstractVector)
+  T = eltype(P)
+  getWeights(T, ref, degree, points, orbits)
 end

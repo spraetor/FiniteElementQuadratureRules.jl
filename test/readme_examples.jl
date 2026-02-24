@@ -24,9 +24,8 @@ using YAML: load_file, write_file
     data = load_file(joinpath(rules_root, "compact", "CCGV22", "triangle", "4-6.yml"))
     qr = expand(CompactQuadratureRule(Float64, data))
 
-    ref_in = ReferenceElement(Triangle())
-    ref_dune = duneReferenceElement(Triangle())
-    qr_dune = transform(qr, ref_in, ref_dune)
+    ref_dune = duneReferenceElement(domain(qr))
+    qr_dune = transform(qr, ref_dune)
     @test qr_dune.degree == qr.degree
     @test length(qr_dune) == length(qr)
   end
@@ -36,7 +35,7 @@ using YAML: load_file, write_file
       out_dir = joinpath(tmp, "dune")
       generate(
         joinpath(@__DIR__, "..", "dune.templ.hh"),
-        joinpath(rules_root, "compact", "CCGV22"),
+        joinpath(rules_root, "compact", "Gat88"),
         out_dir;
         precision=80
       )

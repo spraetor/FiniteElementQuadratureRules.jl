@@ -31,8 +31,8 @@ function AffineGeometry(ref::ReferenceElement{Ω}, coordVector::AbstractVector{C
   mydim = dimension(Ω)
   @assert length(coordVector) == mydim+1
 
-  jacobian = MMatrix{cdim,mydim,T}(undef)
-  dref = MMatrix{mydim,mydim,T}(undef)
+  jacobian = Matrix{T}(undef,cdim,mydim)
+  dref = Matrix{T}(undef,mydim,mydim)
   for i in 1:mydim
     jacobian[:,i] .= coordVector[i+1] .- coordVector[1]
     dref[:,i] .= ref.coordinates[i+1] .- ref.coordinates[1]
@@ -41,10 +41,10 @@ function AffineGeometry(ref::ReferenceElement{Ω}, coordVector::AbstractVector{C
   # Reference coordinates are not necessarily the canonical unit simplex/cube coordinates.
   # Scale the Jacobian with the inverse reference edge matrix.
   if mydim > 0
-    jacobian .= jacobian * inv(SMatrix(dref))
+    jacobian .= jacobian * inv(SMatrix{mydim,mydim,T}(dref))
   end
 
-  J = SMatrix(jacobian)
+  J = SMatrix{cdim,mydim,T}(jacobian)
   x0 = mydim == 0 ? coordVector[1] : coordVector[1] - J * SVector{mydim,T}(ref.coordinates[1])
 
   AffineGeometry(ref, x0, J)

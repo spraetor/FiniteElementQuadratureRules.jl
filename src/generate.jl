@@ -32,10 +32,12 @@ function default_chooser(qr1::QuadratureRule{T, D, Domain}, qr2::QuadratureRule{
 end
 
 function generate(template::AbstractString, in_dir::AbstractString, out_dir::AbstractString;
+                  refOut = (domain) -> ReferenceElement(domain),
                   filter = (qr)->true, chooser=default_chooser, kwargs...)
   out_dir = Filesystem.mkpath(out_dir)
 
-  qrs = Dict{Symbol, Vector{Tuple{QuadratureRule, String}}}()
+  QR = Union{Tuple{QuadratureRule, String},Missing}
+  qrs = Dict{Symbol, Vector{QR}}()
   for Domain in Base.uniontypes(AllDomains)
     qrs[Symbol(Domain)] = Tuple{QuadratureRule, String}[]
   end
@@ -50,6 +52,15 @@ function generate(template::AbstractString, in_dir::AbstractString, out_dir::Abs
         cqr = CompactQuadratureRule(BigFloat, data)
       end
       qr = expand(cqr)
+      if !testQuadratureRule(qr)
+        println("  -> error(1)")
+        continue
+      end
+      qr = transform(qr, refOut(domain(qr)))
+      if !testWeights(qr)
+        println("  -> error(2)")
+        continue
+      end
       if filter(qr)
         reference = haskey(data, "reference") ? string(data["reference"]) : "unknown"
         push!(qrs[Symbol(domaintype(qr))], (qr, reference))
@@ -57,25 +68,23 @@ function generate(template::AbstractString, in_dir::AbstractString, out_dir::Abs
     end
   end
 
-  println("Sorting the quadrature rules")
-  for domain in map(Symbol, Base.uniontypes(AllDomains))
-    sort!(qrs[domain]; lt=(a,b)->chooser(a[1], b[1]))
-    selected = Tuple{QuadratureRule, String}[]
-    seen_degrees = Set{Int}()
-    for rule in qrs[domain]
-      degree = rule[1].degree
-      if degree in seen_degrees
-        continue
-      end
-      push!(selected, rule)
-      push!(seen_degrees, degree)
-    end
-    qrs[domain] = selected
-  end
-
   maxdegree = Dict{Symbol, Int}()
   for domain in map(Symbol, Base.uniontypes(AllDomains))
     maxdegree[domain] = maximum(rule[1].degree for rule in qrs[domain]; init=0)
+  end
+
+  println("Sorting the quadrature rules")
+  for domain in map(Symbol, Base.uniontypes(AllDomains))
+    sort!(qrs[domain]; lt=(a,b)->chooser(a[1], b[1]))
+    selected = Vector{QR}(undef, maxdegree[domain])
+    fill!(selected, missing)
+    for rule in qrs[domain]
+      degree = rule[1].degree
+      if ismissing(selected[degree])
+        selected[degree] = rule
+      end
+    end
+    qrs[domain] = selected
   end
 
   tmpl = Template(
@@ -89,13 +98,12 @@ function generate(template::AbstractString, in_dir::AbstractString, out_dir::Abs
   )
 
   println("Generating the output files")
+  convert(r) = Dict(r[1]; reference=r[2], kwargs...)
+  passmissing(f) = r->ismissing(r) ? r : f(r)
   for domain in Base.uniontypes(AllDomains)
     D = Symbol(domain)
-    rules = Vector{Dict{String, Any}}()
-    for (qr, reference) in qrs[D]
-      rule = Dict{String, Any}(Dict(qr; reference=reference, kwargs...))
-      push!(rules, rule)
-    end
+    rules = map(passmissing(convert), qrs[D])
+
     data = Dict(
       :domain => uppercasefirst(string(D)),
       :date => Libc.strftime("%Y-%m-%d", time()),

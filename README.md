@@ -46,9 +46,8 @@ using YAML: load_file
 data = load_file("rules/compact/CCGV22/triangle/4-6.yml")
 qr = expand(CompactQuadratureRule(Float64, data))
 
-ref_in = ReferenceElement(Triangle())        # internal convention
-ref_dune = duneReferenceElement(Triangle())
-qr_dune = transform(qr, ref_in, ref_dune)
+ref_dune = duneReferenceElement(domain(qr))
+qr_dune = transform(qr, ref_dune)
 ```
 
 ## Generate FE-library specific code from templates

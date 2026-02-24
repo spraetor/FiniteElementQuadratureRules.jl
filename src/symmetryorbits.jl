@@ -66,7 +66,7 @@ function symmetryOrbits(::Type{T}, ::Triangle) where {T<:Real}
     SymmetryOrbit(Val(2),2, (a::T, b::T) -> SVector{2,P}(  # T2=Mirror
       P(a,b,T(1)-a-b),
       P(T(1)-a-b,b,a)) ),
-    SymmetryOrbit(Val(2),3, (a::T, b::T) -> SVector{3,P}(  # T3=Rotation
+    SymmetryOrbit(Val(2),3, (a::T, b::T) -> SVector{3,P}(  # T3=Rotation=even permutations
       P(a,b,T(1)-a-b),
       P(b,T(1)-a-b,a),
       P(T(1)-a-b,a,b)) ), ]

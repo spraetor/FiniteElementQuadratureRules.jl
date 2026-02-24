@@ -9,7 +9,7 @@ reference element and weights {wᵢ}, such that for a given polynomial p the qua
 formula ∑ᵢ p(xᵢ) wᵢ = ∫p(x) dΩ is exact, up to polynomials of a certain degree.
 """
 struct QuadratureRule{Ω<:AbstractDomain, T<:Real, Point<:AbstractVector{T}}
-  domain::Ω
+  ref::ReferenceElement{Ω,T,Point}
   degree::Int
   points::Vector{Point}
   weights::Vector{T}
@@ -21,9 +21,10 @@ end
 
 Construct a new `QuadratureRule` and compute the properties of the rule automatically.
 """
-function QuadratureRule(domain::AbstractDomain, degree::Integer, points::Vector{Point}, weights::Vector{T}) where {Point<:AbstractVector, T<:Real}
-  properties = getProperties(domain,points,weights)
-  QuadratureRule(domain,degree,points,weights,properties)
+function QuadratureRule(domain::Ω, degree::Integer, points::Vector{Point}, weights::Vector{T}) where {Ω<:AbstractDomain, Point<:AbstractVector, T<:Real}
+  ref = ReferenceElement(domain)
+  properties = getProperties(ref,points,weights)
+  QuadratureRule(ReferenceElement{Ω,T,Point}(ref),degree,points,weights,properties)
 end
 
 """
@@ -32,21 +33,26 @@ end
 Construct a new `QuadratureRule` and compute the weights and properties of the
 rule automatically.
 """
-function QuadratureRule(domain::AbstractDomain, degree::Integer, points::Vector{Point}) where {Point<:AbstractVector}
-  weights = getWeights(domain,degree,points)
-  properties = getProperties(domain,points,weights)
-  QuadratureRule(domain,degree,points,weights,properties)
+function QuadratureRule(domain::Ω, degree::Integer, points::Vector{Point}) where {Ω<:AbstractDomain, Point<:AbstractVector}
+  ref = ReferenceElement(domain)
+  weights = getWeights(ref,degree,points)
+  properties = getProperties(ref,points,weights)
+  QuadratureRule(ReferenceElement{Ω,eltype(weights),Point}(ref),degree,points,weights,properties)
 end
 
 # The type of the coordinates
 ctype(::QuadratureRule{Ω,T,P}) where {Ω<:AbstractDomain,T,P} = T
 
 # The dimension of the domain the quadrature rule is defined in
-dimension(qr::QuadratureRule{Ω,T,P}) where {Ω<:AbstractDomain,T,P} = dimension(qr.domain)
+dimension(qr::QuadratureRule{Ω}) where {Ω<:AbstractDomain} = dimension(Ω)
 
 # The type of the domain the quadrature rule is defined in
-domaintype(::QuadratureRule{Ω,T,P}) where {Ω<:AbstractDomain,T,P} = Ω
-domain(::QuadratureRule{Ω,T,P}) where {Ω<:AbstractDomain,T,P} = domain(Ω)
+domaintype(::QuadratureRule{Ω}) where {Ω<:AbstractDomain} = Ω
+domain(::QuadratureRule{Ω}) where {Ω<:AbstractDomain} = Ω()
+
+isPositive(qr::QuadratureRule) = :positive in qr.properties
+isInside(qr::QuadratureRule) = :inside in qr.properties
+isPI(qr::QuadratureRule) = isPositive(qr) && isInside(qr)
 
 # convert a vector of coordinates represented as number or string into a static vector of type T
 function point(::Type{T}, ::Val{D}, coords::Vector{S}) where {T,D,S}
@@ -77,7 +83,9 @@ function QuadratureRule(::Type{T}, data::Dict) where T
   weights = [ _parse(T,w) for w in data["weights"] ]
   properties = [ Symbol(p) for p in data["properties"] ]
 
-  QuadratureRule(dom,degree,points,weights,properties)
+  ref = ReferenceElement(dom)
+  Point = eltype(points)
+  QuadratureRule(ReferenceElement{domaintype(ref),T,Point}(ref),degree,points,weights,properties)
 end
 
 """
@@ -95,7 +103,7 @@ length(qr::QuadratureRule) = length(qr.points)
 import Base: show
 function show(io::IO, qr::QuadratureRule)
   println(io, "{")
-  println(io, "  domain = $(qr.domain), ")
+  println(io, "  domain = $(domain(qr)), ")
   println(io, "  degree = $(qr.degree), ")
   println(io, "  length = $(length(qr)), ")
   println(io, "  points  = $(qr.points), ")
@@ -116,8 +124,8 @@ where the quadrature rule is extracted from.
 function Base.Dict(qr::QuadratureRule; reference::String="unknown", precision::Int=50)
   Dict(
     "reference" => reference,
-    "region" => region(qr.domain),
-    "dim" => dimension(qr.domain),
+    "region" => region(domain(qr)),
+    "dim" => dimension(domain(qr)),
     "degree" => qr.degree,
     "properties" => String[ string(prop) for prop in qr.properties ],
     "coordinates" => [ String[ @sprintf("%0.*e", precision,pᵢ) for pᵢ in p ] for p in qr.points ],

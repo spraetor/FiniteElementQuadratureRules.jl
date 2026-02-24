@@ -1,5 +1,7 @@
 // -*- tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 2 -*-
 // vi: set et ts=4 sw=2 sts=2:
+// SPDX-FileCopyrightInfo: Copyright © DUNE Project contributors, see file LICENSE.md in module root
+// SPDX-License-Identifier: LicenseRef-GPL-2.0-only-with-DUNE-exception
 #ifndef DUNE_GEOMETRY_QUADRATURE_{{ domain |> upper }}_HH
 #define DUNE_GEOMETRY_QUADRATURE_{{ domain |> upper }}_HH
 
@@ -49,9 +51,10 @@ namespace Dune {
 
     switch (order)
     {
-    {%- for rule in rules %}
-      case {{ rule["degree"] }}:
-      {%- if haskey(rule, "coordinates") && length(rule["coordinates"]) > 0 %}
+      case 0:
+    {%- for (degree,rule) in enumerate(rules) %}
+      case {{ degree }}:
+      {%- if !ismissing(rule) %}
       {%- let coordinates = rule["coordinates"], weights = rule["weights"] %}
       {%- let npoints = length(coordinates) %}
         // dim = {{ dim }}, order = {{ rule["degree"] }}, npoints = {{ npoints }}, properties = {{ rule["properties"] }}
@@ -62,7 +65,7 @@ namespace Dune {
         this->resize({{ npoints }});
         {%- for (i,p) in enumerate(coordinates) %}
         {%- let plast = last(p) %}
-        (*this)[{{i}}] = {
+        (*this)[{{ i-1 }}] = {
           Vector{ {%- for j in 1:length(p)-1 %}
             DUNE_NUMBER_FROM_STRING(ct, {{ p[j] }}),
             {%- end %}

@@ -100,13 +100,13 @@ function _lagrange(domain::AbstractCube, k::Integer, x::AbstractVector{T}) where
   if k == 0
     SVector{1,T}(one(T))
   elseif k == 1
-    out = MVector{len,T}(ones(T,len))
+    out = ones(T,len)
     for i in eachindex(out)
       for j in 1:dim
         out[i] *= _bitisset(i,j) ? (one(T)+x[j])/2 : (one(T)-x[j])/2
       end
     end
-    SVector(out)
+    SVector{len,T}(out)
   else
     error("Not implemented")
   end

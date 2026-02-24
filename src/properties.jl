@@ -9,14 +9,13 @@ Currently, three properties are checked:
 
 The function returns a vector of properties as corresponding Symbols.
 """
-function getProperties(domain::AbstractDomain, points::AbstractVector, weights::AbstractVector)
+function getProperties(ref::ReferenceElement, points::AbstractVector, weights::AbstractVector)
   T = eltype(weights)
   properties = Symbol[]
   if all(weights .> zero(T))
     push!(properties, :positive)
   end
 
-  ref = ReferenceElement(domain)
   if all((checkStrictlyInside(ref,p) for p in points))
     push!(properties, :inside)
   elseif all((checkInside(ref,p) for p in points))
@@ -32,4 +31,4 @@ end
 
 Collect properties of a quadrature rule.
 """
-getProperties(qr::QuadratureRule) = getProperties(qr.domain,qr.points,qr.weights)
+getProperties(qr::QuadratureRule) = getProperties(qr.ref,qr.points,qr.weights)
