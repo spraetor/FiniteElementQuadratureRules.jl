@@ -45,7 +45,7 @@ function generate(template::AbstractString, in_dir::AbstractString, out_dir::Abs
   for (root, _, files) in Filesystem.walkdir(in_dir)
     for file in (f for f in files if endswith(f, ".yml"))
       println("Parsing '$(joinpath(root, file))'")
-      data = load_file(joinpath(root, file))
+      data = YAML.load_file(joinpath(root, file))
       if haskey(data, "weights")
         cqr = CompactQuadratureRuleWithWeights(BigFloat, data)
       else

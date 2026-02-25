@@ -137,16 +137,16 @@ end
 function write_file(file::AbstractString, qr::QuadratureRule; reference::String="unknown", precision::Integer=50)
   open(file, "w") do f
     write(f, "reference: '$(reference)'\n")
-    write(f, "region: $(region(qr.domain))\n")
-    write(f, "dim: $(dimension(qr.domain))\n")
+    write(f, "region: $(region(domain(qr)))\n")
+    write(f, "dim: $(dimension(domain(qr)))\n")
     write(f, "degree: $(qr.degree)\n")
     write(f, "properties: [$(length(qr.properties)>0 ? string(qr.properties[1]) : "")")
     for i in 2:length(qr.properties)
-      write(f, ", $(string(qr.orbits[i]))")
+      write(f, ", $(string(qr.properties[i]))")
     end
     write(f, "]\n")
     write(f, "coordinates:\n")
-    for p in qr.coordinates
+    for p in qr.points
       write(f, "  - ['$(@sprintf("%0.*e",precision,p[1]))'")
       for i in 2:length(p)
         write(f, ", '$(@sprintf("%0.*e",precision,p[i]))'")

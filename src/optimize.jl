@@ -1,5 +1,4 @@
-using Optim
-using ADTypes: AutoForwardDiff
+import NonlinearSolve as NLS
 
 """
     optimize(qr::CompactQuadratureRule)
@@ -9,32 +8,25 @@ compact rule, by minimizing the quadrature residual on a set of polynomial basis
 functions. We use basis functions and their integrals given by a `JacobiPolySet`.
 """
 function optimize(qr::CompactQuadratureRule{Ω,T};
-                  x_abstol = sqrt(eps(float(T))),
-                  g_abstol = sqrt(eps(float(T))),
-                  f_abstol = eps(float(T)),
-                  iterations = 1_000) where {Ω,T}
+                  maxiters=1_000, show_trace=false) where {Ω,T}
   domain = qr.domain
-  degree = qr.degree
   orbits = qr.orbits
-  positions = Vector{T}(qr.positions)
-  polyset = JacobiPolySet(T, domain, degree)
+  polyset = JacobiPolySet(T, domain, qr.degree)
+  b = polyset.integrals
 
-  let f = (p) -> _residual(p,(domain,orbits,polyset))
-    options = Optim.Options(
-      x_abstol=T(x_abstol),
-      g_abstol=T(g_abstol),
-      f_abstol=T(f_abstol),
-      iterations = iterations,
-      show_trace = true
-    )
-
-    # Use a gradient-based method explicitly. The Optim default for scalar
-    # objectives is Nelder-Mead, which is too weak here and often stalls early.
-    result = Optim.optimize(
-      f, positions, BFGS(), options;
-      autodiff = AutoForwardDiff(),
-    )
-    return CompactQuadratureRule(domain,degree,orbits,result.minimizer)
+  let prob = NLS.NonlinearProblem(_residual, qr.positions, (domain,orbits,polyset,b))
+    if show_trace
+      # Work around a LinearSolve QR cache type mismatch for non-BLAS element types
+      # (e.g. Float128, Double64) by using Julia's native `\` linsolve path.
+      linsolve = T <: Union{Float32, Float64} ? nothing : (\)
+      sol = NLS.solve(prob, NLS.LevenbergMarquardt(; linsolve),
+        show_trace=Val(true),
+        maxiters=maxiters)
+    else
+      sol = NLS.solve(prob, NLS.SimpleTrustRegion(),
+        maxiters=maxiters)
+    end
+    return CompactQuadratureRule(domain,qr.degree,orbits,sol.u)
   end
 end
 
@@ -61,22 +53,19 @@ end
 # - `w_j` the quadrature weight associated to the jth symmetry orbit
 # - `A_ij` the sum ∑ₖ pᵢ(xₖ) for {xₖ} the points in the jth symmetry orbit.
 function _residual(positions::AbstractVector{T}, params) where {T}
-  domain, orbits, polyset = params
+  domain, orbits, polyset, b = params
   so = symmetryOrbits(T,domain)
   nDifferentWeights = sum(orbits)
   A = zeros(T, length(polyset.basis), nDifferentWeights)
-  b = zeros(T, length(polyset.basis))
 
   for i in eachindex(polyset.basis)
     pᵢ = polyset.basis[i]
-    b[i] = polyset.integrals[i]
 
     j = 1
     l = 1
     for k in eachindex(orbits)     # types of symmetry orbits
       n = args(so[k])              # number of orbital parameters
       for _ = 1:orbits[k]          # number of orbits of this type
-        # r = _clamporbit(so[k],view(positions,l:l+n-1))
         r = view(positions,l:l+n-1)
         # Evaluate on the domain of the reference element.
         points = transformCoordinates(domain, expand(so[k],r))
@@ -88,5 +77,5 @@ function _residual(positions::AbstractVector{T}, params) where {T}
   end
 
   w = A\b
-  return sum((A*w - b).^2)
+  return A*w - b
 end

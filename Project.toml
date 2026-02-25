@@ -4,21 +4,21 @@ version = "0.1.0-dev"
 authors = ["Simon Praetorius <simon.praetorius@tu-dresden.de> and contributors"]
 
 [deps]
-ADTypes = "47edcb42-4c32-4615-8424-f2b9edc5f35b"
 DoubleFloats = "497a8b3b-efae-58df-a0af-a86822472b78"
-Optim = "429524aa-4258-5aef-a3af-852621145aeb"
+NonlinearSolve = "8913a72c-1f9b-4ce2-8d82-65094dcecaec"
 OteraEngine = "b2d7f28f-acd6-4007-8b26-bc27716e5513"
 Printf = "de0858da-6303-5e67-8744-51eddeeeb8d7"
+Quadmath = "be4d8f0f-7fa4-5f49-b795-2f01399ab2dd"
 StaticArrays = "90137ffa-7385-5640-81b9-e52037218182"
 Symbolics = "0c5d862f-8b57-4792-8d23-62f2024744c7"
 YAML = "ddb6d928-2868-570f-bddf-ab3f9cf99eb6"
 
 [compat]
-ADTypes = "1.21.0"
 DoubleFloats = "1.5.5"
-Optim = "1.12.0"
+NonlinearSolve = "4.16.0"
 OteraEngine = "1.1.3"
 Printf = "1.9.0"
+Quadmath = "0.5.13"
 StaticArrays = "1.8"
 Symbolics = "6.3, 7.15"
 YAML = "0.4"
