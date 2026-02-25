@@ -1,4 +1,5 @@
 using Optim
+using ADTypes: AutoForwardDiff
 
 """
     optimize(qr::CompactQuadratureRule)
@@ -16,20 +17,22 @@ function optimize(qr::CompactQuadratureRule{Ω,T};
   degree = qr.degree
   orbits = qr.orbits
   positions = Vector{T}(qr.positions)
+  polyset = JacobiPolySet(T, domain, degree)
 
-  let f = (p) -> _residual(p,(domain,degree,orbits))
+  let f = (p) -> _residual(p,(domain,orbits,polyset))
     options = Optim.Options(
       x_abstol=T(x_abstol),
       g_abstol=T(g_abstol),
       f_abstol=T(f_abstol),
       iterations = iterations,
+      show_trace = true
     )
 
     # Use a gradient-based method explicitly. The Optim default for scalar
     # objectives is Nelder-Mead, which is too weak here and often stalls early.
     result = Optim.optimize(
       f, positions, BFGS(), options;
-      autodiff = :forward,
+      autodiff = AutoForwardDiff(),
     )
     return CompactQuadratureRule(domain,degree,orbits,result.minimizer)
   end
@@ -58,9 +61,7 @@ end
 # - `w_j` the quadrature weight associated to the jth symmetry orbit
 # - `A_ij` the sum ∑ₖ pᵢ(xₖ) for {xₖ} the points in the jth symmetry orbit.
 function _residual(positions::AbstractVector{T}, params) where {T}
-  domain, degree, orbits = params
-
-  polyset = JacobiPolySet(T, domain, degree)
+  domain, orbits, polyset = params
   so = symmetryOrbits(T,domain)
   nDifferentWeights = sum(orbits)
   A = zeros(T, length(polyset.basis), nDifferentWeights)
@@ -75,7 +76,8 @@ function _residual(positions::AbstractVector{T}, params) where {T}
     for k in eachindex(orbits)     # types of symmetry orbits
       n = args(so[k])              # number of orbital parameters
       for _ = 1:orbits[k]          # number of orbits of this type
-        r = _clamporbit(so[k],view(positions,l:l+n-1))
+        # r = _clamporbit(so[k],view(positions,l:l+n-1))
+        r = view(positions,l:l+n-1)
         # Evaluate on the domain of the reference element.
         points = transformCoordinates(domain, expand(so[k],r))
         A[i,j] = sum(pᵢ.(points))

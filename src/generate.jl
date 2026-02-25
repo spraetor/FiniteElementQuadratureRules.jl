@@ -1,6 +1,6 @@
-using YAML: load_file, write_file
 using Base: Filesystem
 using OteraEngine
+import YAML
 
 function default_chooser(qr1::QuadratureRule{T, D, Domain}, qr2::QuadratureRule{T, D, Domain}) where {T,D,Domain}
   if qr1.degree != qr2.degree
@@ -52,6 +52,10 @@ function generate(template::AbstractString, in_dir::AbstractString, out_dir::Abs
         cqr = CompactQuadratureRule(BigFloat, data)
       end
       qr = expand(cqr)
+      if !testWeights(qr)
+        println("  -> error(0)")
+        continue
+      end
       if !testQuadratureRule(qr)
         println("  -> error(1)")
         continue

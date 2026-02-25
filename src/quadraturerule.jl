@@ -132,3 +132,30 @@ function Base.Dict(qr::QuadratureRule; reference::String="unknown", precision::I
     "weights" => String[ @sprintf("%0.*e", precision,w) for w in qr.weights ]
     )
 end
+
+
+function write_file(file::AbstractString, qr::QuadratureRule; reference::String="unknown", precision::Integer=50)
+  open(file, "w") do f
+    write(f, "reference: '$(reference)'\n")
+    write(f, "region: $(region(qr.domain))\n")
+    write(f, "dim: $(dimension(qr.domain))\n")
+    write(f, "degree: $(qr.degree)\n")
+    write(f, "properties: [$(length(qr.properties)>0 ? string(qr.properties[1]) : "")")
+    for i in 2:length(qr.properties)
+      write(f, ", $(string(qr.orbits[i]))")
+    end
+    write(f, "]\n")
+    write(f, "coordinates:\n")
+    for p in qr.coordinates
+      write(f, "  - ['$(@sprintf("%0.*e",precision,p[1]))'")
+      for i in 2:length(p)
+        write(f, ", '$(@sprintf("%0.*e",precision,p[i]))'")
+      end
+      write(f, "]\n")
+    end
+    write(f, "weights:\n")
+    for w in qr.weights
+      write(f, "  - '$(@sprintf("%0.*e",precision,w))'\n")
+    end
+  end
+end

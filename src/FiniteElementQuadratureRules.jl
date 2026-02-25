@@ -35,9 +35,9 @@ export AbstractCube, AbstractDomain, AbstractGeometry, AbstractSimplex, AffineGe
   CompactQuadratureRuleWithWeights, Hexahedron, JacobiPolySet, LagrangePolySet, Line,
   MonomialPolySet, MultiLinearGeometry, Point, Prism, Pyramid, QuadratureRule,
   Quadrilateral, ReferenceElement, SymmetryOrbit, Tetrahedron, Triangle
-export ctype, dimension, domain, domaintype, duneReferenceElement, expand, expandall,
+export args, compact, ctype, dimension, domain, domaintype, duneReferenceElement, expand, expandall,
   facets, generate, getProperties, getWeights, integrate, isInside, isPositive, isPI,
-  optimize, order, position, symmetryOrbits, testQuadratureRule, transform, vertices,
-  volume
+  optimize, order, position, region, symmetryOrbits, testQuadratureRule, testWeights, transform,
+  vertices, volume, write_file
 
 end # end module FiniteElementQuadratureRules

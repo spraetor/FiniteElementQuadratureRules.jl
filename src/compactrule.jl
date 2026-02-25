@@ -82,6 +82,24 @@ function expand(cqr::CompactQuadratureRule{Ω,T}) where {Ω<:AbstractDomain,T<:R
 end
 
 
+function write_file(file::AbstractString, cqr::CompactQuadratureRule; reference::String="unknown", precision::Integer=50)
+  open(file, "w") do f
+    write(f, "reference: '$(reference)'\n")
+    write(f, "region: $(region(cqr.domain))\n")
+    write(f, "dim: $(dimension(cqr.domain))\n")
+    write(f, "degree: $(cqr.degree)\n")
+    write(f, "orbits: [$(cqr.orbits[1])")
+    for i in 2:length(cqr.orbits)
+      write(f, ", $(cqr.orbits[i])")
+    end
+    write(f, "]\n")
+    write(f, "positions:\n")
+    for p in cqr.positions
+      write(f, "  - '$(@sprintf("%0.*e",precision,p))'\n")
+    end
+  end
+end
+
 """
     CompactQuadratureRuleWithWeights{T,Ω}
 
@@ -168,4 +186,27 @@ function expand(cqr::CompactQuadratureRuleWithWeights{Ω,T}) where {Ω<:Abstract
   @assert length(points) == length(weights)
   QuadratureRule(cqr.domain, cqr.degree,
     transformCoordinates(cqr.domain,points), transformWeights(cqr.domain, weights))
+end
+
+
+function write_file(file::AbstractString, cqr::CompactQuadratureRuleWithWeights; reference::String="unknown", precision::Integer=50)
+  open(file, "w") do f
+    write(f, "reference: '$(reference)'\n")
+    write(f, "region: $(region(cqr.domain))\n")
+    write(f, "dim: $(dimension(cqr.domain))\n")
+    write(f, "degree: $(cqr.degree)\n")
+    write(f, "orbits: [$(cqr.orbits[1])")
+    for i in 2:length(cqr.orbits)
+      write(f, ", $(cqr.orbits[i])")
+    end
+    write(f, "]\n")
+    write(f, "positions:\n")
+    for p in cqr.positions
+      write(f, "  - '$(@sprintf("%0.*e",precision,p))'\n")
+    end
+    write(f, "weights:\n")
+    for w in cqr.weights
+      write(f, "  - '$(@sprintf("%0.*e",precision,w))'\n")
+    end
+  end
 end
