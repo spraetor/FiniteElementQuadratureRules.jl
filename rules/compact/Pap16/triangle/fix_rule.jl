@@ -12,7 +12,7 @@ function fix_rule(::Type{T}, file, fileOut=file) where T
     cqr = CompactQuadratureRule(T, data)
   end
   # cqr.positions .+= (2*rand(T,length(cqr.positions)) .- T(1))./100 .* cqr.positions
-  ocqr = optimize(cqr)
+  ocqr = optimize(cqr, show_trace=true)
   qr = expand(ocqr)
   testWeights(qr)
   testQuadratureRule(qr)
