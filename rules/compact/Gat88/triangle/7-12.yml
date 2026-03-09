@@ -2,6 +2,7 @@ reference: 'Gat88'
 region: simplex
 dim: 2
 degree: 7
+quality: PI
 orbits: [0, 0, 0, 0, 4]
 positions:
   - '6.23822650944021181736830009963499894057514515265192841568299917809879209774363e-02'

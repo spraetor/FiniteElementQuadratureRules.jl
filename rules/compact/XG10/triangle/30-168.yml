@@ -2,6 +2,7 @@ reference: 'XG10'
 region: simplex
 dim: 2
 degree: 30
+quality: PI
 points: 168
 orbits: [0,0,0,0,56]
 positions:

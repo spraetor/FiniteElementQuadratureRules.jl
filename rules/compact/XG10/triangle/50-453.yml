@@ -2,6 +2,7 @@ reference: 'XG10'
 region: simplex
 dim: 2
 degree: 50
+quality: PI
 orbits: [0, 17, 67]
 positions:
   - '2.56355863384790938486190725598135031759738922119141e-01'

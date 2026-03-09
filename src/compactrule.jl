@@ -31,6 +31,9 @@ particular the fields
 function CompactQuadratureRule(::Type{T}, data::Dict) where T<:Real
   dom = domain(data["dim"],data["region"])
   degree = Int(data["degree"])
+  if haskey(data, "quality") && !(data["quality"] isa AbstractString)
+    error("Expected `quality` to be a single scalar string value.")
+  end
   orbits = Int[ o for o in data["orbits"] ]
   positions = isnothing(data["positions"]) ? T[] : T[ _parse(T,p) for p in data["positions"] ]
   CompactQuadratureRule{typeof(dom),T}(dom,degree,orbits,positions)
@@ -55,7 +58,7 @@ Expand a compact rule into a full quadrature rule. This first expands the symmet
 orbits to generate a list of quadrature points and then computes the associated
 quadrature weights.
 """
-function expand(cqr::CompactQuadratureRule{Ω,T}) where {Ω<:AbstractDomain,T<:Real}
+function expand(cqr::CompactQuadratureRule{Ω,T}, ref::ReferenceElement{Ω}) where {Ω<:AbstractDomain,T<:Real}
   sos = symmetryOrbits(T,cqr.domain)
   if length(cqr.orbits) > length(sos)
     error("Number of orbits incompatible with available symmetric orbits.")
@@ -75,19 +78,31 @@ function expand(cqr::CompactQuadratureRule{Ω,T}) where {Ω<:AbstractDomain,T<:R
     end
   end
 
-  # maybe compute the weights here directly
   coords = transformCoordinates(cqr.domain,points)
   weights = getWeights(T,cqr.domain,cqr.degree,coords,cqr.orbits)
   QuadratureRule(cqr.domain, cqr.degree, coords, weights)
+
+  # geo = MultiLinearGeometry(ReferenceElement(cqr.domain), coordinates(ref))
+
+  # # maybe compute the weights here directly
+  # coords = [ convert.(T,p) for p in map(geo,transformCoordinates(cqr.domain,points)) ]
+  # weights = getWeights(T,ref,cqr.degree,coords,cqr.orbits)
+  # properties = getProperties(ref,coords,weights)
+  # refOut = ReferenceElement{Ω,T,eltype(coords)}(ref)
+  # QuadratureRule(refOut, cqr.degree, coords, weights, properties)
 end
 
+expand(cqr::CompactQuadratureRule{Ω,T}) where {Ω<:AbstractDomain,T<:Real} = expand(cqr, ReferenceElement(cqr.domain))
 
-function write_file(file::AbstractString, cqr::CompactQuadratureRule; reference::String="unknown", precision::Integer=50)
+
+function write_file(file::AbstractString, cqr::CompactQuadratureRule; reference::String="unknown", precision::Integer=32)
+  qr = expand(cqr)
   open(file, "w") do f
     write(f, "reference: '$(reference)'\n")
     write(f, "region: $(region(cqr.domain))\n")
     write(f, "dim: $(dimension(cqr.domain))\n")
     write(f, "degree: $(cqr.degree)\n")
+    write(f, "quality: $(string(getQuality(qr)))\n")
     write(f, "orbits: [$(cqr.orbits[1])")
     for i in 2:length(cqr.orbits)
       write(f, ", $(cqr.orbits[i])")
@@ -135,6 +150,9 @@ particular the fields
 function CompactQuadratureRuleWithWeights(::Type{T}, data::Dict) where T
   dom = domain(data["dim"],data["region"])
   degree = Int(data["degree"])
+  if haskey(data, "quality") && !(data["quality"] isa AbstractString)
+    error("Expected `quality` to be a single scalar string value.")
+  end
   orbits = Int[ o for o in data["orbits"] ]
   positions = isnothing(data["positions"]) ? T[] : T[ _parse(T,p) for p in data["positions"] ]
   weights = isnothing(data["weights"]) ? T[] : T[ _parse(T,w) for w in data["weights"] ]
@@ -190,11 +208,13 @@ end
 
 
 function write_file(file::AbstractString, cqr::CompactQuadratureRuleWithWeights; reference::String="unknown", precision::Integer=50)
+  qr = expand(cqr)
   open(file, "w") do f
     write(f, "reference: '$(reference)'\n")
     write(f, "region: $(region(cqr.domain))\n")
     write(f, "dim: $(dimension(cqr.domain))\n")
     write(f, "degree: $(cqr.degree)\n")
+    write(f, "quality: $(string(getQuality(qr)))\n")
     write(f, "orbits: [$(cqr.orbits[1])")
     for i in 2:length(cqr.orbits)
       write(f, ", $(cqr.orbits[i])")

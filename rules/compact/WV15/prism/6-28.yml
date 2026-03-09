@@ -2,6 +2,7 @@ reference: 'WV15'
 region: prism
 dim: 3
 degree: 6
+quality: PI
 orbits: [0, 2, 2, 1, 0, 1]
 positions:
   - '5.26622704804974758697980077483792443221458473174502601657224501326703783252041e-01'

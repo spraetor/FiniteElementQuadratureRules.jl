@@ -73,7 +73,9 @@ function symmetryOrbits(::Type{T}, ::Triangle) where {T<:Real}
     SymmetryOrbit(Val(2),3, (a::T, b::T) -> SVector{3,P}(  # Ro3=Rotation=even permutations
       P(a,b,T(1)-a-b),
       P(b,T(1)-a-b,a),
-      P(T(1)-a-b,a,b)), (p)->(p[1],p[2]) ), ]
+      P(T(1)-a-b,a,b)), (p)->(p[1],p[2]) ),
+    SymmetryOrbit(Val(3),1, (a::T, b::T, c::T) -> SVector{1,P}( # identity
+      (P(a,b,c),)), (p)->(p[1],p[2],p[3]) ), ]
 end
 
 function symmetryOrbits(::Type{T}, ::Quadrilateral) where {T<:Real}
@@ -105,21 +107,21 @@ end
 function symmetryOrbits(::Type{T}, ::Tetrahedron) where {T<:Real}
   P = SVector{4,T}
   SymmetryOrbit[
-    SymmetryOrbit(Val(0),1, () -> SVector{1,P}((
-      P(1//4,1//4,1//4,1//4),)), (p)->NTuple{0,P}() ),
+    SymmetryOrbit(Val(0),1, () -> SVector{1,P}((        # S4
+      P(1//4,1//4,1//4,1//4),)), (p)->NTuple{0,P}() ),  # S31
     SymmetryOrbit(Val(1),4, (a::T) -> SVector{4,P}(
       P(a,a,a,T(1)-3*a),
       P(a,a,T(1)-3*a,a),
       P(a,T(1)-3*a,a,a),
       P(T(1)-3*a,a,a,a)), (p)->(p[1],) ),
-    SymmetryOrbit(Val(1),6, (a::T) -> SVector{6,P}(
+    SymmetryOrbit(Val(1),6, (a::T) -> SVector{6,P}(     # S22
       P(a,a,1//2-a,1//2-a),
       P(a,1//2-a,a,1//2-a),
       P(1//2-a,a,a,1//2-a),
       P(a,1//2-a,1//2-a,a),
       P(1//2-a,a,1//2-a,a),
       P(1//2-a,1//2-a,a,a)), (p)->(p[1],) ),
-    SymmetryOrbit(Val(2),12, (a::T, b::T) -> SVector{12,P}(
+    SymmetryOrbit(Val(2),12, (a::T, b::T) -> SVector{12,P}( # S211
       P(a,a,b,T(1)-2*a-b),
       P(a,b,a,T(1)-2*a-b),
       P(b,a,a,T(1)-2*a-b),
@@ -132,7 +134,7 @@ function symmetryOrbits(::Type{T}, ::Tetrahedron) where {T<:Real}
       P(b,T(1)-2*a-b,a,a),
       P(T(1)-2*a-b,a,b,a),
       P(T(1)-2*a-b,b,a,a)), (p)->p[1]≈p[2] ? (p[1],p[3]) : (p[1],p[2]) ),
-    SymmetryOrbit(Val(3),24, (a::T, b::T, c::T) -> SVector{24,P}(
+    SymmetryOrbit(Val(3),24, (a::T, b::T, c::T) -> SVector{24,P}( # S1111
       P(a,b,c,T(1)-a-b-c),
       P(a,c,b,T(1)-a-b-c),
       P(c,a,b,T(1)-a-b-c),

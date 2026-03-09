@@ -2,6 +2,7 @@ reference: 'Pap15'
 region: simplex
 dim: 2
 degree: 2
+quality: PB
 orbits: [0, 1, 0, 0]
 positions:
   - '5.00000000000000000000000000000000000000000000000000000000000000000000000000000e-01'

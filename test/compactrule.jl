@@ -21,6 +21,8 @@ let
   cqr = CompactQuadratureRuleWithWeights(line, 1, [1,0], F[], F[2.0])
   qr = expand(cqr)
 
+  @test getQuality(qr) == :PI
+
   cqr2 = CompactQuadratureRule(line, 1, [1,0], F[])
   qr2 = expand(cqr2)
 
@@ -32,6 +34,8 @@ end
 let
   cqr = CompactQuadratureRuleWithWeights(tri, 1, [0,1,0], F[0.0], F[1/3])
   qr = expand(cqr)
+
+  @test getQuality(qr) == :PB
 
   cqr2 = CompactQuadratureRule(tri, 1, [0,1,0], F[0.0])
   qr2 = expand(cqr2)

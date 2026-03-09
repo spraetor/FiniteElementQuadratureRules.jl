@@ -2,6 +2,7 @@ reference: 'WV15'
 region: pyramid
 dim: 3
 degree: 5
+quality: PI
 orbits: [3, 1, 2, 0]
 positions:
   - '4.59715761565013385861642653779208113140938897464610329592507360133027388392079e-01'

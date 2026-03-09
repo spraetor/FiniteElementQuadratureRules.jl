@@ -2,6 +2,7 @@ reference: 'JS21'
 region: pyramid
 dim: 3
 degree: 10
+quality: PI
 orbits: [4, 6, 7, 3]
 positions:
   - '8.35333097935684809019633484161463817332665845645109e-01'

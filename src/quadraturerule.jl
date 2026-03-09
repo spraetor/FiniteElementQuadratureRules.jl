@@ -1,5 +1,7 @@
 using StaticArrays: SVector
 using Printf: @sprintf
+import BibParser
+import BibFormatter
 
 """
     QuadratureRule{Ω,T,Point}
@@ -81,6 +83,9 @@ function QuadratureRule(::Type{T}, data::Dict) where T
   degree::Integer = data["degree"]
   points = [ point(T,D,coords) for coords in data["coordinates"] ]
   weights = [ _parse(T,w) for w in data["weights"] ]
+  if haskey(data, "quality") && !(data["quality"] isa AbstractString)
+    error("Expected `quality` to be a single scalar string value.")
+  end
   properties = [ Symbol(p) for p in data["properties"] ]
 
   ref = ReferenceElement(dom)
@@ -115,18 +120,19 @@ end
 import Base: Dict
 
 """
-    Dict(qr::QuadratureRule, ref::String = "unknown")
+    Dict(qr::QuadratureRule, reference::String="unknown", precision::Int=32)
 
 Convert the given `QuadratureRule` into a Dict for exporting into a YAML file.
-The optional parameter `ref` refers to a bibtex key used to reference a publication
+The optional parameter `reference` refers to a bibtex key used to reference a publication
 where the quadrature rule is extracted from.
 """
-function Base.Dict(qr::QuadratureRule; reference::String="unknown", precision::Int=50)
+function Base.Dict(qr::QuadratureRule; reference::String="unknown", precision::Int=32)
   Dict(
     "reference" => reference,
     "region" => region(domain(qr)),
     "dim" => dimension(domain(qr)),
     "degree" => qr.degree,
+    "quality" => string(getQuality(qr)),
     "properties" => String[ string(prop) for prop in qr.properties ],
     "coordinates" => [ String[ @sprintf("%0.*e", precision,pᵢ) for pᵢ in p ] for p in qr.points ],
     "weights" => String[ @sprintf("%0.*e", precision,w) for w in qr.weights ]
@@ -140,6 +146,7 @@ function write_file(file::AbstractString, qr::QuadratureRule; reference::String=
     write(f, "region: $(region(domain(qr)))\n")
     write(f, "dim: $(dimension(domain(qr)))\n")
     write(f, "degree: $(qr.degree)\n")
+    write(f, "quality: $(string(getQuality(qr)))\n")
     write(f, "properties: [$(length(qr.properties)>0 ? string(qr.properties[1]) : "")")
     for i in 2:length(qr.properties)
       write(f, ", $(string(qr.properties[i]))")

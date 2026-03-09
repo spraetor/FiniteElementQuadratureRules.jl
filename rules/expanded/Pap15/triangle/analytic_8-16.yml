@@ -2,6 +2,7 @@ reference: 'Pap15'
 region: simplex
 dim: 2
 degree: 8
+quality: NI
 properties:
   - inside
   - negative

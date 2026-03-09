@@ -2,6 +2,7 @@ reference: 'WV15'
 region: cube
 dim: 2
 degree: 19
+quality: PI
 properties:
   - inside
   - positive

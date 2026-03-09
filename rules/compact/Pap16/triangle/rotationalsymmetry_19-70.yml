@@ -2,6 +2,7 @@ reference: 'Pap16'
 region: simplex
 dim: 2
 degree: 19
+quality: PI
 orbits: [1, 0, 0, 0, 23]
 positions:
   - '1.03766565457017547537688051732930324120651683765294e-02'

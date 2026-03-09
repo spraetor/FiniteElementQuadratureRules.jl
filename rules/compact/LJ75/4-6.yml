@@ -1,0 +1,12 @@
+reference: 'LJ75'
+region: simplex
+dim: 2
+degree: 4
+quality: PI
+orbits: [0, 2, 0, 0]
+positions:
+  - '9.157621350977073e-2'
+  - '4.459484909159649e-1'
+weights:
+  - '0.10995174365532183'
+  - '0.2233815896780115'

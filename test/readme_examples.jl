@@ -54,6 +54,23 @@ import YAML
     end
   end
 
+  @testset "Generate Markdown Rule Overview" begin
+    mktempdir() do tmp
+      out_file = joinpath(tmp, "allrules.md")
+      generate_rule_overview(
+        joinpath(rules_root, "compact", "Gat88"),
+        out_file,
+      )
+
+      @test isfile(out_file)
+      text = read(out_file, String)
+      @test occursin("# Quadrature Rule Overview", text)
+      @test occursin("## Triangle", text)
+      @test occursin("| Degree | Points | Quality | Orbits | Reference |", text)
+      @test occursin("## References", text)
+    end
+  end
+
   @testset "Optimize Rule" begin
     data = YAML.load_file(joinpath(rules_root, "compact", "CCGV22", "triangle", "4-6.yml"))
     cqr = CompactQuadratureRule(BigFloat, data)

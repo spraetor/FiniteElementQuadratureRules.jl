@@ -2,6 +2,7 @@ reference: 'WV15'
 region: pyramid
 dim: 3
 degree: 10
+quality: PI
 properties:
   - inside
   - positive

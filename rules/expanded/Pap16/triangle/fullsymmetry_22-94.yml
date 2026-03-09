@@ -2,6 +2,7 @@ reference: 'Pap16'
 region: simplex
 dim: 2
 degree: 22
+quality: NB
 properties:
   - boundary
   - negative

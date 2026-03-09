@@ -2,6 +2,7 @@ reference: 'Pap15'
 region: simplex
 dim: 2
 degree: 1
+quality: PI
 properties:
   - inside
   - positive

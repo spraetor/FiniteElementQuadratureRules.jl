@@ -2,6 +2,7 @@ reference: 'WV15'
 region: simplex
 dim: 2
 degree: 12
+quality: PI
 orbits: [0, 5, 3]
 positions:
   - '4.88203750945541551778008123868814756924295226619318829343726078459899090872361e-01'

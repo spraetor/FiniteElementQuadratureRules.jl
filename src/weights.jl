@@ -59,7 +59,6 @@ computation more stable and faster. The parameter `T` represents the number type
 used for the computation.
 """
 function getWeights(::Type{T}, ref::ReferenceElement, degree::Integer, points::AbstractVector, orbits::AbstractVector) where {T<:Real}
-
   polyset = JacobiPolySet(domain(ref), degree)
   so = symmetryOrbits(T,domain(ref))
   nDifferentWeights = sum(orbits)
@@ -71,12 +70,9 @@ function getWeights(::Type{T}, ref::ReferenceElement, degree::Integer, points::A
     j = 1
     n = 1
     for k in eachindex(orbits)    # types of symmetry orbits
-      for l in 1:orbits[k]        # number of orbits of this type
-        fPointsSum = T(0)
-        for m in 1:length(so[k])  # length of the orbit
-          fPointsSum += f(points[n])
-          n = n+1
-        end
+      for _ in 1:orbits[k]        # number of orbits of this type
+        fPointsSum = sum(f(points[n+m-1]) for m in 1:length(so[k]))
+        n += length(so[k])
         A[i,j] = fPointsSum
         j = j+1
       end

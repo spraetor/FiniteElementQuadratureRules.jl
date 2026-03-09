@@ -2,6 +2,7 @@ reference: 'WV15'
 region: cube
 dim: 2
 degree: 7
+quality: PI
 orbits: [0, 1, 2, 0]
 positions:
   - '9.25820099772551461566566776583999522529314901008335221387336342544231053977719e-01'

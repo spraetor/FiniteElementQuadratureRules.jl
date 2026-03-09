@@ -3,6 +3,7 @@ reference: 'XG10'
 region: cube
 dim: 3
 degree: 5
+quality: PI
 points: 13
 properties: ['inside','positive']
 coordinates:

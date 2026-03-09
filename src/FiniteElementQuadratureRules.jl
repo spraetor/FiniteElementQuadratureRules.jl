@@ -31,13 +31,13 @@ include("optimize.jl")
 include("dune.jl")
 
 export AbstractCube, AbstractDomain, AbstractGeometry, AbstractSimplex, AffineGeometry,
-  AbstractPolySet, BarycentricMonomial, CompactQuadratureRule,
+  AbstractPolySet, BarycentricMonomials, CompactQuadratureRule,
   CompactQuadratureRuleWithWeights, Hexahedron, JacobiPolySet, LagrangePolySet, Line,
   MonomialPolySet, MultiLinearGeometry, Point, Prism, Pyramid, QuadratureRule,
   Quadrilateral, ReferenceElement, SymmetryOrbit, Tetrahedron, Triangle
 export args, compact, ctype, dimension, domain, domaintype, duneReferenceElement, expand, expandall,
-  facets, generate, getProperties, getWeights, integrate, isInside, isPositive, isPI,
-  optimize, order, position, region, symmetryOrbits, testQuadratureRule, testWeights, transform,
+  facets, generate, generate_rule_overview, getProperties, getQuality, getWeights, integrate, isInside, isPositive, isPI,
+  optimize, position, region, symmetryOrbits, testQuadratureRule, testWeights, transform,
   vertices, volume, write_file
 
 end # end module FiniteElementQuadratureRules

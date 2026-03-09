@@ -1,0 +1,11 @@
+reference: 'LJ75'
+region: simplex
+dim: 2
+degree: 2
+quality: PB
+orbits: [1, 1, 0, 0]
+positions:
+  - '0.0'
+weights:
+  - '0.75'
+  - '0.083333333333333333333333333333333333333333333333333333333333333333333333333333'

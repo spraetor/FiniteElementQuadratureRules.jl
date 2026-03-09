@@ -37,6 +37,12 @@ jobs:
           version: ${{ matrix.version }}
           arch: ${{ matrix.arch }}
       - uses: julia-actions/cache@v2
+      - name: Configure test environment
+        shell: julia --project=. --color=yes {0}
+        run: |
+          using Pkg
+          Pkg.add(url="https://github.com/spraetor/BibFormatter.jl")
+          Pkg.instantiate()
       - uses: julia-actions/julia-buildpkg@v1
       - uses: julia-actions/julia-runtest@v1
       - uses: julia-actions/julia-processcoverage@v1
@@ -62,6 +68,7 @@ jobs:
         shell: julia --project=docs --color=yes {0}
         run: |
           using Pkg
+          Pkg.add(url="https://github.com/spraetor/BibFormatter.jl")
           Pkg.develop(PackageSpec(path=pwd()))
           Pkg.instantiate()
       - uses: julia-actions/julia-buildpkg@v1
@@ -76,4 +83,3 @@ jobs:
           using FiniteElementQuadratureRules
           DocMeta.setdocmeta!(FiniteElementQuadratureRules, :DocTestSetup, :(using FiniteElementQuadratureRules); recursive=true)
           doctest(FiniteElementQuadratureRules)
-

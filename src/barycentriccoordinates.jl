@@ -74,12 +74,12 @@ function transformCoordinates(::Prism, X::AbstractVector{P}) where {P<:AbstractV
 end
 transformCoordinates(::Pyramid, X::AbstractVector{P}) where {P<:AbstractVector} = X
 
-transformCoordinates(domain::AbstractDomain, X::NTuple{N,T}) where {N,T} = transformCoordinates(domain, SVector{N,T}(X))
+transformCoordinates(domain::AbstractDomain, X::NTuple{N}) where {N} = transformCoordinates(domain, SVector(X))
 
 
 # transform the quadrature weights when changing the coordinates from barycentric to reference domain
 transformWeights(::AbstractCube, W::AbstractVector{<:Real}) = W
 transformWeights(::Triangle, W::AbstractVector{<:Real}) = map(w -> 2*w, W)
-transformWeights(::Tetrahedron, W::AbstractVector{<:Real}) = map(w -> 2*w, W)
+transformWeights(::Tetrahedron, W::AbstractVector{<:Real}) = map(w -> 4*w/3, W)
 transformWeights(::Prism, W::AbstractVector{<:Real}) = map(w -> 2*w, W)
 transformWeights(::Pyramid, W::AbstractVector{<:Real}) = W

@@ -52,6 +52,6 @@ using FiniteElementQuadratureRules: transformCoordinates, transformWeights
   # Weight transforms.
   @test transformWeights(Line(), [1.0, 2.0]) == [1.0, 2.0]
   @test transformWeights(Triangle(), [0.25, 0.5]) == [0.5, 1.0]
-  @test transformWeights(Tetrahedron(), [0.25, 0.5]) == [0.5, 1.0]
+  @test transformWeights(Tetrahedron(), [1//4, 1//2]) == [1//3, 2//3]
   @test transformWeights(Quadrilateral(), [0.25, 0.5]) == [0.25, 0.5]
 end
