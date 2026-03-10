@@ -7,6 +7,18 @@
 
 This julia package allows to transform compact quadrature rules, given in terms of symmetric orbits of points inside reference domains, like simplices and cubes, into full sets of quadrature points and weights. Additionally, the package provides utilities to improve the accuracy of given quadrature rules, by running an optimizer with high floating point accuracy, starting from the given set of points as initial condition.
 
+## Installation
+`FiniteElementQuadratureRules` is not yet registered. It can be installed directly from GitHub.
+
+`BibFormatter` is also currently required as an unregistered dependency and must be installed from its GitHub URL first.
+
+```julia
+using Pkg
+
+Pkg.add(url="https://github.com/spraetor/BibFormatter.jl")
+Pkg.add(url="https://github.com/spraetor/FiniteElementQuadratureRules.jl")
+```
+
 ## Main workflow for FE library developers
 The main purpose of this repository is to help finite-element library developers maintain quadrature-rule tables in their own code base:
 
