@@ -14,7 +14,6 @@ StaticArrays = "90137ffa-7385-5640-81b9-e52037218182"
 YAML = "ddb6d928-2868-570f-bddf-ab3f9cf99eb6"
 
 [compat]
-BibFormatter = "0.1.0"
 BibInternal = "0.3.7"
 BibParser = "0.2.3"
 NonlinearSolve = "4.16.0"
