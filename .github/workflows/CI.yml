@@ -41,7 +41,7 @@ jobs:
         shell: julia --project=. --color=yes {0}
         run: |
           using Pkg
-          Pkg.add(url="https://github.com/spraetor/BibFormatter.jl")
+          Pkg.develop(PackageSpec(url="https://github.com/spraetor/BibFormatter.jl"))
           Pkg.instantiate()
       - uses: julia-actions/julia-buildpkg@v1
       - uses: julia-actions/julia-runtest@v1
@@ -69,7 +69,7 @@ jobs:
         run: |
           using Pkg
           Pkg.develop(PackageSpec(path=pwd()))
-          Pkg.add(url="https://github.com/spraetor/BibFormatter.jl")
+          Pkg.develop(PackageSpec(url="https://github.com/spraetor/BibFormatter.jl"))
           Pkg.instantiate()
       - name: Build and deploy documentation
         run: julia --project=docs docs/make.jl
