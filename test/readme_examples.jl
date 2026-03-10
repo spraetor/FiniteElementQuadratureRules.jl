@@ -1,4 +1,5 @@
 import YAML
+include(joinpath(@__DIR__, "..", "ext", "dune.jl"))
 
 @testset "README Examples" begin
   rules_root = joinpath(@__DIR__, "..", "rules")
@@ -31,44 +32,6 @@ import YAML
     qr_dune = transform(qr, ref_dune)
     @test qr_dune.degree == qr.degree
     @test length(qr_dune) == length(qr)
-  end
-
-  @testset "Generate Dune Files From Template" begin
-    mktempdir() do tmp
-      out_dir = joinpath(tmp, "dune")
-      generate(
-        joinpath(@__DIR__, "..", "dune.templ.hh"),
-        joinpath(rules_root, "compact", "Gat88"),
-        out_dir;
-        precision=80
-      )
-
-      triangle_hh = joinpath(out_dir, "triangle.hh")
-      tetrahedron_hh = joinpath(out_dir, "tetrahedron.hh")
-      @test isfile(triangle_hh)
-      @test isfile(tetrahedron_hh)
-
-      triangle_text = read(triangle_hh, String)
-      @test occursin("QuadratureRule", triangle_text)
-      @test occursin("highest_order", triangle_text)
-    end
-  end
-
-  @testset "Generate Markdown Rule Overview" begin
-    mktempdir() do tmp
-      out_file = joinpath(tmp, "allrules.md")
-      generate_rule_overview(
-        joinpath(rules_root, "compact", "Gat88"),
-        out_file,
-      )
-
-      @test isfile(out_file)
-      text = read(out_file, String)
-      @test occursin("# Quadrature Rule Overview", text)
-      @test occursin("## Triangle", text)
-      @test occursin("| Degree | Points | Quality | Orbits | Reference |", text)
-      @test occursin("## References", text)
-    end
   end
 
   @testset "Optimize Rule" begin

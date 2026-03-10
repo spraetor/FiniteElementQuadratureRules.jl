@@ -41,6 +41,7 @@ Example (to Dune triangle convention):
 ```julia
 using FiniteElementQuadratureRules
 using YAML: load_file
+include("ext/dune.jl")
 
 data = load_file("rules/compact/CCGV22/triangle/4-6.yml")
 qr = expand(CompactQuadratureRule(Float64, data))
@@ -50,14 +51,27 @@ qr_dune = transform(qr, ref_dune)
 ```
 
 ## Generate library-specific code from templates
-`generate` renders source/header files from an Otera template with rule data grouped by domain and degree.
+The export-oriented generators are provided by an optional package extension. To activate
+it, install and load the optional dependencies:
+
+```julia
+using Pkg
+Pkg.add(url="https://github.com/spraetor/BibFormatter.jl")
+Pkg.add("BibInternal")
+Pkg.add("BibParser")
+Pkg.add("OteraEngine")
+```
 
 Example (Dune):
 
 ```julia
 using FiniteElementQuadratureRules
+using BibFormatter
+using BibInternal
+using BibParser
+using OteraEngine
 
-generate("dune.templ.hh", "rules/compact/CCGV22/", "dune/"; precision=80)
+generate("ext/dune.templ.hh", "rules/compact/CCGV22/", "dune/"; precision=80)
 ```
 
 ## Optional: optimize rule accuracy

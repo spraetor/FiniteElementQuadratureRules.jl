@@ -37,12 +37,6 @@ jobs:
           version: ${{ matrix.version }}
           arch: ${{ matrix.arch }}
       - uses: julia-actions/cache@v2
-      - name: Configure test environment
-        shell: julia --project=. --color=yes {0}
-        run: |
-          using Pkg
-          Pkg.develop(PackageSpec(url="https://github.com/spraetor/BibFormatter.jl"))
-          Pkg.instantiate()
       - uses: julia-actions/julia-buildpkg@v1
       - uses: julia-actions/julia-runtest@v1
       - uses: julia-actions/julia-processcoverage@v1
@@ -69,10 +63,9 @@ jobs:
         run: |
           using Pkg
           Pkg.develop(PackageSpec(path=pwd()))
-          Pkg.develop(PackageSpec(url="https://github.com/spraetor/BibFormatter.jl"))
           Pkg.instantiate()
-      - name: Build and deploy documentation
-        run: julia --project=docs docs/make.jl
+      - uses: julia-actions/julia-buildpkg@v1
+      - uses: julia-actions/julia-docdeploy@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DOCUMENTER_KEY: ${{ secrets.DOCUMENTER_KEY }}

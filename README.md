@@ -10,12 +10,26 @@ This julia package allows to transform compact quadrature rules, given in terms 
 ## Installation
 `FiniteElementQuadratureRules` is not yet registered. It can be installed directly from GitHub.
 
-`BibFormatter` is also currently required as an unregistered dependency and must be installed from its GitHub URL first.
-
 ```julia
 using Pkg
 
+Pkg.add(url="https://github.com/spraetor/FiniteElementQuadratureRules.jl")
+```
+
+## Optional Export Extension
+Template-based exporters and bibliography-aware helpers are provided through an optional
+package extension. That keeps the core package free of `Bib*` and template-engine
+dependencies.
+
+To use the export helpers, install the optional dependencies and load them together with
+`FiniteElementQuadratureRules`:
+
+```julia
+using Pkg
 Pkg.add(url="https://github.com/spraetor/BibFormatter.jl")
+Pkg.add("BibInternal")
+Pkg.add("BibParser")
+Pkg.add("OteraEngine")
 Pkg.add(url="https://github.com/spraetor/FiniteElementQuadratureRules.jl")
 ```
 
@@ -49,11 +63,16 @@ write_file("rules/expanded/CCGV22/triangle/4-6.yml", Dict(qr; reference=data["re
 ## Transform to another reference-element convention
 Different FE libraries use different reference-element coordinate systems. Use `transform` to map one convention to another.
 
+For the Dune reference element, either load the optional dependencies to activate the
+extension automatically, or use the helper file in `ext/dune.jl` from a checkout of this
+repository:
+
 Example (transforming to Dune coordinates):
 
 ```julia
 using FiniteElementQuadratureRules
 using YAML: load_file
+include("ext/dune.jl")
 
 data = load_file("rules/compact/CCGV22/triangle/4-6.yml")
 qr = expand(CompactQuadratureRule(Float64, data))
@@ -63,14 +82,19 @@ qr_dune = transform(qr, ref_dune)
 ```
 
 ## Generate FE-library specific code from templates
-The `generate` function reads compact-rule files, expands/sorts/selects rules, and renders output files from an Otera template.
+The `generate` and `generate_rule_overview` helpers are provided by the optional export
+extension.
 
 Example for Dune headers:
 
 ```julia
 using FiniteElementQuadratureRules
+using BibFormatter
+using BibInternal
+using BibParser
+using OteraEngine
 
-generate("dune.templ.hh", "rules/compact/CCGV22/", "dune/"; precision=80)
+generate("ext/dune.templ.hh", "rules/compact/CCGV22/", "dune/"; precision=80)
 ```
 
 This creates one output file per domain in `dune/` (e.g. `triangle.hh`, `tetrahedron.hh`).

@@ -1,4 +1,5 @@
 using YAML: load_file
+include(joinpath(@__DIR__, "..", "ext", "dune.jl"))
 
 @testset "Dune reference element" begin
   rules_root = joinpath(@__DIR__, "..", "rules")

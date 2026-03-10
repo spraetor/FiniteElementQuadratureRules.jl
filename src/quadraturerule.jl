@@ -1,7 +1,5 @@
 using StaticArrays: SVector
 using Printf: @sprintf
-import BibParser
-import BibFormatter
 
 """
     QuadratureRule{Ω,T,Point}
