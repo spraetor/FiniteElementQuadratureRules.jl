@@ -1,5 +1,5 @@
 
-function testWeights(qr::QuadratureRule{Ω,T,P}; tol::T = sqrt(eps(T))) where {Ω,T,P}
+function testWeights(qr::QuadratureRule{Ω,T,P}; tol::Real = sqrt(eps(T))) where {Ω,T,P}
   check = isapprox(sum(qr.weights), volume(qr.ref), atol=tol)
   if !check
     println("$(sum(qr.weights)) != $(volume(qr.ref))")
@@ -7,7 +7,7 @@ function testWeights(qr::QuadratureRule{Ω,T,P}; tol::T = sqrt(eps(T))) where {�
   return check
 end
 
-function testQuadratureRule(qr::QuadratureRule{Ω,T,P}; tol::T = sqrt(eps(T))) where {Ω,T,P}
+function testQuadratureRule(qr::QuadratureRule{Ω,T,P}; tol::Real = sqrt(eps(T))) where {Ω,T,P}
   polyset = JacobiPolySet(domain(qr),qr.degree)
   max_error = zero(T)
   for (f,I) in zip(polyset.basis, polyset.integrals)

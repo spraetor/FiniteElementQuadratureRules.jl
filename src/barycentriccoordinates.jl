@@ -1,8 +1,8 @@
 using StaticArrays: @SMatrix, @SVector, SMatrix, SVector
 
-
 """
     barycentricCoordinates(domain::AbstractDomain, x::AbstractVector)
+    barycentricCoordinates(ref::ReferenceElement, x::AbstractVector)
 
 Transform reference element coordinates in a given domain into
 barycentric coordinates. This is in particular useful for simplex
@@ -19,11 +19,25 @@ function barycentricCoordinates(::AbstractDomain, x::AbstractVector)
   return x
 end
 
+function barycentricCoordinates(ref::ReferenceElement, x::AbstractVector)
+  return barycentricCoordinates(domain(ref),x)
+end
+
 # Specializations for triangle reference domains
 function barycentricCoordinates(::Triangle, x::AbstractVector)
   @assert length(x) == 2
   T = eltype(x)
   return SVector{3,T}(-(x[1]+x[2])/2, (one(T)+x[1])/2, (one(T)+x[2])/2)
+end
+
+function barycentricCoordinates(ref::ReferenceElement{Triangle}, x::AbstractVector)
+  @assert length(x) == 2
+  T = eltype(x)
+  A = SMatrix{3,3,T}((coordinates(ref,1)[1], coordinates(ref,1)[2], one(T),
+                      coordinates(ref,2)[1], coordinates(ref,2)[2], one(T),
+                      coordinates(ref,3)[1], coordinates(ref,3)[2], one(T)))
+  b = SVector{3,T}((x[1],x[2],one(T)))
+  return A\b
 end
 
 # Specializations for tetrahedron reference domains

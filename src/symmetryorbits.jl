@@ -75,7 +75,11 @@ function symmetryOrbits(::Type{T}, ::Triangle) where {T<:Real}
       P(b,T(1)-a-b,a),
       P(T(1)-a-b,a,b)), (p)->(p[1],p[2]) ),
     SymmetryOrbit(Val(3),1, (a::T, b::T, c::T) -> SVector{1,P}( # identity
-      (P(a,b,c),)), (p)->(p[1],p[2],p[3]) ), ]
+      (P(a,b,c),)), (p)->(p[1],p[2],p[3]) ),
+    SymmetryOrbit(Val(2),2, (a::T, b::T) -> SVector{2,P}(  # Mirror2
+      P(a,b,T(1)-a-b),
+      P(a,T(1)-a-b,b)), (p)->(p[1],p[2]) ),
+    ]
 end
 
 function symmetryOrbits(::Type{T}, ::Quadrilateral) where {T<:Real}

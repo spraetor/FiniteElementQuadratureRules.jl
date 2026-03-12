@@ -20,8 +20,9 @@ function generate_rule_overview end
 
 
 include("domain.jl")
-include("barycentriccoordinates.jl")
 include("referenceelement.jl")
+include("barycentriccoordinates.jl")
+include("checkinside.jl")
 include("symmetryorbits.jl")
 include("jacobi.jl")
 include("lagrange.jl")
@@ -42,7 +43,7 @@ export AbstractCube, AbstractDomain, AbstractGeometry, AbstractSimplex, AffineGe
   CompactQuadratureRuleWithWeights, Hexahedron, JacobiPolySet, LagrangePolySet, Line,
   MonomialPolySet, MultiLinearGeometry, Point, Prism, Pyramid, QuadratureRule,
   Quadrilateral, ReferenceElement, SymmetryOrbit, Tetrahedron, Triangle
-export args, compact, ctype, default_chooser, dimension, domain, domaintype, duneReferenceElement, expand, expandall,
+export args, barycentricCoordinates, compact, coordinates, ctype, default_chooser, dimension, domain, domaintype, duneReferenceElement, expand, expandall,
   facets, generate, generate_rule_overview, getProperties, getQuality, getWeights, integrate, isInside, isPositive, isPI,
   optimize, position, region, symmetryOrbits, testQuadratureRule, testWeights, transform,
   vertices, volume, write_file
