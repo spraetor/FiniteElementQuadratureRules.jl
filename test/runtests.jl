@@ -11,6 +11,7 @@ using Test
     include("quadraturerule.jl")
     include("readme_examples.jl")
     include("referenceelement.jl")
+    include("rules.jl")
     include("symmetryorbits.jl")
     include("transformcoordinates.jl")
     include("weights.jl")
