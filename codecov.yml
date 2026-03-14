@@ -1,4 +1,0 @@
-ignore:
-  - "ext/*.templ.*"
-  - "ext/generate*.jl"
-  - "rules/julia/*.jl"
