@@ -22,16 +22,16 @@ function gun75(file)
   positions = BigFloat[]
   weights = BigFloat[]
 
-  for i in eachindex(t)
-    λ = barycentricCoordinates(refIn, SVector{2,BigFloat}((t[i],t[i])))
-    push!(positions, λ...)
-    push!(weights, wt[i]*2)
-  end
-
   for i in axes(xy,1)
     λ = barycentricCoordinates(refIn, xy[i,:])
     push!(positions, so4.compact(λ)...)
     push!(weights, wxy[i]*2)
+  end
+
+  for i in eachindex(t)
+    λ = barycentricCoordinates(refIn, SVector{2,BigFloat}((t[i],t[i])))
+    push!(positions, λ...)
+    push!(weights, wt[i]*2)
   end
 
   cqr = CompactQuadratureRule(Triangle(), 7, orbits, positions)

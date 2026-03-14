@@ -41,7 +41,7 @@ function generate(
 
   QR = Union{Tuple{QuadratureRule, BibInternal.Entry},Missing}
   qrs = Dict{Symbol, Vector{QR}}()
-  for Domain in Base.uniontypes(AllDomains)
+  for Domain in Base.uniontypes(FiniteElementQuadratureRules.AllDomains)
     qrs[Symbol(Domain)] = Tuple{QuadratureRule, BibInternal.Entry}[]
   end
 
@@ -74,12 +74,12 @@ function generate(
   end
 
   maxdegree = Dict{Symbol, Int}()
-  for domain in map(Symbol, Base.uniontypes(AllDomains))
+  for domain in map(Symbol, Base.uniontypes(FiniteElementQuadratureRules.AllDomains))
     maxdegree[domain] = maximum(rule[1].degree for rule in qrs[domain]; init=0)
   end
 
   println("Sorting the quadrature rules")
-  for domain in map(Symbol, Base.uniontypes(AllDomains))
+  for domain in map(Symbol, Base.uniontypes(FiniteElementQuadratureRules.AllDomains))
     sort!(qrs[domain]; lt=chooser)
     selected = Vector{QR}(undef, maxdegree[domain])
     fill!(selected, missing)
@@ -106,7 +106,7 @@ function generate(
   bibliography(bibentry) = BibFormatter.format(bibentry, fmt=:text)
   convert(rule) = Dict(rule[1]; reference=bibliography(rule[2]), kwargs...)
   passmissing(f) = rule -> ismissing(rule) ? rule : f(rule)
-  for domain in Base.uniontypes(AllDomains)
+  for domain in Base.uniontypes(FiniteElementQuadratureRules.AllDomains)
     D = Symbol(domain)
     rules = map(passmissing(convert), qrs[D])
 
@@ -119,7 +119,8 @@ function generate(
       :rules => rules,
     )
 
-    open(joinpath(out_dir, string(D) * ".hh"), "w") do io
+    extension = Filesystem.splitext(template)[end]
+    open(joinpath(out_dir, string(D) * extension), "w") do io
       write(io, tmpl(init=data))
     end
   end
