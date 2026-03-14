@@ -11,6 +11,8 @@ end
 HexahedronQuadRule(degree::Val{d}) where d = HexahedronQuadRule(Float64, degree)
 HexahedronQuadRule(degree::Integer) = HexahedronQuadRule(Float64, Val{degree}())
 HexahedronQuadRule(::Type{T}, degree::Integer) = HexahedronQuadRule(T, Val{degree}())
+
+# Source: F. D. Witherden and P. E. Vincent. On the identification of symmetric quadrature rules for finite element methods. Computers & Mathematics with Applications, 69, 2015.
 function HexahedronQuadRule(::Type{T}, degree::Val{ 1 }) where {T<:Real}
   HexahedronQuadRule(1,
   #= points =# [
@@ -26,6 +28,8 @@ end
 HexahedronQuadRule(::Type{T}, ::Val{ 2 }) where T = HexahedronQuadRule(T, Val{ 3 }())
 HexahedronQuadRule(::Type{T}, ::Val{ 3 }) where T = HexahedronQuadRule(T, Val{ 4 }())
 HexahedronQuadRule(::Type{T}, ::Val{ 4 }) where T = HexahedronQuadRule(T, Val{ 5 }())
+
+# Source: F. D. Witherden and P. E. Vincent. On the identification of symmetric quadrature rules for finite element methods. Computers & Mathematics with Applications, 69, 2015.
 function HexahedronQuadRule(::Type{T}, degree::Val{ 5 }) where {T<:Real}
   HexahedronQuadRule(5,
   #= points =# [
@@ -104,6 +108,8 @@ function HexahedronQuadRule(::Type{T}, degree::Val{ 5 }) where {T<:Real}
   ])
 end
 HexahedronQuadRule(::Type{T}, ::Val{ 6 }) where T = HexahedronQuadRule(T, Val{ 7 }())
+
+# Source: F. D. Witherden and P. E. Vincent. On the identification of symmetric quadrature rules for finite element methods. Computers & Mathematics with Applications, 69, 2015.
 function HexahedronQuadRule(::Type{T}, degree::Val{ 7 }) where {T<:Real}
   HexahedronQuadRule(7,
   #= points =# [
@@ -282,6 +288,8 @@ function HexahedronQuadRule(::Type{T}, degree::Val{ 7 }) where {T<:Real}
   ])
 end
 HexahedronQuadRule(::Type{T}, ::Val{ 8 }) where T = HexahedronQuadRule(T, Val{ 9 }())
+
+# Source: F. D. Witherden and P. E. Vincent. On the identification of symmetric quadrature rules for finite element methods. Computers & Mathematics with Applications, 69, 2015.
 function HexahedronQuadRule(::Type{T}, degree::Val{ 9 }) where {T<:Real}
   HexahedronQuadRule(9,
   #= points =# [
@@ -580,6 +588,8 @@ function HexahedronQuadRule(::Type{T}, degree::Val{ 9 }) where {T<:Real}
   ])
 end
 HexahedronQuadRule(::Type{T}, ::Val{ 10 }) where T = HexahedronQuadRule(T, Val{ 11 }())
+
+# Source: F. D. Witherden and P. E. Vincent. On the identification of symmetric quadrature rules for finite element methods. Computers & Mathematics with Applications, 69, 2015.
 function HexahedronQuadRule(::Type{T}, degree::Val{ 11 }) where {T<:Real}
   HexahedronQuadRule(11,
   #= points =# [

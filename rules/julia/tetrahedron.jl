@@ -11,6 +11,8 @@ end
 TetrahedronQuadRule(degree::Val{d}) where d = TetrahedronQuadRule(Float64, degree)
 TetrahedronQuadRule(degree::Integer) = TetrahedronQuadRule(Float64, Val{degree}())
 TetrahedronQuadRule(::Type{T}, degree::Integer) = TetrahedronQuadRule(T, Val{degree}())
+
+# Source: F. D. Witherden and P. E. Vincent. On the identification of symmetric quadrature rules for finite element methods. Computers & Mathematics with Applications, 69, 2015.
 function TetrahedronQuadRule(::Type{T}, degree::Val{ 1 }) where {T<:Real}
   TetrahedronQuadRule(1,
   #= points =# [
@@ -23,6 +25,8 @@ function TetrahedronQuadRule(::Type{T}, degree::Val{ 1 }) where {T<:Real}
     parse(T, "1.66666666666666673208718577849062e-01"),
   ])
 end
+
+# Source: F. D. Witherden and P. E. Vincent. On the identification of symmetric quadrature rules for finite element methods. Computers & Mathematics with Applications, 69, 2015.
 function TetrahedronQuadRule(::Type{T}, degree::Val{ 2 }) where {T<:Real}
   TetrahedronQuadRule(2,
   #= points =# [
@@ -50,6 +54,8 @@ function TetrahedronQuadRule(::Type{T}, degree::Val{ 2 }) where {T<:Real}
     parse(T, "4.16666666666666683021796444622656e-02"),
   ])
 end
+
+# Source: F. D. Witherden and P. E. Vincent. On the identification of symmetric quadrature rules for finite element methods. Computers & Mathematics with Applications, 69, 2015.
 function TetrahedronQuadRule(::Type{T}, degree::Val{ 3 }) where {T<:Real}
   TetrahedronQuadRule(3,
   #= points =# [
@@ -97,6 +103,8 @@ function TetrahedronQuadRule(::Type{T}, degree::Val{ 3 }) where {T<:Real}
     parse(T, "1.89636929104854412331068573234180e-02"),
   ])
 end
+
+# Source: J. Jaśkowiec and N. Sukumar. High-order symmetric cubature rules for tetrahedra and pyramids. International Journal for Numerical Methods in Engineering, 122(1):148-171, 2021.
 function TetrahedronQuadRule(::Type{T}, degree::Val{ 4 }) where {T<:Real}
   TetrahedronQuadRule(4,
   #= points =# [
@@ -174,6 +182,8 @@ function TetrahedronQuadRule(::Type{T}, degree::Val{ 4 }) where {T<:Real}
     parse(T, "1.39150635705047852440271526603792e-02"),
   ])
 end
+
+# Source: F. D. Witherden and P. E. Vincent. On the identification of symmetric quadrature rules for finite element methods. Computers & Mathematics with Applications, 69, 2015.
 function TetrahedronQuadRule(::Type{T}, degree::Val{ 5 }) where {T<:Real}
   TetrahedronQuadRule(5,
   #= points =# [
@@ -251,6 +261,8 @@ function TetrahedronQuadRule(::Type{T}, degree::Val{ 5 }) where {T<:Real}
     parse(T, "7.09100346284691135134984789128796e-03"),
   ])
 end
+
+# Source: F. D. Witherden and P. E. Vincent. On the identification of symmetric quadrature rules for finite element methods. Computers & Mathematics with Applications, 69, 2015.
 function TetrahedronQuadRule(::Type{T}, degree::Val{ 6 }) where {T<:Real}
   TetrahedronQuadRule(6,
   #= points =# [
@@ -378,6 +390,8 @@ function TetrahedronQuadRule(::Type{T}, degree::Val{ 6 }) where {T<:Real}
     parse(T, "8.03571428571428602970607428915122e-03"),
   ])
 end
+
+# Source: F. D. Witherden and P. E. Vincent. On the identification of symmetric quadrature rules for finite element methods. Computers & Mathematics with Applications, 69, 2015.
 function TetrahedronQuadRule(::Type{T}, degree::Val{ 7 }) where {T<:Real}
   TetrahedronQuadRule(7,
   #= points =# [
@@ -560,6 +574,8 @@ function TetrahedronQuadRule(::Type{T}, degree::Val{ 7 }) where {T<:Real}
     parse(T, "1.35179513831722364741165605744767e-03"),
   ])
 end
+
+# Source: L. Zhang, T. Cui, and H. Liu. A set of symmetric quadrature rules on triangles and tetrahedra. Journal of Computational Mathematics, 27(1):89-96, 2009.
 function TetrahedronQuadRule(::Type{T}, degree::Val{ 8 }) where {T<:Real}
   TetrahedronQuadRule(8,
   #= points =# [
@@ -797,6 +813,8 @@ function TetrahedronQuadRule(::Type{T}, degree::Val{ 8 }) where {T<:Real}
     parse(T, "2.72869699088651959015635662601985e-03"),
   ])
 end
+
+# Source: F. D. Witherden and P. E. Vincent. On the identification of symmetric quadrature rules for finite element methods. Computers & Mathematics with Applications, 69, 2015.
 function TetrahedronQuadRule(::Type{T}, degree::Val{ 9 }) where {T<:Real}
   TetrahedronQuadRule(9,
   #= points =# [
@@ -1099,6 +1117,8 @@ function TetrahedronQuadRule(::Type{T}, degree::Val{ 9 }) where {T<:Real}
     parse(T, "3.42081932799802314091153937056819e-03"),
   ])
 end
+
+# Source: G. Chuluunbaatar, O. Chuluunbaatar, A. A. Gusev, and S. I. Vinitsky. Pi-type fully symmetric quadrature rules on the 3-,$\ldots$, 6-simplexes. Computer & Mathematics with Applications, 124:89-97, 2022.
 function TetrahedronQuadRule(::Type{T}, degree::Val{ 10 }) where {T<:Real}
   TetrahedronQuadRule(10,
   #= points =# [
@@ -1501,6 +1521,8 @@ function TetrahedronQuadRule(::Type{T}, degree::Val{ 10 }) where {T<:Real}
     parse(T, "1.00694983976390230919310991147162e-03"),
   ])
 end
+
+# Source: G. Chuluunbaatar, O. Chuluunbaatar, A. A. Gusev, and S. I. Vinitsky. Pi-type fully symmetric quadrature rules on the 3-,$\ldots$, 6-simplexes. Computer & Mathematics with Applications, 124:89-97, 2022.
 function TetrahedronQuadRule(::Type{T}, degree::Val{ 11 }) where {T<:Real}
   TetrahedronQuadRule(11,
   #= points =# [
@@ -1998,6 +2020,8 @@ function TetrahedronQuadRule(::Type{T}, degree::Val{ 11 }) where {T<:Real}
     parse(T, "2.07696579839601116338113801062470e-03"),
   ])
 end
+
+# Source: G. Chuluunbaatar, O. Chuluunbaatar, A. A. Gusev, and S. I. Vinitsky. Pi-type fully symmetric quadrature rules on the 3-,$\ldots$, 6-simplexes. Computer & Mathematics with Applications, 124:89-97, 2022.
 function TetrahedronQuadRule(::Type{T}, degree::Val{ 12 }) where {T<:Real}
   TetrahedronQuadRule(12,
   #= points =# [
@@ -2620,6 +2644,8 @@ function TetrahedronQuadRule(::Type{T}, degree::Val{ 12 }) where {T<:Real}
     parse(T, "1.26285697762618721691288395488068e-03"),
   ])
 end
+
+# Source: G. Chuluunbaatar, O. Chuluunbaatar, A. A. Gusev, and S. I. Vinitsky. Pi-type fully symmetric quadrature rules on the 3-,$\ldots$, 6-simplexes. Computer & Mathematics with Applications, 124:89-97, 2022.
 function TetrahedronQuadRule(::Type{T}, degree::Val{ 13 }) where {T<:Real}
   TetrahedronQuadRule(13,
   #= points =# [
@@ -3352,6 +3378,8 @@ function TetrahedronQuadRule(::Type{T}, degree::Val{ 13 }) where {T<:Real}
     parse(T, "3.50226567580782274139290179839045e-04"),
   ])
 end
+
+# Source: G. Chuluunbaatar, O. Chuluunbaatar, A. A. Gusev, and S. I. Vinitsky. Pi-type fully symmetric quadrature rules on the 3-,$\ldots$, 6-simplexes. Computer & Mathematics with Applications, 124:89-97, 2022.
 function TetrahedronQuadRule(::Type{T}, degree::Val{ 14 }) where {T<:Real}
   TetrahedronQuadRule(14,
   #= points =# [
@@ -4234,6 +4262,8 @@ function TetrahedronQuadRule(::Type{T}, degree::Val{ 14 }) where {T<:Real}
     parse(T, "5.28969173366363966151540405091880e-04"),
   ])
 end
+
+# Source: G. Chuluunbaatar, O. Chuluunbaatar, A. A. Gusev, and S. I. Vinitsky. Pi-type fully symmetric quadrature rules on the 3-,$\ldots$, 6-simplexes. Computer & Mathematics with Applications, 124:89-97, 2022.
 function TetrahedronQuadRule(::Type{T}, degree::Val{ 15 }) where {T<:Real}
   TetrahedronQuadRule(15,
   #= points =# [
@@ -5286,6 +5316,8 @@ function TetrahedronQuadRule(::Type{T}, degree::Val{ 15 }) where {T<:Real}
     parse(T, "7.07458692200529184529619092085362e-04"),
   ])
 end
+
+# Source: G. Chuluunbaatar, O. Chuluunbaatar, A. A. Gusev, and S. I. Vinitsky. Pi-type fully symmetric quadrature rules on the 3-,$\ldots$, 6-simplexes. Computer & Mathematics with Applications, 124:89-97, 2022.
 function TetrahedronQuadRule(::Type{T}, degree::Val{ 16 }) where {T<:Real}
   TetrahedronQuadRule(16,
   #= points =# [
@@ -6533,6 +6565,8 @@ function TetrahedronQuadRule(::Type{T}, degree::Val{ 16 }) where {T<:Real}
     parse(T, "1.47055596469915304473458098887320e-03"),
   ])
 end
+
+# Source: G. Chuluunbaatar, O. Chuluunbaatar, A. A. Gusev, and S. I. Vinitsky. Pi-type fully symmetric quadrature rules on the 3-,$\ldots$, 6-simplexes. Computer & Mathematics with Applications, 124:89-97, 2022.
 function TetrahedronQuadRule(::Type{T}, degree::Val{ 17 }) where {T<:Real}
   TetrahedronQuadRule(17,
   #= points =# [
@@ -7960,6 +7994,8 @@ function TetrahedronQuadRule(::Type{T}, degree::Val{ 17 }) where {T<:Real}
     parse(T, "2.69135394730690480535588355187490e-04"),
   ])
 end
+
+# Source: G. Chuluunbaatar, O. Chuluunbaatar, A. A. Gusev, and S. I. Vinitsky. Pi-type fully symmetric quadrature rules on the 3-,$\ldots$, 6-simplexes. Computer & Mathematics with Applications, 124:89-97, 2022.
 function TetrahedronQuadRule(::Type{T}, degree::Val{ 18 }) where {T<:Real}
   TetrahedronQuadRule(18,
   #= points =# [
@@ -9682,6 +9718,8 @@ function TetrahedronQuadRule(::Type{T}, degree::Val{ 18 }) where {T<:Real}
     parse(T, "1.27738536486342443082897475130002e-04"),
   ])
 end
+
+# Source: G. Chuluunbaatar, O. Chuluunbaatar, A. A. Gusev, and S. I. Vinitsky. Pi-type fully symmetric quadrature rules on the 3-,$\ldots$, 6-simplexes. Computer & Mathematics with Applications, 124:89-97, 2022.
 function TetrahedronQuadRule(::Type{T}, degree::Val{ 19 }) where {T<:Real}
   TetrahedronQuadRule(19,
   #= points =# [
@@ -11604,6 +11642,8 @@ function TetrahedronQuadRule(::Type{T}, degree::Val{ 19 }) where {T<:Real}
     parse(T, "1.64230458281612444199909051299378e-04"),
   ])
 end
+
+# Source: G. Chuluunbaatar, O. Chuluunbaatar, A. A. Gusev, and S. I. Vinitsky. Pi-type fully symmetric quadrature rules on the 3-,$\ldots$, 6-simplexes. Computer & Mathematics with Applications, 124:89-97, 2022.
 function TetrahedronQuadRule(::Type{T}, degree::Val{ 20 }) where {T<:Real}
   TetrahedronQuadRule(20,
   #= points =# [

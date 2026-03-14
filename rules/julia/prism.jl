@@ -11,6 +11,8 @@ end
 PrismQuadRule(degree::Val{d}) where d = PrismQuadRule(Float64, degree)
 PrismQuadRule(degree::Integer) = PrismQuadRule(Float64, Val{degree}())
 PrismQuadRule(::Type{T}, degree::Integer) = PrismQuadRule(T, Val{degree}())
+
+# Source: F. D. Witherden and P. E. Vincent. On the identification of symmetric quadrature rules for finite element methods. Computers & Mathematics with Applications, 69, 2015.
 function PrismQuadRule(::Type{T}, degree::Val{ 1 }) where {T<:Real}
   PrismQuadRule(1,
   #= points =# [
@@ -23,6 +25,8 @@ function PrismQuadRule(::Type{T}, degree::Val{ 1 }) where {T<:Real}
     parse(T, "5.00000000000000000000000000000000e-01"),
   ])
 end
+
+# Source: F. D. Witherden and P. E. Vincent. On the identification of symmetric quadrature rules for finite element methods. Computers & Mathematics with Applications, 69, 2015.
 function PrismQuadRule(::Type{T}, degree::Val{ 2 }) where {T<:Real}
   PrismQuadRule(2,
   #= points =# [
@@ -55,6 +59,8 @@ function PrismQuadRule(::Type{T}, degree::Val{ 2 }) where {T<:Real}
     parse(T, "1.11111111111111094577004234529465e-01"),
   ])
 end
+
+# Source: F. D. Witherden and P. E. Vincent. On the identification of symmetric quadrature rules for finite element methods. Computers & Mathematics with Applications, 69, 2015.
 function PrismQuadRule(::Type{T}, degree::Val{ 3 }) where {T<:Real}
   PrismQuadRule(3,
   #= points =# [
@@ -102,6 +108,8 @@ function PrismQuadRule(::Type{T}, degree::Val{ 3 }) where {T<:Real}
     parse(T, "4.58338769758499179940050402045112e-02"),
   ])
 end
+
+# Source: F. D. Witherden and P. E. Vincent. On the identification of symmetric quadrature rules for finite element methods. Computers & Mathematics with Applications, 69, 2015.
 function PrismQuadRule(::Type{T}, degree::Val{ 4 }) where {T<:Real}
   PrismQuadRule(4,
   #= points =# [
@@ -164,6 +172,8 @@ function PrismQuadRule(::Type{T}, degree::Val{ 4 }) where {T<:Real}
     parse(T, "3.12443510460413384355036126993065e-02"),
   ])
 end
+
+# Source: F. D. Witherden and P. E. Vincent. On the identification of symmetric quadrature rules for finite element methods. Computers & Mathematics with Applications, 69, 2015.
 function PrismQuadRule(::Type{T}, degree::Val{ 5 }) where {T<:Real}
   PrismQuadRule(5,
   #= points =# [
@@ -251,6 +261,8 @@ function PrismQuadRule(::Type{T}, degree::Val{ 5 }) where {T<:Real}
     parse(T, "3.12592857184742448900706180805490e-02"),
   ])
 end
+
+# Source: F. D. Witherden and P. E. Vincent. On the identification of symmetric quadrature rules for finite element methods. Computers & Mathematics with Applications, 69, 2015.
 function PrismQuadRule(::Type{T}, degree::Val{ 6 }) where {T<:Real}
   PrismQuadRule(6,
   #= points =# [
@@ -398,6 +410,8 @@ function PrismQuadRule(::Type{T}, degree::Val{ 6 }) where {T<:Real}
     parse(T, "1.05791093924449195970497420698096e-02"),
   ])
 end
+
+# Source: F. D. Witherden and P. E. Vincent. On the identification of symmetric quadrature rules for finite element methods. Computers & Mathematics with Applications, 69, 2015.
 function PrismQuadRule(::Type{T}, degree::Val{ 7 }) where {T<:Real}
   PrismQuadRule(7,
   #= points =# [
@@ -580,6 +594,8 @@ function PrismQuadRule(::Type{T}, degree::Val{ 7 }) where {T<:Real}
     parse(T, "1.94703516381038025202176683832333e-02"),
   ])
 end
+
+# Source: F. D. Witherden and P. E. Vincent. On the identification of symmetric quadrature rules for finite element methods. Computers & Mathematics with Applications, 69, 2015.
 function PrismQuadRule(::Type{T}, degree::Val{ 8 }) where {T<:Real}
   PrismQuadRule(8,
   #= points =# [
@@ -817,6 +833,8 @@ function PrismQuadRule(::Type{T}, degree::Val{ 8 }) where {T<:Real}
     parse(T, "6.82376454543653654804535611880779e-03"),
   ])
 end
+
+# Source: F. D. Witherden and P. E. Vincent. On the identification of symmetric quadrature rules for finite element methods. Computers & Mathematics with Applications, 69, 2015.
 function PrismQuadRule(::Type{T}, degree::Val{ 9 }) where {T<:Real}
   PrismQuadRule(9,
   #= points =# [

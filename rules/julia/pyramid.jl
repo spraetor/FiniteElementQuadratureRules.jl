@@ -11,6 +11,8 @@ end
 PyramidQuadRule(degree::Val{d}) where d = PyramidQuadRule(Float64, degree)
 PyramidQuadRule(degree::Integer) = PyramidQuadRule(Float64, Val{degree}())
 PyramidQuadRule(::Type{T}, degree::Integer) = PyramidQuadRule(T, Val{degree}())
+
+# Source: F. D. Witherden and P. E. Vincent. On the identification of symmetric quadrature rules for finite element methods. Computers & Mathematics with Applications, 69, 2015.
 function PyramidQuadRule(::Type{T}, degree::Val{ 1 }) where {T<:Real}
   PyramidQuadRule(1,
   #= points =# [
@@ -23,6 +25,8 @@ function PyramidQuadRule(::Type{T}, degree::Val{ 1 }) where {T<:Real}
     parse(T, "3.33333333333333314829616256247391e-01"),
   ])
 end
+
+# Source: F. D. Witherden and P. E. Vincent. On the identification of symmetric quadrature rules for finite element methods. Computers & Mathematics with Applications, 69, 2015.
 function PyramidQuadRule(::Type{T}, degree::Val{ 2 }) where {T<:Real}
   PyramidQuadRule(2,
   #= points =# [
@@ -55,6 +59,8 @@ function PyramidQuadRule(::Type{T}, degree::Val{ 2 }) where {T<:Real}
     parse(T, "6.44935582229914779058531735522728e-02"),
   ])
 end
+
+# Source: F. D. Witherden and P. E. Vincent. On the identification of symmetric quadrature rules for finite element methods. Computers & Mathematics with Applications, 69, 2015.
 function PyramidQuadRule(::Type{T}, degree::Val{ 3 }) where {T<:Real}
   PyramidQuadRule(3,
   #= points =# [
@@ -92,6 +98,8 @@ function PyramidQuadRule(::Type{T}, degree::Val{ 3 }) where {T<:Real}
     parse(T, "5.29411758342645388437111694375425e-02"),
   ])
 end
+
+# Source: F. D. Witherden and P. E. Vincent. On the identification of symmetric quadrature rules for finite element methods. Computers & Mathematics with Applications, 69, 2015.
 function PyramidQuadRule(::Type{T}, degree::Val{ 4 }) where {T<:Real}
   PyramidQuadRule(4,
   #= points =# [
@@ -149,6 +157,8 @@ function PyramidQuadRule(::Type{T}, degree::Val{ 4 }) where {T<:Real}
     parse(T, "2.11730302235419801534935651813238e-02"),
   ])
 end
+
+# Source: F. D. Witherden and P. E. Vincent. On the identification of symmetric quadrature rules for finite element methods. Computers & Mathematics with Applications, 69, 2015.
 function PyramidQuadRule(::Type{T}, degree::Val{ 5 }) where {T<:Real}
   PyramidQuadRule(5,
   #= points =# [
@@ -231,6 +241,8 @@ function PyramidQuadRule(::Type{T}, degree::Val{ 5 }) where {T<:Real}
     parse(T, "1.99178500715415495644370808563934e-02"),
   ])
 end
+
+# Source: J. Jaśkowiec and N. Sukumar. High-order symmetric cubature rules for tetrahedra and pyramids. International Journal for Numerical Methods in Engineering, 122(1):148-171, 2021.
 function PyramidQuadRule(::Type{T}, degree::Val{ 6 }) where {T<:Real}
   PyramidQuadRule(6,
   #= points =# [
@@ -353,6 +365,8 @@ function PyramidQuadRule(::Type{T}, degree::Val{ 6 }) where {T<:Real}
     parse(T, "1.24622616966531680069241444391731e-02"),
   ])
 end
+
+# Source: F. D. Witherden and P. E. Vincent. On the identification of symmetric quadrature rules for finite element methods. Computers & Mathematics with Applications, 69, 2015.
 function PyramidQuadRule(::Type{T}, degree::Val{ 7 }) where {T<:Real}
   PyramidQuadRule(7,
   #= points =# [
@@ -515,6 +529,8 @@ function PyramidQuadRule(::Type{T}, degree::Val{ 7 }) where {T<:Real}
     parse(T, "1.19061799655531032950886578926610e-02"),
   ])
 end
+
+# Source: F. D. Witherden and P. E. Vincent. On the identification of symmetric quadrature rules for finite element methods. Computers & Mathematics with Applications, 69, 2015.
 function PyramidQuadRule(::Type{T}, degree::Val{ 8 }) where {T<:Real}
   PyramidQuadRule(8,
   #= points =# [
@@ -757,6 +773,8 @@ function PyramidQuadRule(::Type{T}, degree::Val{ 8 }) where {T<:Real}
     parse(T, "3.35480381702215461600946143888508e-03"),
   ])
 end
+
+# Source: F. D. Witherden and P. E. Vincent. On the identification of symmetric quadrature rules for finite element methods. Computers & Mathematics with Applications, 69, 2015.
 function PyramidQuadRule(::Type{T}, degree::Val{ 9 }) where {T<:Real}
   PyramidQuadRule(9,
   #= points =# [
@@ -1074,6 +1092,8 @@ function PyramidQuadRule(::Type{T}, degree::Val{ 9 }) where {T<:Real}
     parse(T, "4.43902864863792840276992981582813e-03"),
   ])
 end
+
+# Source: J. Jaśkowiec and N. Sukumar. High-order symmetric cubature rules for tetrahedra and pyramids. International Journal for Numerical Methods in Engineering, 122(1):148-171, 2021.
 function PyramidQuadRule(::Type{T}, degree::Val{ 10 }) where {T<:Real}
   PyramidQuadRule(10,
   #= points =# [
@@ -1481,6 +1501,8 @@ function PyramidQuadRule(::Type{T}, degree::Val{ 10 }) where {T<:Real}
     parse(T, "7.11593113728522840295815219385120e-03"),
   ])
 end
+
+# Source: J. Jaśkowiec and N. Sukumar. High-order symmetric cubature rules for tetrahedra and pyramids. International Journal for Numerical Methods in Engineering, 122(1):148-171, 2021.
 function PyramidQuadRule(::Type{T}, degree::Val{ 11 }) where {T<:Real}
   PyramidQuadRule(11,
   #= points =# [
@@ -2003,6 +2025,8 @@ function PyramidQuadRule(::Type{T}, degree::Val{ 11 }) where {T<:Real}
     parse(T, "2.22514074258177296791169645763940e-03"),
   ])
 end
+
+# Source: J. Jaśkowiec and N. Sukumar. High-order symmetric cubature rules for tetrahedra and pyramids. International Journal for Numerical Methods in Engineering, 122(1):148-171, 2021.
 function PyramidQuadRule(::Type{T}, degree::Val{ 12 }) where {T<:Real}
   PyramidQuadRule(12,
   #= points =# [
@@ -2645,6 +2669,8 @@ function PyramidQuadRule(::Type{T}, degree::Val{ 12 }) where {T<:Real}
     parse(T, "1.90789264224220598284932869801095e-03"),
   ])
 end
+
+# Source: J. Jaśkowiec and N. Sukumar. High-order symmetric cubature rules for tetrahedra and pyramids. International Journal for Numerical Methods in Engineering, 122(1):148-171, 2021.
 function PyramidQuadRule(::Type{T}, degree::Val{ 13 }) where {T<:Real}
   PyramidQuadRule(13,
   #= points =# [
@@ -3412,6 +3438,8 @@ function PyramidQuadRule(::Type{T}, degree::Val{ 13 }) where {T<:Real}
     parse(T, "2.25164171034136627917510763491288e-03"),
   ])
 end
+
+# Source: J. Jaśkowiec and N. Sukumar. High-order symmetric cubature rules for tetrahedra and pyramids. International Journal for Numerical Methods in Engineering, 122(1):148-171, 2021.
 function PyramidQuadRule(::Type{T}, degree::Val{ 14 }) where {T<:Real}
   PyramidQuadRule(14,
   #= points =# [
@@ -4339,6 +4367,8 @@ function PyramidQuadRule(::Type{T}, degree::Val{ 14 }) where {T<:Real}
     parse(T, "8.98876188705704971778924081585537e-04"),
   ])
 end
+
+# Source: J. Jaśkowiec and N. Sukumar. High-order symmetric cubature rules for tetrahedra and pyramids. International Journal for Numerical Methods in Engineering, 122(1):148-171, 2021.
 function PyramidQuadRule(::Type{T}, degree::Val{ 15 }) where {T<:Real}
   PyramidQuadRule(15,
   #= points =# [
@@ -5516,6 +5546,8 @@ function PyramidQuadRule(::Type{T}, degree::Val{ 15 }) where {T<:Real}
     parse(T, "8.44735841402579439503375762281986e-04"),
   ])
 end
+
+# Source: J. Jaśkowiec and N. Sukumar. High-order symmetric cubature rules for tetrahedra and pyramids. International Journal for Numerical Methods in Engineering, 122(1):148-171, 2021.
 function PyramidQuadRule(::Type{T}, degree::Val{ 16 }) where {T<:Real}
   PyramidQuadRule(16,
   #= points =# [
@@ -6948,6 +6980,8 @@ function PyramidQuadRule(::Type{T}, degree::Val{ 16 }) where {T<:Real}
     parse(T, "8.23093522475484449089794923542791e-04"),
   ])
 end
+
+# Source: J. Jaśkowiec and N. Sukumar. High-order symmetric cubature rules for tetrahedra and pyramids. International Journal for Numerical Methods in Engineering, 122(1):148-171, 2021.
 function PyramidQuadRule(::Type{T}, degree::Val{ 17 }) where {T<:Real}
   PyramidQuadRule(17,
   #= points =# [
@@ -8550,6 +8584,8 @@ function PyramidQuadRule(::Type{T}, degree::Val{ 17 }) where {T<:Real}
     parse(T, "8.08363167776597450521429001795471e-04"),
   ])
 end
+
+# Source: J. Jaśkowiec and N. Sukumar. High-order symmetric cubature rules for tetrahedra and pyramids. International Journal for Numerical Methods in Engineering, 122(1):148-171, 2021.
 function PyramidQuadRule(::Type{T}, degree::Val{ 18 }) where {T<:Real}
   PyramidQuadRule(18,
   #= points =# [
@@ -10342,6 +10378,8 @@ function PyramidQuadRule(::Type{T}, degree::Val{ 18 }) where {T<:Real}
     parse(T, "5.05973884673583214316851093141068e-04"),
   ])
 end
+
+# Source: J. Jaśkowiec and N. Sukumar. High-order symmetric cubature rules for tetrahedra and pyramids. International Journal for Numerical Methods in Engineering, 122(1):148-171, 2021.
 function PyramidQuadRule(::Type{T}, degree::Val{ 19 }) where {T<:Real}
   PyramidQuadRule(19,
   #= points =# [
@@ -12439,6 +12477,8 @@ function PyramidQuadRule(::Type{T}, degree::Val{ 19 }) where {T<:Real}
     parse(T, "3.07760580584397138731366851059004e-04"),
   ])
 end
+
+# Source: J. Jaśkowiec and N. Sukumar. High-order symmetric cubature rules for tetrahedra and pyramids. International Journal for Numerical Methods in Engineering, 122(1):148-171, 2021.
 function PyramidQuadRule(::Type{T}, degree::Val{ 20 }) where {T<:Real}
   PyramidQuadRule(20,
   #= points =# [

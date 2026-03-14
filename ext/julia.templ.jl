@@ -18,6 +18,8 @@ end
 {{ domain }}QuadRule(::Type{T}, ::Val{ {{ degree }} }) where T = {{ domain }}QuadRule(T, Val{ {{ degree+1 }} }())
 {%- else %}
 {%- let coordinates = rule["coordinates"], weights = rule["weights"] %}
+
+# Source: {{ rule["reference" ] }}
 function {{ domain }}QuadRule(::Type{T}, degree::Val{ {{ degree }} }) where {T<:Real}
   {{ domain }}QuadRule({{ degree }},
   #= points =# [

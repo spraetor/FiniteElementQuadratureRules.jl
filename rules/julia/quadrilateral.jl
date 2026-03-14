@@ -11,6 +11,8 @@ end
 QuadrilateralQuadRule(degree::Val{d}) where d = QuadrilateralQuadRule(Float64, degree)
 QuadrilateralQuadRule(degree::Integer) = QuadrilateralQuadRule(Float64, Val{degree}())
 QuadrilateralQuadRule(::Type{T}, degree::Integer) = QuadrilateralQuadRule(T, Val{degree}())
+
+# Source: F. D. Witherden and P. E. Vincent. On the identification of symmetric quadrature rules for finite element methods. Computers & Mathematics with Applications, 69, 2015.
 function QuadrilateralQuadRule(::Type{T}, degree::Val{ 1 }) where {T<:Real}
   QuadrilateralQuadRule(1,
   #= points =# [
@@ -23,6 +25,8 @@ function QuadrilateralQuadRule(::Type{T}, degree::Val{ 1 }) where {T<:Real}
   ])
 end
 QuadrilateralQuadRule(::Type{T}, ::Val{ 2 }) where T = QuadrilateralQuadRule(T, Val{ 3 }())
+
+# Source: F. D. Witherden and P. E. Vincent. On the identification of symmetric quadrature rules for finite element methods. Computers & Mathematics with Applications, 69, 2015.
 function QuadrilateralQuadRule(::Type{T}, degree::Val{ 3 }) where {T<:Real}
   QuadrilateralQuadRule(3,
   #= points =# [
@@ -47,6 +51,8 @@ function QuadrilateralQuadRule(::Type{T}, degree::Val{ 3 }) where {T<:Real}
   ])
 end
 QuadrilateralQuadRule(::Type{T}, ::Val{ 4 }) where T = QuadrilateralQuadRule(T, Val{ 5 }())
+
+# Source: F. D. Witherden and P. E. Vincent. On the identification of symmetric quadrature rules for finite element methods. Computers & Mathematics with Applications, 69, 2015.
 function QuadrilateralQuadRule(::Type{T}, degree::Val{ 5 }) where {T<:Real}
   QuadrilateralQuadRule(5,
   #= points =# [
@@ -87,6 +93,8 @@ function QuadrilateralQuadRule(::Type{T}, degree::Val{ 5 }) where {T<:Real}
   ])
 end
 QuadrilateralQuadRule(::Type{T}, ::Val{ 6 }) where T = QuadrilateralQuadRule(T, Val{ 7 }())
+
+# Source: F. D. Witherden and P. E. Vincent. On the identification of symmetric quadrature rules for finite element methods. Computers & Mathematics with Applications, 69, 2015.
 function QuadrilateralQuadRule(::Type{T}, degree::Val{ 7 }) where {T<:Real}
   QuadrilateralQuadRule(7,
   #= points =# [
@@ -143,6 +151,8 @@ function QuadrilateralQuadRule(::Type{T}, degree::Val{ 7 }) where {T<:Real}
   ])
 end
 QuadrilateralQuadRule(::Type{T}, ::Val{ 8 }) where T = QuadrilateralQuadRule(T, Val{ 9 }())
+
+# Source: F. D. Witherden and P. E. Vincent. On the identification of symmetric quadrature rules for finite element methods. Computers & Mathematics with Applications, 69, 2015.
 function QuadrilateralQuadRule(::Type{T}, degree::Val{ 9 }) where {T<:Real}
   QuadrilateralQuadRule(9,
   #= points =# [
@@ -231,6 +241,8 @@ function QuadrilateralQuadRule(::Type{T}, degree::Val{ 9 }) where {T<:Real}
   ])
 end
 QuadrilateralQuadRule(::Type{T}, ::Val{ 10 }) where T = QuadrilateralQuadRule(T, Val{ 11 }())
+
+# Source: F. D. Witherden and P. E. Vincent. On the identification of symmetric quadrature rules for finite element methods. Computers & Mathematics with Applications, 69, 2015.
 function QuadrilateralQuadRule(::Type{T}, degree::Val{ 11 }) where {T<:Real}
   QuadrilateralQuadRule(11,
   #= points =# [
@@ -351,6 +363,8 @@ function QuadrilateralQuadRule(::Type{T}, degree::Val{ 11 }) where {T<:Real}
   ])
 end
 QuadrilateralQuadRule(::Type{T}, ::Val{ 12 }) where T = QuadrilateralQuadRule(T, Val{ 13 }())
+
+# Source: F. D. Witherden and P. E. Vincent. On the identification of symmetric quadrature rules for finite element methods. Computers & Mathematics with Applications, 69, 2015.
 function QuadrilateralQuadRule(::Type{T}, degree::Val{ 13 }) where {T<:Real}
   QuadrilateralQuadRule(13,
   #= points =# [
@@ -507,6 +521,8 @@ function QuadrilateralQuadRule(::Type{T}, degree::Val{ 13 }) where {T<:Real}
   ])
 end
 QuadrilateralQuadRule(::Type{T}, ::Val{ 14 }) where T = QuadrilateralQuadRule(T, Val{ 15 }())
+
+# Source: F. D. Witherden and P. E. Vincent. On the identification of symmetric quadrature rules for finite element methods. Computers & Mathematics with Applications, 69, 2015.
 function QuadrilateralQuadRule(::Type{T}, degree::Val{ 15 }) where {T<:Real}
   QuadrilateralQuadRule(15,
   #= points =# [
@@ -707,6 +723,8 @@ function QuadrilateralQuadRule(::Type{T}, degree::Val{ 15 }) where {T<:Real}
   ])
 end
 QuadrilateralQuadRule(::Type{T}, ::Val{ 16 }) where T = QuadrilateralQuadRule(T, Val{ 17 }())
+
+# Source: F. D. Witherden and P. E. Vincent. On the identification of symmetric quadrature rules for finite element methods. Computers & Mathematics with Applications, 69, 2015.
 function QuadrilateralQuadRule(::Type{T}, degree::Val{ 17 }) where {T<:Real}
   QuadrilateralQuadRule(17,
   #= points =# [
@@ -955,6 +973,8 @@ function QuadrilateralQuadRule(::Type{T}, degree::Val{ 17 }) where {T<:Real}
   ])
 end
 QuadrilateralQuadRule(::Type{T}, ::Val{ 18 }) where T = QuadrilateralQuadRule(T, Val{ 19 }())
+
+# Source: F. D. Witherden and P. E. Vincent. On the identification of symmetric quadrature rules for finite element methods. Computers & Mathematics with Applications, 69, 2015.
 function QuadrilateralQuadRule(::Type{T}, degree::Val{ 19 }) where {T<:Real}
   QuadrilateralQuadRule(19,
   #= points =# [
@@ -1251,6 +1271,8 @@ function QuadrilateralQuadRule(::Type{T}, degree::Val{ 19 }) where {T<:Real}
   ])
 end
 QuadrilateralQuadRule(::Type{T}, ::Val{ 20 }) where T = QuadrilateralQuadRule(T, Val{ 21 }())
+
+# Source: F. D. Witherden and P. E. Vincent. On the identification of symmetric quadrature rules for finite element methods. Computers & Mathematics with Applications, 69, 2015.
 function QuadrilateralQuadRule(::Type{T}, degree::Val{ 21 }) where {T<:Real}
   QuadrilateralQuadRule(21,
   #= points =# [

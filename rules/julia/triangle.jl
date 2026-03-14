@@ -11,6 +11,8 @@ end
 TriangleQuadRule(degree::Val{d}) where d = TriangleQuadRule(Float64, degree)
 TriangleQuadRule(degree::Integer) = TriangleQuadRule(Float64, Val{degree}())
 TriangleQuadRule(::Type{T}, degree::Integer) = TriangleQuadRule(T, Val{degree}())
+
+# Source: S.-A. Papanicolopulos. Computation of moderate-degree fully-symmetric cubature rules on the triangle using symmetric polynomials and algebraic solving. Computers & Mathematics with Applications, 69:650-666, 2015.
 function TriangleQuadRule(::Type{T}, degree::Val{ 1 }) where {T<:Real}
   TriangleQuadRule(1,
   #= points =# [
@@ -22,6 +24,8 @@ function TriangleQuadRule(::Type{T}, degree::Val{ 1 }) where {T<:Real}
     parse(T, "5.00000000000000000000000000000000e-01"),
   ])
 end
+
+# Source: F. D. Witherden and P. E. Vincent. On the identification of symmetric quadrature rules for finite element methods. Computers & Mathematics with Applications, 69, 2015.
 function TriangleQuadRule(::Type{T}, degree::Val{ 2 }) where {T<:Real}
   TriangleQuadRule(2,
   #= points =# [
@@ -41,6 +45,8 @@ function TriangleQuadRule(::Type{T}, degree::Val{ 2 }) where {T<:Real}
     parse(T, "1.66666666666666666666666666666667e-01"),
   ])
 end
+
+# Source: S.-A. Papanicolopulos. Computation of moderate-degree fully-symmetric cubature rules on the triangle using symmetric polynomials and algebraic solving. Computers & Mathematics with Applications, 69:650-666, 2015.
 function TriangleQuadRule(::Type{T}, degree::Val{ 3 }) where {T<:Real}
   TriangleQuadRule(3,
   #= points =# [
@@ -72,6 +78,8 @@ function TriangleQuadRule(::Type{T}, degree::Val{ 3 }) where {T<:Real}
     parse(T, "8.33333333333333333333333333333333e-02"),
   ])
 end
+
+# Source: J. N. Lyness and D. Jespersen. Moderate degree symmetric quadrature rules for the triangle. J. Inst. Math. Appl., 15(1):19-32, 1975.
 function TriangleQuadRule(::Type{T}, degree::Val{ 4 }) where {T<:Real}
   TriangleQuadRule(4,
   #= points =# [
@@ -103,6 +111,8 @@ function TriangleQuadRule(::Type{T}, degree::Val{ 4 }) where {T<:Real}
     parse(T, "1.11690794839005750000000000000000e-01"),
   ])
 end
+
+# Source: S.-A. Papanicolopulos. Computation of moderate-degree fully-symmetric cubature rules on the triangle using symmetric polynomials and algebraic solving. Computers & Mathematics with Applications, 69:650-666, 2015.
 function TriangleQuadRule(::Type{T}, degree::Val{ 5 }) where {T<:Real}
   TriangleQuadRule(5,
   #= points =# [
@@ -138,6 +148,8 @@ function TriangleQuadRule(::Type{T}, degree::Val{ 5 }) where {T<:Real}
     parse(T, "6.29695902724135762978419727500907e-02"),
   ])
 end
+
+# Source: S.-A. Papanicolopulos. Computation of moderate-degree fully-symmetric cubature rules on the triangle using symmetric polynomials and algebraic solving. Computers & Mathematics with Applications, 69:650-666, 2015.
 function TriangleQuadRule(::Type{T}, degree::Val{ 6 }) where {T<:Real}
   TriangleQuadRule(6,
   #= points =# [
@@ -193,6 +205,8 @@ function TriangleQuadRule(::Type{T}, degree::Val{ 6 }) where {T<:Real}
     parse(T, "4.14255378091947950000000000000000e-02"),
   ])
 end
+
+# Source: K. Gatermann. The construction of symmetric cubature formulas for the square and the triangle. Computing, 40:229-240, 1988.
 function TriangleQuadRule(::Type{T}, degree::Val{ 7 }) where {T<:Real}
   TriangleQuadRule(7,
   #= points =# [
@@ -248,6 +262,8 @@ function TriangleQuadRule(::Type{T}, degree::Val{ 7 }) where {T<:Real}
     parse(T, "6.74931870098027744626970861664215e-02"),
   ])
 end
+
+# Source: L. Zhang, T. Cui, and H. Liu. A set of symmetric quadrature rules on triangles and tetrahedra. Journal of Computational Mathematics, 27(1):89-96, 2009.
 function TriangleQuadRule(::Type{T}, degree::Val{ 8 }) where {T<:Real}
   TriangleQuadRule(8,
   #= points =# [
@@ -319,6 +335,8 @@ function TriangleQuadRule(::Type{T}, degree::Val{ 8 }) where {T<:Real}
     parse(T, "1.36151570872174971324223450369545e-02"),
   ])
 end
+
+# Source: S.-A. Papanicolopulos. Computation of moderate-degree fully-symmetric cubature rules on the triangle using symmetric polynomials and algebraic solving. Computers & Mathematics with Applications, 69:650-666, 2015.
 function TriangleQuadRule(::Type{T}, degree::Val{ 9 }) where {T<:Real}
   TriangleQuadRule(9,
   #= points =# [
@@ -402,6 +420,8 @@ function TriangleQuadRule(::Type{T}, degree::Val{ 9 }) where {T<:Real}
     parse(T, "2.16417696886446886446886446886447e-02"),
   ])
 end
+
+# Source: H. Xiao and Z. Gimbutas. A numerical algorithm for the construction of efficient quadrature rules in two and higher dimensions. Computers & Mathematics with Applications, 59(2):663-676, 2010.
 function TriangleQuadRule(::Type{T}, degree::Val{ 10 }) where {T<:Real}
   TriangleQuadRule(10,
   #= points =# [
@@ -505,6 +525,8 @@ function TriangleQuadRule(::Type{T}, degree::Val{ 10 }) where {T<:Real}
     parse(T, "3.91040464117519550787073287831292e-02"),
   ])
 end
+
+# Source: S.-A. Papanicolopulos. New fully symmetric and rotationally symmetric cubature rules on the triangle using minimal orthonormal bases. Journal of Computational and Applied Mathematics, 294:39-48, 2016.
 function TriangleQuadRule(::Type{T}, degree::Val{ 11 }) where {T<:Real}
   TriangleQuadRule(11,
   #= points =# [
@@ -620,6 +642,8 @@ function TriangleQuadRule(::Type{T}, degree::Val{ 11 }) where {T<:Real}
     parse(T, "2.92639725280929963844079293210189e-02"),
   ])
 end
+
+# Source: F. D. Witherden and P. E. Vincent. On the identification of symmetric quadrature rules for finite element methods. Computers & Mathematics with Applications, 69, 2015.
 function TriangleQuadRule(::Type{T}, degree::Val{ 12 }) where {T<:Real}
   TriangleQuadRule(12,
   #= points =# [
@@ -759,6 +783,8 @@ function TriangleQuadRule(::Type{T}, degree::Val{ 12 }) where {T<:Real}
     parse(T, "7.54183878825571929292529523138346e-03"),
   ])
 end
+
+# Source: S.-A. Papanicolopulos. New fully symmetric and rotationally symmetric cubature rules on the triangle using minimal orthonormal bases. Journal of Computational and Applied Mathematics, 294:39-48, 2016.
 function TriangleQuadRule(::Type{T}, degree::Val{ 13 }) where {T<:Real}
   TriangleQuadRule(13,
   #= points =# [
@@ -910,6 +936,8 @@ function TriangleQuadRule(::Type{T}, degree::Val{ 13 }) where {T<:Real}
     parse(T, "2.46283798392913878920198897970670e-02"),
   ])
 end
+
+# Source: S.-A. Papanicolopulos. Computation of moderate-degree fully-symmetric cubature rules on the triangle using symmetric polynomials and algebraic solving. Computers & Mathematics with Applications, 69:650-666, 2015.
 function TriangleQuadRule(::Type{T}, degree::Val{ 14 }) where {T<:Real}
   TriangleQuadRule(14,
   #= points =# [
@@ -1085,6 +1113,8 @@ function TriangleQuadRule(::Type{T}, degree::Val{ 14 }) where {T<:Real}
     parse(T, "2.50511441925033193058183390736939e-03"),
   ])
 end
+
+# Source: S.-A. Papanicolopulos. New fully symmetric and rotationally symmetric cubature rules on the triangle using minimal orthonormal bases. Journal of Computational and Applied Mathematics, 294:39-48, 2016.
 function TriangleQuadRule(::Type{T}, degree::Val{ 15 }) where {T<:Real}
   TriangleQuadRule(15,
   #= points =# [
@@ -1276,6 +1306,8 @@ function TriangleQuadRule(::Type{T}, degree::Val{ 15 }) where {T<:Real}
     parse(T, "2.06576637160655450833867879328592e-02"),
   ])
 end
+
+# Source: S.-A. Papanicolopulos. New fully symmetric and rotationally symmetric cubature rules on the triangle using minimal orthonormal bases. Journal of Computational and Applied Mathematics, 294:39-48, 2016.
 function TriangleQuadRule(::Type{T}, degree::Val{ 16 }) where {T<:Real}
   TriangleQuadRule(16,
   #= points =# [
@@ -1491,6 +1523,8 @@ function TriangleQuadRule(::Type{T}, degree::Val{ 16 }) where {T<:Real}
     parse(T, "1.99646336873568913576482924492776e-02"),
   ])
 end
+
+# Source: S.-A. Papanicolopulos. New fully symmetric and rotationally symmetric cubature rules on the triangle using minimal orthonormal bases. Journal of Computational and Applied Mathematics, 294:39-48, 2016.
 function TriangleQuadRule(::Type{T}, degree::Val{ 17 }) where {T<:Real}
   TriangleQuadRule(17,
   #= points =# [
@@ -1726,6 +1760,8 @@ function TriangleQuadRule(::Type{T}, degree::Val{ 17 }) where {T<:Real}
     parse(T, "1.93095802077451182394506029320986e-02"),
   ])
 end
+
+# Source: S.-A. Papanicolopulos. New fully symmetric and rotationally symmetric cubature rules on the triangle using minimal orthonormal bases. Journal of Computational and Applied Mathematics, 294:39-48, 2016.
 function TriangleQuadRule(::Type{T}, degree::Val{ 18 }) where {T<:Real}
   TriangleQuadRule(18,
   #= points =# [
@@ -1997,6 +2033,8 @@ function TriangleQuadRule(::Type{T}, degree::Val{ 18 }) where {T<:Real}
     parse(T, "1.69984272585877453230703955828687e-02"),
   ])
 end
+
+# Source: S.-A. Papanicolopulos. New fully symmetric and rotationally symmetric cubature rules on the triangle using minimal orthonormal bases. Journal of Computational and Applied Mathematics, 294:39-48, 2016.
 function TriangleQuadRule(::Type{T}, degree::Val{ 19 }) where {T<:Real}
   TriangleQuadRule(19,
   #= points =# [
@@ -2284,6 +2322,8 @@ function TriangleQuadRule(::Type{T}, degree::Val{ 19 }) where {T<:Real}
     parse(T, "1.50827998399043715252977916247166e-02"),
   ])
 end
+
+# Source: S.-A. Papanicolopulos. New fully symmetric and rotationally symmetric cubature rules on the triangle using minimal orthonormal bases. Journal of Computational and Applied Mathematics, 294:39-48, 2016.
 function TriangleQuadRule(::Type{T}, degree::Val{ 20 }) where {T<:Real}
   TriangleQuadRule(20,
   #= points =# [
@@ -2603,6 +2643,8 @@ function TriangleQuadRule(::Type{T}, degree::Val{ 20 }) where {T<:Real}
     parse(T, "1.56953608107867216831531428764929e-02"),
   ])
 end
+
+# Source: S.-A. Papanicolopulos. New fully symmetric and rotationally symmetric cubature rules on the triangle using minimal orthonormal bases. Journal of Computational and Applied Mathematics, 294:39-48, 2016.
 function TriangleQuadRule(::Type{T}, degree::Val{ 21 }) where {T<:Real}
   TriangleQuadRule(21,
   #= points =# [
@@ -2950,6 +2992,8 @@ function TriangleQuadRule(::Type{T}, degree::Val{ 21 }) where {T<:Real}
     parse(T, "1.19538232815810754860658960206292e-02"),
   ])
 end
+
+# Source: S.-A. Papanicolopulos. New fully symmetric and rotationally symmetric cubature rules on the triangle using minimal orthonormal bases. Journal of Computational and Applied Mathematics, 294:39-48, 2016.
 function TriangleQuadRule(::Type{T}, degree::Val{ 22 }) where {T<:Real}
   TriangleQuadRule(22,
   #= points =# [
@@ -3329,6 +3373,8 @@ function TriangleQuadRule(::Type{T}, degree::Val{ 22 }) where {T<:Real}
     parse(T, "1.17638765835114608119570732559793e-02"),
   ])
 end
+
+# Source: S.-A. Papanicolopulos. New fully symmetric and rotationally symmetric cubature rules on the triangle using minimal orthonormal bases. Journal of Computational and Applied Mathematics, 294:39-48, 2016.
 function TriangleQuadRule(::Type{T}, degree::Val{ 23 }) where {T<:Real}
   TriangleQuadRule(23,
   #= points =# [
@@ -3736,6 +3782,8 @@ function TriangleQuadRule(::Type{T}, degree::Val{ 23 }) where {T<:Real}
     parse(T, "1.18459271543522503050363638463108e-02"),
   ])
 end
+
+# Source: S.-A. Papanicolopulos. New fully symmetric and rotationally symmetric cubature rules on the triangle using minimal orthonormal bases. Journal of Computational and Applied Mathematics, 294:39-48, 2016.
 function TriangleQuadRule(::Type{T}, degree::Val{ 24 }) where {T<:Real}
   TriangleQuadRule(24,
   #= points =# [
@@ -4179,6 +4227,8 @@ function TriangleQuadRule(::Type{T}, degree::Val{ 24 }) where {T<:Real}
     parse(T, "1.02296793188677308645182963857528e-02"),
   ])
 end
+
+# Source: S.-A. Papanicolopulos. New fully symmetric and rotationally symmetric cubature rules on the triangle using minimal orthonormal bases. Journal of Computational and Applied Mathematics, 294:39-48, 2016.
 function TriangleQuadRule(::Type{T}, degree::Val{ 25 }) where {T<:Real}
   TriangleQuadRule(25,
   #= points =# [
@@ -4658,6 +4708,8 @@ TriangleQuadRule(::Type{T}, ::Val{ 26 }) where T = TriangleQuadRule(T, Val{ 27 }
 TriangleQuadRule(::Type{T}, ::Val{ 27 }) where T = TriangleQuadRule(T, Val{ 28 }())
 TriangleQuadRule(::Type{T}, ::Val{ 28 }) where T = TriangleQuadRule(T, Val{ 29 }())
 TriangleQuadRule(::Type{T}, ::Val{ 29 }) where T = TriangleQuadRule(T, Val{ 30 }())
+
+# Source: H. Xiao and Z. Gimbutas. A numerical algorithm for the construction of efficient quadrature rules in two and higher dimensions. Computers & Mathematics with Applications, 59(2):663-676, 2010.
 function TriangleQuadRule(::Type{T}, degree::Val{ 30 }) where {T<:Real}
   TriangleQuadRule(30,
   #= points =# [
@@ -5356,6 +5408,8 @@ TriangleQuadRule(::Type{T}, ::Val{ 46 }) where T = TriangleQuadRule(T, Val{ 47 }
 TriangleQuadRule(::Type{T}, ::Val{ 47 }) where T = TriangleQuadRule(T, Val{ 48 }())
 TriangleQuadRule(::Type{T}, ::Val{ 48 }) where T = TriangleQuadRule(T, Val{ 49 }())
 TriangleQuadRule(::Type{T}, ::Val{ 49 }) where T = TriangleQuadRule(T, Val{ 50 }())
+
+# Source: H. Xiao and Z. Gimbutas. A numerical algorithm for the construction of efficient quadrature rules in two and higher dimensions. Computers & Mathematics with Applications, 59(2):663-676, 2010.
 function TriangleQuadRule(::Type{T}, degree::Val{ 50 }) where {T<:Real}
   TriangleQuadRule(50,
   #= points =# [
