@@ -226,8 +226,6 @@ let domain = Quadrilateral()
     F[ 6.83130051063973225548e-01,
        8.81917103688196863500e-01 ])
   qr = expand(cqr)
-  oqr = optimize(cqr)
-
   test_quadrature_rule(qr)
 end
 
@@ -238,8 +236,6 @@ let domain = Tetrahedron()
        9.27352503108912264023e-02,
        4.55037041256496494918e-02 ])
   qr = expand(cqr)
-  oqr = optimize(cqr)
-
   test_quadrature_rule(qr)
 end
 
@@ -256,8 +252,6 @@ let domain = Pyramid()
        4.32882864103540976850e-01,
       -1.52797325760550388420e-01 ])
   qr = expand(cqr)
-  oqr = optimize(cqr)
-
   test_quadrature_rule(qr)
 end
 
@@ -270,8 +264,6 @@ let domain = Prism()
        1.00858945982708530915e-01,
        5.70426980705159272061e-01 ])
   qr = expand(cqr)
-  oqr = optimize(cqr)
-
   test_quadrature_rule(qr)
 end
 
@@ -281,7 +273,5 @@ let domain = Hexahedron()
     F[ 7.95822425754221463264e-01,
        7.58786910639328146269e-01 ])
   qr = expand(cqr)
-  oqr = optimize(cqr)
-
   test_quadrature_rule(qr)
 end

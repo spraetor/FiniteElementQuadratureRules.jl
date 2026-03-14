@@ -54,31 +54,34 @@ end
 function symmetryOrbits(::Type{T}, ::Triangle) where {T<:Real}
   P = SVector{3,T}
   SymmetryOrbit[
-    SymmetryOrbit(Val(0),1, () -> SVector{1,P}((            # S3
+    SymmetryOrbit(Val(0),1, () -> SVector{1,P}((             # S3
       P(1//3,1//3,1//3),)), (p)->NTuple{0,P}() ),
-    SymmetryOrbit(Val(1),3, (a::T) -> SVector{3,P}(        # S21
+    SymmetryOrbit(Val(1),3, (a::T) -> SVector{3,P}(         # S21
       P(a,a,T(1)-2*a),
       P(a,T(1)-2*a,a),
       P(T(1)-2*a,a,a)), (p)->(p[1],) ),
-    SymmetryOrbit(Val(2),6, (a::T, b::T) -> SVector{6,P}(  # S111
+    SymmetryOrbit(Val(2),6, (a::T, b::T) -> SVector{6,P}(   # S111
       P(a,b,T(1)-a-b),
       P(a,T(1)-a-b,b),
       P(T(1)-a-b,a,b),
       P(b,a,T(1)-a-b),
       P(b,T(1)-a-b,a),
       P(T(1)-a-b,b,a)), (p)->(p[1],p[2]) ),
-    SymmetryOrbit(Val(2),2, (a::T, b::T) -> SVector{2,P}(  # T2=Mirror
-      P(a,b,T(1)-a-b),
-      P(T(1)-a-b,b,a)), (p)->(p[1],p[2]) ),
-    SymmetryOrbit(Val(2),3, (a::T, b::T) -> SVector{3,P}(  # Ro3=Rotation=even permutations
+    SymmetryOrbit(Val(2),3, (a::T, b::T) -> SVector{3,P}(   # A3
       P(a,b,T(1)-a-b),
       P(b,T(1)-a-b,a),
       P(T(1)-a-b,a,b)), (p)->(p[1],p[2]) ),
-    SymmetryOrbit(Val(3),1, (a::T, b::T, c::T) -> SVector{1,P}( # identity
-      (P(a,b,c),)), (p)->(p[1],p[2],p[3]) ),
-    SymmetryOrbit(Val(2),2, (a::T, b::T) -> SVector{2,P}(  # Mirror2
+    SymmetryOrbit(Val(2),2, (a::T, b::T) -> SVector{2,P}(   # M12
+      P(a,b,T(1)-a-b),
+      P(b,a,T(1)-a-b)), (p)->(p[1],p[2]) ),
+    SymmetryOrbit(Val(2),2, (a::T, b::T) -> SVector{2,P}(   # M13
+      P(a,b,T(1)-a-b),
+      P(T(1)-a-b,b,a)), (p)->(p[1],p[2]) ),
+    SymmetryOrbit(Val(2),2, (a::T, b::T) -> SVector{2,P}(   # M23
       P(a,b,T(1)-a-b),
       P(a,T(1)-a-b,b)), (p)->(p[1],p[2]) ),
+    SymmetryOrbit(Val(3),1, (a::T, b::T, c::T) -> SVector{1,P}( # I
+      (P(a,b,c),)), (p)->(p[1],p[2],p[3]) ),
     ]
 end
 

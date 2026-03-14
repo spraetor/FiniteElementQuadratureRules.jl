@@ -2,14 +2,19 @@ using FiniteElementQuadratureRules
 using Test
 
 @testset "FiniteElementQuadratureRules.jl" begin
-    include("domain.jl")
-    include("referenceelement.jl")
-    include("geometry.jl")
     include("barycentriccoordinates.jl")
-    include("transformcoordinates.jl")
-    include("polyset.jl")
-    include("jacobi.jl")
     include("compactrule.jl")
-    include("dune.jl")
+    include("domain.jl")
+    include("geometry.jl")
+    include("jacobi.jl")
+    include("polyset.jl")
+    include("quadraturerule.jl")
     include("readme_examples.jl")
+    include("referenceelement.jl")
+    include("symmetryorbits.jl")
+    include("transformcoordinates.jl")
+    include("weights.jl")
 end
+
+# run the test in the extension
+include(joinpath(@__DIR__, "..", "ext", "test", "runtest.jl"))

@@ -6,9 +6,13 @@ abstract type AbstractSimplex <: AbstractDomain end
 abstract type AbstractCube <: AbstractDomain end
 abstract type AbstractPolySet end
 
-import Base: parse
 _parse(::Type{<:AbstractString}, x::AbstractString) = x
 _parse(::Type{T}, x::AbstractString) where T<:Number = Base.parse(T,x)
+
+_transform(::Type{T}, x::AbstractArray) where {T} = map(xᵢ -> _transform(T,xᵢ), x)
+_transform(::Type{T}, x::Real) where {T<:Real} = Base.convert(T,x)
+_transform(::Type{A}, x::AbstractArray{S,N}) where {S<:Real, N, T<:Real, A<:AbstractArray{T,N}} = Base.convert(A,x)
+
 
 # Function which are available in the FiniteElementQuadratureRulesExportExt
 # extension, when BibFormatter, BibInternal, BibParser, and OteraEngine are

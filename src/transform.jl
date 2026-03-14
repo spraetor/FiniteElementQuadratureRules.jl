@@ -16,4 +16,3 @@ function transform(qr::QuadratureRule{Ω,T,P}, refOut::ReferenceElement) where {
     map(w -> w*volOut/volIn, qr.weights),
     qr.properties)
 end
-

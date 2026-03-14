@@ -1,8 +1,7 @@
 using YAML: load_file
-include(joinpath(@__DIR__, "..", "ext", "dune.jl"))
 
 @testset "Dune reference element" begin
-  rules_root = joinpath(@__DIR__, "..", "rules")
+  rules_root = joinpath(@__DIR__, "..", "..", "rules")
 
   data = load_file(joinpath(rules_root, "compact", "CCGV22", "triangle", "4-6.yml"))
   cqr = CompactQuadratureRule(Float64, data)

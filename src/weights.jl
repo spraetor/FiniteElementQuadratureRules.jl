@@ -1,4 +1,5 @@
 """
+    getWeights(::Type{T}, domain::AbstractDomain, degree::Integer, points::AbstractVector)
     getWeights(::Type{T}, ref::ReferenceElement, degree::Integer, points::AbstractVector)
 
 Compute the quadrature weight associated to given quadrature `points` for quadrature
@@ -34,21 +35,25 @@ end
 
 
 """
-    getWeights(::Type{T}, domain::AbstractDomain, degree::Integer, points::AbstractVector)
+    getWeights(domain::AbstractDomain, degree::Integer, points::AbstractVector)
+    getWeights(ref::ReferenceElement, degree::Integer, points::AbstractVector)
 
-Compute the quadrature weight using Float64 precision.
+Compute the quadrature weight for the given set of quadrature points. The data type of the weights is identical to the element type
+of the points.
 """
 function getWeights(domain::AbstractDomain, degree::Integer, points::AbstractVector{P}) where {P<:AbstractVector}
   T = eltype(P)
   getWeights(T, ReferenceElement(domain), degree, points)
 end
 
-function getWeights(ref::ReferenceElement, degree::Integer, points::AbstractVector)
+function getWeights(ref::ReferenceElement, degree::Integer, points::AbstractVector{P}) where {P<:AbstractVector}
   T = eltype(P)
   getWeights(T, ref, degree, points)
 end
 
+
 """
+    getWeights(::Type{T}, domain::AbstractDomain, degree::Integer, points::AbstractVector, orbits::AbstractVector)
     getWeights(::Type{T}, ref::ReferenceElement, degree::Integer, points::AbstractVector, orbits::AbstractVector)
 
 Compute the quadrature weight associated to given quadrature `points` for quadrature
@@ -102,16 +107,19 @@ function getWeights(::Type{T}, domain::AbstractDomain, degree::Integer, points::
 end
 
 """
-    getWeights(::Type{T}, domain::AbstractDomain, degree::Integer, points::AbstractVector, orbits::AbstractVector)
+    getWeights(domain::AbstractDomain, degree::Integer, points::AbstractVector, orbits::AbstractVector)
+    getWeights(ref::ReferenceElement, domain::AbstractDomain, degree::Integer, points::AbstractVector, orbits::AbstractVector)
 
-Compute the quadrature weight using Float64 precision.
+Compute the quadrature weight for the given set of quadrature points, using the
+symmetry orbits. The data type of the weights is identical to the element type
+of the points.
 """
 function getWeights(domain::AbstractDomain, degree::Integer, points::AbstractVector{P}, orbits::AbstractVector) where {P<:AbstractVector}
   T = eltype(P)
   getWeights(T, ReferenceElement(domain), degree, points, orbits)
 end
 
-function getWeights(ref::ReferenceElement, degree::Integer, points::AbstractVector, orbits::AbstractVector)
+function getWeights(ref::ReferenceElement, degree::Integer, points::AbstractVector{P}, orbits::AbstractVector) where {P<:AbstractVector}
   T = eltype(P)
   getWeights(T, ref, degree, points, orbits)
 end

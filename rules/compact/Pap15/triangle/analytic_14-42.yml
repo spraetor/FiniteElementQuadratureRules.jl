@@ -3,7 +3,7 @@ region: simplex
 dim: 2
 degree: 14
 quality: PI
-orbits: [0, 6, 4, 0]
+orbits: [0, 6, 4, 0, 0, 0, 0, 0]
 positions:
   - '2.734775283088387e-01'
   - '4.176447193404539e-01'

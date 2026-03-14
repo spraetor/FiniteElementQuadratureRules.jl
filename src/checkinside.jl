@@ -41,9 +41,7 @@ end
 
 function checkInside(ref::ReferenceElement{Prism}, x::AbstractVector, tol::Real)
   λ = barycentricCoordinates(ref, x)
-  lower = min(coordinates(ref)[1][3], coordinates(ref)[end][3])
-  upper = min(coordinates(ref)[1][3], coordinates(ref)[end][3])
-  all(-tol <= λᵢ <= 1+tol for λᵢ in λ[1:3]) && (lower-tol <= λ[4] <= upper+tol)
+  all(-tol <= λᵢ <= 1+tol for λᵢ in λ[1:3]) && (-1-tol <= λ[4] <= 1+tol)
 end
 
 # TODO: generalize implementation to arbitrary reference pyramids
@@ -77,9 +75,7 @@ end
 
 function checkStrictlyInside(ref::ReferenceElement{Prism}, x::AbstractVector, tol::Real)
   λ = barycentricCoordinates(ref, x)
-  lower = min(coordinates(ref)[1][3], coordinates(ref)[end][3])
-  upper = min(coordinates(ref)[1][3], coordinates(ref)[end][3])
-  all(tol < λᵢ < 1-tol for λᵢ in λ[1:3]) && (lower+tol < λ[4] < upper-tol)
+  all(tol < λᵢ < 1-tol for λᵢ in λ[1:3]) && (-1+tol < λ[4] < 1-tol)
 end
 
 # TODO: generalize implementation to arbitrary reference pyramids

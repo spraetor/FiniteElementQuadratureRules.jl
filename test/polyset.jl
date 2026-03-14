@@ -1,5 +1,13 @@
 using FiniteElementQuadratureRules: _allexponents
 
+function test_polyset(ps::AbstractPolySet)
+  @test length(ps.basis) == length(ps.integrals)
+  ref = ReferenceElement(ps.domain)
+  for f in ps.basis
+    f(position(ref,1,0)) # evaluate in the center of the domain
+  end
+end
+
 @testset "MonomialPolySet" begin
 
   # check exponent tuples
@@ -17,5 +25,18 @@ using FiniteElementQuadratureRules: _allexponents
 
   tri = Triangle()
   p = MonomialPolySet(tri, 5)
+  # test_polyset(p)
   @test integrate(p.basis[1], tri) ≈ 1.0
+end
+
+@testset "LagrangePolySet" begin
+
+  for degree in 0:3
+    lps2 = LagrangePolySet(Triangle(), degree)
+    test_polyset(lps2)
+
+    lps3 = LagrangePolySet(Tetrahedron(), degree)
+    test_polyset(lps3)
+  end
+
 end

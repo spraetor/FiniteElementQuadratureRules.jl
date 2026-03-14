@@ -23,21 +23,28 @@ function barycentricCoordinates(ref::ReferenceElement, x::AbstractVector)
   return barycentricCoordinates(domain(ref),x)
 end
 
+function barycentricCoordinates(ref::ReferenceElement{Ω}, x::AbstractVector) where {Ω<:AbstractSimplex}
+  dim = dimension(Ω)
+  n = dim + 1
+  @assert length(x) == dim
+  T = float(promote_type(eltype(x), ctype(ref)))
+  coords = coordinates(ref)
+  A = SMatrix{n,n,T}(ntuple(n*n) do k
+    i = (k - 1) % n + 1
+    j = (k - 1) ÷ n + 1
+    i <= dim ? T(coords[j][i]) : one(T)
+  end)
+  b = SVector{n,T}(ntuple(n) do i
+    i <= dim ? T(x[i]) : one(T)
+  end)
+  return A \ b
+end
+
 # Specializations for triangle reference domains
 function barycentricCoordinates(::Triangle, x::AbstractVector)
   @assert length(x) == 2
   T = eltype(x)
   return SVector{3,T}(-(x[1]+x[2])/2, (one(T)+x[1])/2, (one(T)+x[2])/2)
-end
-
-function barycentricCoordinates(ref::ReferenceElement{Triangle}, x::AbstractVector)
-  @assert length(x) == 2
-  T = eltype(x)
-  A = SMatrix{3,3,T}((coordinates(ref,1)[1], coordinates(ref,1)[2], one(T),
-                      coordinates(ref,2)[1], coordinates(ref,2)[2], one(T),
-                      coordinates(ref,3)[1], coordinates(ref,3)[2], one(T)))
-  b = SVector{3,T}((x[1],x[2],one(T)))
-  return A\b
 end
 
 # Specializations for tetrahedron reference domains
@@ -62,6 +69,22 @@ function barycentricCoordinates(::Prism, x::AbstractVector)
     (one(T)+x[2])/2,
     x[3],
   )
+end
+
+function barycentricCoordinates(ref::ReferenceElement{Prism}, x::AbstractVector)
+  @assert length(x) == 3
+  T = float(promote_type(eltype(x), ctype(ref)))
+  coords = _transform(SVector{3,T}, coordinates(ref))
+  A = SMatrix{3,3,T}(
+    coords[1][1], coords[1][2], one(T),
+    coords[2][1], coords[2][2], one(T),
+    coords[3][1], coords[3][2], one(T),
+  )
+  λ = A \ SVector{3,T}(x[1], x[2], one(T))
+  z_bottom = (coords[1][3] + coords[2][3] + coords[3][3]) / T(3)
+  z_top = (coords[4][3] + coords[5][3] + coords[6][3]) / T(3)
+  z = (T(2) * T(x[3]) - (z_top + z_bottom)) / (z_top - z_bottom)
+  return SVector{4,T}(λ[1], λ[2], λ[3], z)
 end
 
 

@@ -17,8 +17,8 @@ function gun75(file)
   refIn = ReferenceElement(Triangle, SVector{2,Rational}[[0,0], [1,0], [0,1]],
     [[1,2], [1,3], [2,3]], 1//2)
 
-  orbits = [0,0,0,0,0,4,5]
-  so4 = symmetryOrbits(BigFloat,Triangle())[4]
+  orbits = [0,0,0,0,0,0,5,4]
+  so4 = symmetryOrbits(BigFloat,Triangle())[7]
   positions = BigFloat[]
   weights = BigFloat[]
 

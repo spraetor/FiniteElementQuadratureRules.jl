@@ -47,7 +47,7 @@ function transformCompactRule3(file)
       [[1,2], [1,3], [2,3]], BigFloat(2))
     geo=MultiLinearGeometry(ref1,ref2.coordinates)
     coordinates=map(xy->barycentricCoordinates(Triangle(), geo(big.([xy[1],xy[2]]))), zip(x,y))
-    orbits=[0,0,0,10,0,4]
+    orbits=[0,0,0,0,0,10,0,4]
     positions=BigFloat[]
     so = symmetryOrbits(BigFloat, Triangle())
     j = 1
