@@ -6,6 +6,7 @@ using Base: Filesystem
 
   for (root, _, files) in Filesystem.walkdir(rules_root)
     for file in (f for f in files if endswith(f, ".yml"))
+      occursin(".opt.yml", file) && continue
       data = YAML.load_file(joinpath(root, file))
       qr = if haskey(data, "coordinates")
         QuadratureRule(Float64, data)

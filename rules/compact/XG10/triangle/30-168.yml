@@ -1,9 +1,9 @@
 reference: 'XG10'
-region: simplex
+region: 'simplex'
 dim: 2
 degree: 30
-quality: PI
-accuracy: '3.39115277206414963152304051356596e-14'
+quality: 'PI'
+accuracy: '3.39115277206414963049834349059373e-14'
 orbits: [0, 0, 0, 56, 0, 0, 0, 0]
 positions:
   - '2.97995340276697700000000000000000e-01'

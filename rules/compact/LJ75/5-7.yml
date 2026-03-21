@@ -1,9 +1,9 @@
 reference: 'Pap15'
-region: simplex
+region: 'simplex'
 dim: 2
 degree: 2
-quality: PI
-accuracy: '1.29542528326416669380795277942006e-77'
+quality: 'PI'
+accuracy: '2.82842712474619029094924371747766e-33'
 orbits: [1, 2, 0, 0]
 positions:
   - '1.01286507323456338800987361915124e-01'

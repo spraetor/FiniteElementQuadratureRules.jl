@@ -1,9 +1,9 @@
 reference: 'WV15'
-region: cube
+region: 'cube'
 dim: 2
 degree: 5
-quality: PI
-accuracy: '5.77746017036844541751985907405888e-34'
+quality: 'PI'
+accuracy: '1.51989339813671562483694738075360e-33'
 orbits: [0, 1, 1, 0]
 positions:
   - '6.83130051063973225548069245368070e-01'

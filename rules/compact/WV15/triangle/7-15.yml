@@ -1,9 +1,9 @@
 reference: 'WV15'
-region: simplex
+region: 'simplex'
 dim: 2
 degree: 7
-quality: PI
-accuracy: '4.87869513063153721246874919725877e-33'
+quality: 'PI'
+accuracy: '5.04946047318502794873545154979665e-33'
 orbits: [0, 3, 1, 0, 0, 0, 0, 0]
 positions:
   - '3.37306485545878487149717263008162e-02'

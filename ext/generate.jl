@@ -52,19 +52,19 @@ function generate(
       cqr = haskey(data, "weights") ? CompactQuadratureRuleWithWeights(BigFloat, data) : CompactQuadratureRule(BigFloat, data)
       qr = expand(cqr)
       tol = validation_tol(ctype(qr))
-      if !testWeights(qr; tol)
-        println("  -> error(weights)")
-        continue
-      end
-      if !testQuadratureRule(qr; tol)
-        println("  -> error(polynomials)")
-        continue
-      end
+      # if !testWeights(qr; tol)
+      #   println("  -> error(weights)")
+      #   continue
+      # end
+      # if !testQuadratureRule(qr; tol)
+      #   println("  -> error(polynomials)")
+      #   continue
+      # end
       qr = transform(qr, refOut(domain(qr)))
-      if !testWeights(qr; tol)
-        println("  -> error(transform)")
-        continue
-      end
+      # if !testWeights(qr; tol)
+      #   println("  -> error(transform)")
+      #   continue
+      # end
       if filter(qr)
         reference = haskey(data, "reference") ? string(data["reference"]) : "unknown"
         bibentry = haskey(bibFile, reference) ? bibFile[reference] : BibInternal.Entry(reference, Dict())

@@ -1,6 +1,5 @@
 using StaticArrays: SVector
 using Printf: @sprintf
-import YAML
 
 """
     QuadratureRule{Ω,T,Point}
@@ -56,7 +55,7 @@ isInside(qr::QuadratureRule) = :inside in qr.properties
 isPI(qr::QuadratureRule) = isPositive(qr) && isInside(qr)
 
 # convert a vector of coordinates represented as number or string into a static vector of type T
-function point(::Type{T}, ::Val{D}, coords::Vector{S}) where {T,D,S}
+function point(::Type{T}, ::Val{D}, coords::AbstractVector{S}) where {T,D,S}
   @assert length(coords) == D
   SVector{D,T}((_parse(T,c) for c in coords))
 end
@@ -126,22 +125,127 @@ The optional parameter `reference` refers to a bibtex key used to reference a pu
 where the quadrature rule is extracted from.
 """
 function Base.Dict(qr::QuadratureRule; reference::String="unknown", precision::Int=32, extra_fields::AbstractDict=Dict())
+  coordinates = [ [@sprintf("%0.*e", precision, pᵢ) for pᵢ in p] for p in qr.points ]
+  weights = String[ @sprintf("%0.*e", precision,w) for w in qr.weights ]
+  rounded = Dict(
+    "reference" => reference,
+    "region" => region(domain(qr)),
+    "dim" => dimension(domain(qr)),
+    "degree" => qr.degree,
+    "coordinates" => coordinates,
+    "weights" => weights,
+    "properties" => String[ string(prop) for prop in qr.properties ],
+  )
+  rounded_accuracy = quadratureAccuracy(QuadratureRule(BigFloat, rounded))
+
   data = Dict{String,Any}(string(k) => v for (k, v) in pairs(extra_fields))
   data["reference"] = reference
   data["region"] = region(domain(qr))
   data["dim"] = dimension(domain(qr))
   data["degree"] = qr.degree
   data["quality"] = string(getQuality(qr))
-  data["accuracy"] = @sprintf("%0.*e", precision, quadratureAccuracy(qr))
+  data["accuracy"] = @sprintf("%0.*e", precision, rounded_accuracy)
   data["properties"] = String[ string(prop) for prop in qr.properties ]
-  data["coordinates"] = [ String[ @sprintf("%0.*e", precision,pᵢ) for pᵢ in p ] for p in qr.points ]
-  data["weights"] = String[ @sprintf("%0.*e", precision,w) for w in qr.weights ]
+  data["coordinates"] = coordinates
+  data["weights"] = weights
   data
 end
 
+_yaml_quote(s::AbstractString) = "'$(replace(s, "'" => "''"))'"
+
+function _write_yaml_scalar(io::IO, key::AbstractString, value)
+  if value isa AbstractString
+    write(io, "$(key): $(_yaml_quote(value))\n")
+  else
+    write(io, "$(key): $(value)\n")
+  end
+end
+
+function _write_yaml_inline_array(io::IO, key::AbstractString, values::AbstractVector)
+  write(io, "$(key): [")
+  for (i, value) in enumerate(values)
+    i > 1 && write(io, ", ")
+    if value isa AbstractString
+      write(io, string(value))
+    else
+      write(io, string(value))
+    end
+  end
+  write(io, "]\n")
+end
+
+function _write_yaml_string_block(io::IO, key::AbstractString, values::AbstractVector)
+  write(io, "$(key):\n")
+  for value in values
+    write(io, "  - $(_yaml_quote(string(value)))\n")
+  end
+end
+
+function _write_yaml_coordinates_block(io::IO, values::AbstractVector)
+  write(io, "coordinates:\n")
+  for p in values
+    write(io, "  - [")
+    for (i, v) in enumerate(p)
+      i > 1 && write(io, ", ")
+      write(io, _yaml_quote(string(v)))
+    end
+    write(io, "]\n")
+  end
+end
+
+function _write_yaml_extra_fields(io::IO, data::AbstractDict, written::AbstractSet{String}, deferred::AbstractSet{String}=Set{String}())
+  extras = sort!(String[string(k) for k in keys(data) if !(string(k) in written) && !(string(k) in deferred)])
+  for key in extras
+    value = data[key]
+    if value isa AbstractVector
+      if all(v -> !(v isa AbstractVector), value)
+        _write_yaml_inline_array(io, key, value)
+      else
+        write(io, "$(key):\n")
+        for entry in value
+          write(io, "  - $(entry)\n")
+        end
+      end
+    else
+      _write_yaml_scalar(io, key, value)
+    end
+  end
+end
+
+function write_file(file::AbstractString, data::AbstractDict)
+  written = Set{String}()
+  open(file, "w") do io
+    for key in ("reference", "region", "dim", "degree", "quality", "accuracy")
+      haskey(data, key) || continue
+      _write_yaml_scalar(io, key, data[key])
+      push!(written, key)
+    end
+    _write_yaml_extra_fields(io, data, written, Set(["properties", "coordinates", "weights", "orbits", "positions"]))
+    if haskey(data, "orbits")
+      _write_yaml_inline_array(io, "orbits", data["orbits"])
+      push!(written, "orbits")
+    end
+    if haskey(data, "positions")
+      _write_yaml_string_block(io, "positions", data["positions"])
+      push!(written, "positions")
+    end
+    if haskey(data, "properties")
+      _write_yaml_inline_array(io, "properties", data["properties"])
+      push!(written, "properties")
+    end
+    if haskey(data, "coordinates")
+      _write_yaml_coordinates_block(io, data["coordinates"])
+      push!(written, "coordinates")
+    end
+    if haskey(data, "weights")
+      _write_yaml_string_block(io, "weights", data["weights"])
+      push!(written, "weights")
+    end
+  end
+end
 
 function write_file(file::AbstractString, qr::QuadratureRule; reference::String="unknown", precision::Integer=50, extra_fields::AbstractDict=Dict())
-  YAML.write_file(file, Dict(qr; reference, precision, extra_fields))
+  write_file(file, Dict(qr; reference, precision, extra_fields))
 end
 
 """

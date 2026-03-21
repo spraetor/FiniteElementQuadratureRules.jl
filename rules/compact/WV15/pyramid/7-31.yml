@@ -1,9 +1,9 @@
 reference: 'WV15'
-region: pyramid
+region: 'pyramid'
 dim: 3
 degree: 7
-quality: PI
-accuracy: '2.08589578500161037490782134541648e-32'
+quality: 'PI'
+accuracy: '3.57854355105308146911054695443485e-32'
 orbits: [3, 2, 5, 0]
 positions:
   - '-9.99909039583594483241576515698211e-01'

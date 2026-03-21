@@ -1,9 +1,9 @@
 reference: 'CCGV22'
-region: simplex
+region: 'simplex'
 dim: 3
 degree: 19
-quality: PI
-accuracy: '1.53259769541501988045292645728649e-62'
+quality: 'PI'
+accuracy: '5.81403169414081965731961379974266e-29'
 orbits: [1, 7, 3, 18, 5]
 positions:
   - '1.99329047511150179926689171649959e-01'

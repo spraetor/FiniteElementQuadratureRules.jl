@@ -1,9 +1,9 @@
 reference: 'ZCL09'
-region: simplex
+region: 'simplex'
 dim: 3
 degree: 8
-quality: PI
-accuracy: '5.20124727807206703482767879473200e-64'
+quality: 'PI'
+accuracy: '2.22818801166418023126756215392480e-32'
 orbits: [0, 4, 1, 2, 0]
 positions:
   - '3.96754230703899012650713295393892e-02'

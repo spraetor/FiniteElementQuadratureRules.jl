@@ -1,9 +1,9 @@
 reference: 'LJ75'
-region: simplex
+region: 'simplex'
 dim: 2
 degree: 4
-quality: NB
-accuracy: '3.45446742203777785015454074512016e-77'
+quality: 'NB'
+accuracy: '1.30644296716855169271301158898867e-33'
 orbits: [1, 1, 1, 0]
 positions:
   - '0.00000000000000000000000000000000e+00'

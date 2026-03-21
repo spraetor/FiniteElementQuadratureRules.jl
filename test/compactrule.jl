@@ -210,9 +210,15 @@ let
     path = joinpath(dir, "rule.yml")
     write_file(path, cqr; reference="TEST", extra_fields=Dict("comment" => "keep me"))
     data = YAML.load_file(path)
+    text = read(path, String)
     @test data["comment"] == "keep me"
     @test data["reference"] == "TEST"
     @test haskey(data, "weights")
+    @test occursin("reference: 'TEST'\n", text)
+    @test occursin("comment: 'keep me'\n", text)
+    @test occursin("orbits: [0, 1, 0]\n", text)
+    @test occursin("positions:\n", text)
+    @test occursin("weights:\n", text)
   end
 end
 

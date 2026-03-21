@@ -66,8 +66,24 @@ function _is_close(original::CompactQuadratureRuleWithWeights, optimized::Compac
   original.domain == optimized.domain || return false
   original.degree == optimized.degree || return false
   original.orbits == optimized.orbits || return false
-  return _is_close(original.positions, optimized.positions; atol, rtol) &&
-         _is_close(original.weights, optimized.weights; atol, rtol)
+  return _is_close(original.positions, optimized.positions; atol, rtol)
+end
+
+function _rule_change_summary(original::CompactQuadratureRule, optimized::CompactQuadratureRule)
+  if original.orbits != optimized.orbits
+    return "orbit structure changed"
+  end
+  posdiff = _max_componentwise_difference(original.positions, optimized.positions)
+  return @sprintf("position diff %.3e", posdiff)
+end
+
+function _rule_change_summary(original::CompactQuadratureRuleWithWeights, optimized::CompactQuadratureRuleWithWeights)
+  if original.orbits != optimized.orbits
+    return "orbit structure changed"
+  end
+  posdiff = _max_componentwise_difference(original.positions, optimized.positions)
+  wdiff = _max_componentwise_difference(original.weights, optimized.weights)
+  return @sprintf("position diff %.3e, weight diff %.3e", posdiff, wdiff)
 end
 
 function _try_optimized_rule(rule;
@@ -180,6 +196,7 @@ function optimize_rule_file(path::AbstractString;
     final_accuracy = best.accuracy,
     solver = best.solver,
     action = close ? :overwrite : :optfile,
+    close_reason = close ? "close to original" : _rule_change_summary(original, best.rule),
     output = outpath,
     attempts = attempted,
   )
@@ -204,15 +221,16 @@ function optimize_rules(dir::AbstractString=joinpath(@__DIR__, "compact");
       data = load_file(path)
       accuracy = haskey(data, "accuracy") ? parse(BigFloat, string(data["accuracy"])) : big(Inf)
       accuracy > BigFloat(accuracy_threshold) || continue
-      candidates = vcat(candidates, [(path = path, accuracy = accuracy)])
+      candidates = vcat(candidates, [(path = path, accuracy = accuracy, degree = data["degree"])])
     end
   end
-  candidates = sort(candidates; by = x -> (x.accuracy, x.path), rev = true)
+  candidates = sort(candidates; by = x -> (x.degree, 1-x.accuracy, x.path))
 
   results = NamedTuple[]
   println("Candidates above accuracy threshold: $(length(candidates))")
   for candidate in candidates
     path = candidate.path
+    println(path)
     result = optimize_rule_file(path;
       work_T,
       accuracy_threshold,
@@ -228,8 +246,8 @@ function optimize_rules(dir::AbstractString=joinpath(@__DIR__, "compact");
       println(@sprintf("OVERWRITE %s  %.3e -> %.3e  [%s]",
         relpath(path, pwd()), Float64(result.original_accuracy), Float64(result.final_accuracy), string(result.solver)))
     elseif result.action == :optfile
-      println(@sprintf("OPTFILE   %s  %.3e -> %.3e  [%s] -> %s",
-        relpath(path, pwd()), Float64(result.original_accuracy), Float64(result.final_accuracy), string(result.solver), relpath(result.output, pwd())))
+      println(@sprintf("OPTFILE   %s  %.3e -> %.3e  [%s] -> %s  (%s)",
+        relpath(path, pwd()), Float64(result.original_accuracy), Float64(result.final_accuracy), string(result.solver), relpath(result.output, pwd()), result.close_reason))
     elseif result.reason == :accuracy_ok
       println(@sprintf("SKIP      %s  %.3e", relpath(path, pwd()), Float64(result.original_accuracy)))
     else

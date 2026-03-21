@@ -1,9 +1,9 @@
 reference: 'JS21'
-region: pyramid
+region: 'pyramid'
 dim: 3
 degree: 11
-quality: PI
-accuracy: '8.55255992902222107360127310531410e-32'
+quality: 'PI'
+accuracy: '1.49786049521520649791448249006571e-31'
 orbits: [3, 8, 11, 3]
 positions:
   - '3.85912792950176717716144449810058e-01'

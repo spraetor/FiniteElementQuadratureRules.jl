@@ -1,9 +1,9 @@
 reference: 'LL24'
-region: simplex
+region: 'simplex'
 dim: 2
 degree: 36
-quality: PO
-accuracy: '1.98587750765595959396621762076282e-11'
+quality: 'PO'
+accuracy: '1.98587750765595959521631499783169e-11'
 orbits: [0, 0, 0, 0, 0, 0, 145, 13]
 positions:
   - '9.93894972465746942831784086709880e-01'

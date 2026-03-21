@@ -1,5 +1,3 @@
-import YAML
-
 """
     CompactQuadratureRule{T,Ω}
 
@@ -109,21 +107,31 @@ end
 
 function Base.Dict(cqr::CompactQuadratureRule; reference::String="unknown", precision::Int=32, extra_fields::AbstractDict=Dict())
   qr = expand(cqr)
+  positions = [@sprintf("%0.*e", precision, p) for p in cqr.positions]
+  rounded = Dict(
+    "reference" => reference,
+    "region" => region(cqr.domain),
+    "dim" => dimension(cqr.domain),
+    "degree" => cqr.degree,
+    "orbits" => copy(cqr.orbits),
+    "positions" => positions,
+  )
+  rounded_accuracy = quadratureAccuracy(expand(CompactQuadratureRule(BigFloat, rounded)))
   data = Dict{String,Any}(string(k) => v for (k, v) in pairs(extra_fields))
   data["reference"] = reference
   data["region"] = region(cqr.domain)
   data["dim"] = dimension(cqr.domain)
   data["degree"] = cqr.degree
   data["quality"] = string(getQuality(qr))
-  data["accuracy"] = @sprintf("%0.*e", precision, quadratureAccuracy(qr))
+  data["accuracy"] = @sprintf("%0.*e", precision, rounded_accuracy)
   data["orbits"] = copy(cqr.orbits)
-  data["positions"] = [@sprintf("%0.*e", precision, p) for p in cqr.positions]
+  data["positions"] = positions
   data
 end
 
 
 function write_file(file::AbstractString, cqr::CompactQuadratureRule; reference::String="unknown", precision::Integer=32, extra_fields::AbstractDict=Dict())
-  YAML.write_file(file, Dict(cqr; reference, precision, extra_fields))
+  write_file(file, Dict(cqr; reference, precision, extra_fields))
 end
 
 """
@@ -220,20 +228,32 @@ end
 
 function Base.Dict(cqr::CompactQuadratureRuleWithWeights; reference::String="unknown", precision::Int=50, extra_fields::AbstractDict=Dict())
   qr = expand(cqr)
+  positions = [@sprintf("%0.*e", precision, p) for p in cqr.positions]
+  weights = [@sprintf("%0.*e", precision, w) for w in cqr.weights]
+  rounded = Dict(
+    "reference" => reference,
+    "region" => region(cqr.domain),
+    "dim" => dimension(cqr.domain),
+    "degree" => cqr.degree,
+    "orbits" => copy(cqr.orbits),
+    "positions" => positions,
+    "weights" => weights,
+  )
+  rounded_accuracy = quadratureAccuracy(expand(CompactQuadratureRuleWithWeights(BigFloat, rounded)))
   data = Dict{String,Any}(string(k) => v for (k, v) in pairs(extra_fields))
   data["reference"] = reference
   data["region"] = region(cqr.domain)
   data["dim"] = dimension(cqr.domain)
   data["degree"] = cqr.degree
   data["quality"] = string(getQuality(qr))
-  data["accuracy"] = @sprintf("%0.*e", precision, quadratureAccuracy(qr))
+  data["accuracy"] = @sprintf("%0.*e", precision, rounded_accuracy)
   data["orbits"] = copy(cqr.orbits)
-  data["positions"] = [@sprintf("%0.*e", precision, p) for p in cqr.positions]
-  data["weights"] = [@sprintf("%0.*e", precision, w) for w in cqr.weights]
+  data["positions"] = positions
+  data["weights"] = weights
   data
 end
 
 
 function write_file(file::AbstractString, cqr::CompactQuadratureRuleWithWeights; reference::String="unknown", precision::Integer=50, extra_fields::AbstractDict=Dict())
-  YAML.write_file(file, Dict(cqr; reference, precision, extra_fields))
+  write_file(file, Dict(cqr; reference, precision, extra_fields))
 end

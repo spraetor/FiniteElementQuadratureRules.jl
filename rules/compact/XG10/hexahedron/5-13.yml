@@ -1,10 +1,10 @@
 reference: 'XG10'
-region: cube
+region: 'cube'
 dim: 3
 degree: 5
-quality: PI
-accuracy: '7.77255169958500016284771667652036e-77'
-comment: "The published coordinates were used, but the paper weights were not: they do not satisfy the cube volume and were likely incorrect or mis-scaled."
+quality: 'PI'
+accuracy: '6.00000000000000000000000000000000e-33'
+comment: 'The published coordinates were used, but the paper weights were not: they do not satisfy the cube volume and were likely incorrect or mis-scaled.'
 orbits: [1, 0, 0, 0, 0, 0, 0, 12]
 positions:
   - '8.15416217922541000000000000000000e-01'

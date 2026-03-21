@@ -1,9 +1,9 @@
 reference: 'WV15'
-region: prism
+region: 'prism'
 dim: 3
 degree: 6
-quality: PI
-accuracy: '1.27365417796110319099399936619164e-32'
+quality: 'PI'
+accuracy: '1.16129954225246706344071846868465e-32'
 orbits: [0, 2, 2, 1, 0, 1]
 positions:
   - '5.26622704804974758697980077483792e-01'

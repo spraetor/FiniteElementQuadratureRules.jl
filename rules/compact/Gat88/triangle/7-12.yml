@@ -1,9 +1,9 @@
 reference: 'Gat88'
-region: simplex
+region: 'simplex'
 dim: 2
 degree: 7
-quality: PI
-accuracy: '2.28706711959476506190158186345649e-33'
+quality: 'PI'
+accuracy: '2.27970855935340571321404937967020e-33'
 orbits: [0, 0, 0, 4, 0, 0, 0, 0]
 positions:
   - '6.23822650944021181736830009963500e-02'

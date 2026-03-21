@@ -1,8 +1,8 @@
 reference: 'TWB05'
-region: simplex
+region: 'simplex'
 dim: 2
 degree: 5
-quality: PO
+quality: 'PO'
 accuracy: '4.12508571556759564354403770453074e-33'
 orbits: [0, 0, 0, 0, 0, 0, 0, 10]
 positions:

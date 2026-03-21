@@ -47,10 +47,8 @@ function _format_accuracy(x)
 end
 
 
-function _format_rule_reference(reference::AbstractString, bibfile::AbstractDict)
-  label = "`$(_markdown_escape(reference))`"
-  haskey(bibfile, reference) || return label
-  return "[$label](#$(_markdown_escape(reference)))"
+function _format_rule_reference(reference::AbstractString)
+  return "[@$(_markdown_escape(reference))]"
 end
 
 

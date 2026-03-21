@@ -1,9 +1,9 @@
 reference: 'JS21'
-region: simplex
+region: 'simplex'
 dim: 3
 degree: 11
-quality: PI
-accuracy: '3.27636887571305644619296559077067e-32'
+quality: 'PI'
+accuracy: '3.37002627155061280874056493224480e-32'
 orbits: [0, 2, 3, 5, 1]
 positions:
   - '2.99313092399342490908243331163354e-01'
