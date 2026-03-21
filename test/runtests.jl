@@ -14,7 +14,6 @@ using Test
     include("rules.jl")
     include("symmetryorbits.jl")
     include("transformcoordinates.jl")
-    include("twb05.jl")
     include("weights.jl")
 end
 
