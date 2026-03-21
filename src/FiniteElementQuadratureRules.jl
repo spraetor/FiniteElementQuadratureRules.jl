@@ -48,7 +48,7 @@ export AbstractCube, AbstractDomain, AbstractGeometry, AbstractSimplex, AffineGe
   MonomialPolySet, MultiLinearGeometry, Point, Prism, Pyramid, QuadratureRule,
   Quadrilateral, ReferenceElement, SymmetryOrbit, Tetrahedron, Triangle
 export args, barycentricCoordinates, compact, coordinates, ctype, default_chooser, dimension, domain, domaintype, duneReferenceElement, expand, expandall,
-  facets, generate, generate_rule_overview, getProperties, getQuality, getWeights, integrate, isInside, isPositive, isPI,
+  facets, generate, generate_rule_overview, getCompactWeights, getOrbitWeights, getProperties, getQuality, getWeights, integrate, isInside, isPositive, isPI,
   optimize, position, quadratureAccuracy, region, symmetryOrbits, testQuadratureRule, testWeights, transform,
   vertices, volume, write_file
 

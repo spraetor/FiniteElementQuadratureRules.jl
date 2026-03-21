@@ -38,12 +38,4 @@ import YAML
     @test testQuadratureRule(qr; tol)
   end
 
-  @testset "Read expanded QuadratureRuleRule" begin
-    data = YAML.load_file(joinpath(rules_root, "expanded", "WV15", "tetrahedron", "1-1.yml"))
-    qr = QuadratureRule(data)
-    # @test testQuadratureRule(qr)
-
-    qr2 = QuadratureRule(Float64,data)
-    # @test testQuadratureRule(qr2)
-  end
 end

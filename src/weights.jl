@@ -64,6 +64,30 @@ computation more stable and faster. The parameter `T` represents the number type
 used for the computation.
 """
 function getWeights(::Type{T}, ref::ReferenceElement, degree::Integer, points::AbstractVector, orbits::AbstractVector) where {T<:Real}
+  orbit_weights = getOrbitWeights(T, ref, degree, points, orbits)
+  so = symmetryOrbits(T,domain(ref))
+
+  weights = T[]
+  j = 1
+  for k in eachindex(orbits)    # types of symmetry orbits
+    for _ in 1:orbits[k]        # number of orbits of this type
+      append!(weights, fill(orbit_weights[j],length(so[k])))
+      j = j+1
+    end
+  end
+
+  return weights
+end
+
+"""
+    getOrbitWeights(::Type{T}, domain::AbstractDomain, degree::Integer, points::AbstractVector, orbits::AbstractVector)
+    getOrbitWeights(::Type{T}, ref::ReferenceElement, degree::Integer, points::AbstractVector, orbits::AbstractVector)
+
+Compute one quadrature weight per symmetry orbit for the given expanded quadrature
+`points`. In contrast to [`getWeights`](@ref), the returned vector contains exactly one
+weight per orbit rather than one weight per quadrature point.
+"""
+function getOrbitWeights(::Type{T}, ref::ReferenceElement, degree::Integer, points::AbstractVector, orbits::AbstractVector) where {T<:Real}
   polyset = JacobiPolySet(domain(ref), degree)
   so = symmetryOrbits(T,domain(ref))
   nDifferentWeights = sum(orbits)
@@ -85,25 +109,15 @@ function getWeights(::Type{T}, ref::ReferenceElement, degree::Integer, points::A
     b[i] = T(polyset.integrals[i])
   end
 
-  w = A\b
-
-  weights = T[]
-  j = 1
-  for k in eachindex(orbits)    # types of symmetry orbits
-    for l in 1:orbits[k]        # number of orbits of this type
-      append!(weights, fill(w[j],length(so[k])))
-      j = j+1
-    end
-  end
-
-  return weights
-  # volIn = volume(ReferenceElement(domain(ref)))
-  # volOut = volume(ref)
-  # return map(w -> w*volOut/volIn, weights)
+  return A\b
 end
 
 function getWeights(::Type{T}, domain::AbstractDomain, degree::Integer, points::AbstractVector, orbits::AbstractVector) where {T<:Real}
   getWeights(T, ReferenceElement(domain), degree, points, orbits)
+end
+
+function getOrbitWeights(::Type{T}, domain::AbstractDomain, degree::Integer, points::AbstractVector, orbits::AbstractVector) where {T<:Real}
+  getOrbitWeights(T, ReferenceElement(domain), degree, points, orbits)
 end
 
 """
@@ -122,4 +136,61 @@ end
 function getWeights(ref::ReferenceElement, degree::Integer, points::AbstractVector{P}, orbits::AbstractVector) where {P<:AbstractVector}
   T = eltype(P)
   getWeights(T, ref, degree, points, orbits)
+end
+
+"""
+    getOrbitWeights(domain::AbstractDomain, degree::Integer, points::AbstractVector, orbits::AbstractVector)
+    getOrbitWeights(ref::ReferenceElement, degree::Integer, points::AbstractVector, orbits::AbstractVector)
+
+Compute one quadrature weight per symmetry orbit, inferring the weight type from the
+point type.
+"""
+function getOrbitWeights(domain::AbstractDomain, degree::Integer, points::AbstractVector{P}, orbits::AbstractVector) where {P<:AbstractVector}
+  T = eltype(P)
+  getOrbitWeights(T, ReferenceElement(domain), degree, points, orbits)
+end
+
+function getOrbitWeights(ref::ReferenceElement, degree::Integer, points::AbstractVector{P}, orbits::AbstractVector) where {P<:AbstractVector}
+  T = eltype(P)
+  getOrbitWeights(T, ref, degree, points, orbits)
+end
+
+"""
+    getCompactWeights(::Type{T}, domain::AbstractDomain, orbit_weights::AbstractVector)
+    getCompactWeights(domain::AbstractDomain, orbit_weights::AbstractVector)
+    getCompactWeights(::Type{T}, domain::AbstractDomain, degree::Integer, points::AbstractVector, orbits::AbstractVector)
+    getCompactWeights(domain::AbstractDomain, degree::Integer, points::AbstractVector, orbits::AbstractVector)
+    getCompactWeights(::Type{T}, ref::ReferenceElement, degree::Integer, points::AbstractVector, orbits::AbstractVector)
+    getCompactWeights(ref::ReferenceElement, degree::Integer, points::AbstractVector, orbits::AbstractVector)
+
+Convert per-orbit reference-element weights into the compact-rule scaling, or compute
+compact-format per-orbit weights directly from expanded quadrature points grouped by
+symmetry orbits.
+"""
+function getCompactWeights(::Type{T}, domain::AbstractDomain, orbit_weights::AbstractVector) where {T<:Real}
+  scale = transformWeights(domain, T[one(T)])[1]
+  return T.(orbit_weights) ./ scale
+end
+
+function getCompactWeights(domain::AbstractDomain, orbit_weights::AbstractVector{T}) where {T<:Real}
+  getCompactWeights(T, domain, orbit_weights)
+end
+
+function getCompactWeights(::Type{T}, ref::ReferenceElement, degree::Integer, points::AbstractVector, orbits::AbstractVector) where {T<:Real}
+  orbit_weights = getOrbitWeights(T, ref, degree, points, orbits)
+  getCompactWeights(T, domain(ref), orbit_weights)
+end
+
+function getCompactWeights(::Type{T}, domain::AbstractDomain, degree::Integer, points::AbstractVector, orbits::AbstractVector) where {T<:Real}
+  getCompactWeights(T, ReferenceElement(domain), degree, points, orbits)
+end
+
+function getCompactWeights(ref::ReferenceElement, degree::Integer, points::AbstractVector{P}, orbits::AbstractVector) where {P<:AbstractVector}
+  T = eltype(P)
+  getCompactWeights(T, ref, degree, points, orbits)
+end
+
+function getCompactWeights(domain::AbstractDomain, degree::Integer, points::AbstractVector{P}, orbits::AbstractVector) where {P<:AbstractVector}
+  T = eltype(P)
+  getCompactWeights(T, domain, degree, points, orbits)
 end

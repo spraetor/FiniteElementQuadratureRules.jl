@@ -94,6 +94,16 @@ end
 
 expand(cqr::CompactQuadratureRule{Ω,T}) where {Ω<:AbstractDomain,T<:Real} = expand(cqr, ReferenceElement(cqr.domain))
 
+"""
+    getCompactWeights(cqr::CompactQuadratureRule)
+
+Compute one compact-format weight per symmetry orbit for the given compact rule.
+"""
+function getCompactWeights(cqr::CompactQuadratureRule{Ω,T}) where {Ω<:AbstractDomain,T<:Real}
+  qr = expand(cqr)
+  getCompactWeights(qr, cqr.orbits)
+end
+
 
 function write_file(file::AbstractString, cqr::CompactQuadratureRule; reference::String="unknown", precision::Integer=32)
   qr = expand(cqr)

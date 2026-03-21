@@ -167,3 +167,13 @@ function write_file(file::AbstractString, qr::QuadratureRule; reference::String=
     end
   end
 end
+
+"""
+    getCompactWeights(qr::QuadratureRule, orbits::AbstractVector)
+
+Extract one compact-format weight per symmetry orbit from an expanded quadrature rule.
+The returned weights can be stored directly in a `CompactQuadratureRuleWithWeights`.
+"""
+function getCompactWeights(qr::QuadratureRule, orbits::AbstractVector)
+  getCompactWeights(eltype(qr.weights), qr.ref, qr.degree, qr.points, orbits)
+end

@@ -1,3 +1,5 @@
+using Printf
+
 function default_chooser(qr1_entry, qr2_entry)
   qr1, qr2 = qr1_entry[1], qr2_entry[1]
   if qr1.degree != qr2.degree

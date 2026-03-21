@@ -6,8 +6,8 @@
   file = joinpath(rules_root, "compact", "CCGV22", "triangle", "4-6.yml")
   qr,data = _read_rule_file(file)
 
-  # expanded rule
-  file2 = joinpath(rules_root, "expanded", "WV15", "tetrahedron", "1-1.yml")
+  # compact rule that expands on read
+  file2 = joinpath(rules_root, "compact", "WV15", "tetrahedron", "1-1.yml")
   qr2,data2 = _read_rule_file(file2)
 
   # compact rule without weights

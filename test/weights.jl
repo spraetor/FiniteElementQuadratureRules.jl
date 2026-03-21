@@ -27,6 +27,19 @@ import YAML
     w4 = getWeights(Float64, ReferenceElement(cqr.domain), cqr.degree, qr.points, cqr.orbits)
     @test w1 ≈ w3
     @test w1 ≈ w4
+
+    ow1 = getOrbitWeights(cqr.domain, cqr.degree, qr.points, cqr.orbits)
+    ow2 = getOrbitWeights(ReferenceElement(cqr.domain), cqr.degree, qr.points, cqr.orbits)
+    ow3 = getOrbitWeights(Float64, cqr.domain, cqr.degree, qr.points, cqr.orbits)
+    ow4 = getOrbitWeights(Float64, ReferenceElement(cqr.domain), cqr.degree, qr.points, cqr.orbits)
+    @test ow1 ≈ ow2
+    @test ow1 ≈ ow3
+    @test ow1 ≈ ow4
+    @test length(ow1) == sum(cqr.orbits)
+
+    cw = getCompactWeights(cqr)
+    @test length(cw) == sum(cqr.orbits)
+    @test FiniteElementQuadratureRules.transformWeights(cqr.domain, cw) ≈ ow1
   end
 
   @testset "Weights of expanded rule" begin
@@ -43,5 +56,8 @@ import YAML
     w4 = getWeights(Float64, qr.ref, qr.degree, qr.points)
     @test w1 ≈ w3
     @test w1 ≈ w4
+
+    cw = getCompactWeights(qr, cqr.orbits)
+    @test FiniteElementQuadratureRules.transformWeights(domain(qr), cw) ≈ getOrbitWeights(qr.ref, qr.degree, qr.points, cqr.orbits)
   end
 end
