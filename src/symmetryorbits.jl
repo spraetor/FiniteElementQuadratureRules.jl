@@ -300,7 +300,9 @@ function symmetryOrbits(::Type{T}, ::Hexahedron) where {T<:Real}
       P(-b,-a,-c),
       P(-b,-c,-a),
       P(-c,-a,-b),
-      P(-c,-b,-a)), (p)->(abs(p[1]),abs(p[2]),abs(p[3])) )]
+      P(-c,-b,-a)), (p)->(abs(p[1]),abs(p[2]),abs(p[3])) ),
+    SymmetryOrbit(Val(3),1, (a::T, b::T, c::T) -> SVector{1,P}((
+      P(a,b,c),)), (p)->(p[1],p[2],p[3]) )]
 end
 
 function symmetryOrbits(::Type{T}, ::Prism) where {T<:Real}

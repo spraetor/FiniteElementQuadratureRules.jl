@@ -7,12 +7,20 @@ const DEFAULT_ACCURACY_THRESHOLD = big"1e-20"
 const DEFAULT_OPT_TOL = BigFloat(sqrt(eps(Float64)))
 const DEFAULT_CLOSE_ATOL = big"1e-8"
 const DEFAULT_CLOSE_RTOL = big"1e-8"
+const RESERVED_YAML_FIELDS = Set([
+  "reference", "region", "dim", "degree", "quality", "accuracy",
+  "properties", "coordinates", "weights", "orbits", "positions",
+])
 
-function _load_compact_rule(path::AbstractString)
+function _extra_yaml_fields(data::AbstractDict)
+  Dict{String,Any}(string(k) => v for (k, v) in pairs(data) if !(string(k) in RESERVED_YAML_FIELDS))
+end
+
+function _load_compact_rule(path::AbstractString, ::Type{T}=BigFloat) where {T<:Real}
   data = load_file(path)
   rule = haskey(data, "weights") ?
-    CompactQuadratureRuleWithWeights(BigFloat, data) :
-    CompactQuadratureRule(BigFloat, data)
+    CompactQuadratureRuleWithWeights(T, data) :
+    CompactQuadratureRule(T, data)
   return data, rule
 end
 
@@ -94,18 +102,21 @@ function _try_optimized_rule(rule;
 end
 
 function optimize_rule_file(path::AbstractString;
+                            work_T::Type{<:Real}=BigFloat,
                             accuracy_threshold::Real=DEFAULT_ACCURACY_THRESHOLD,
                             maxiters::Integer=120,
                             close_atol::Real=DEFAULT_CLOSE_ATOL,
                             close_rtol::Real=DEFAULT_CLOSE_RTOL,
-                            opt_tol::Real=DEFAULT_OPT_TOL,
+                            opt_tol::Union{Nothing,Real}=nothing,
                             precision::Integer=32,
                             show_trace::Bool=false)
-  data, original = _load_compact_rule(path)
+  data, original = _load_compact_rule(path, work_T)
+  opt_tol = isnothing(opt_tol) ? sqrt(eps(work_T)) : opt_tol
   original_accuracy = haskey(data, "accuracy") ?
     parse(BigFloat, string(data["accuracy"])) :
     quadratureAccuracy(expand(original))
   reference = haskey(data, "reference") ? string(data["reference"]) : "unknown"
+  extra_fields = _extra_yaml_fields(data)
 
   if original_accuracy <= BigFloat(accuracy_threshold)
     return (
@@ -159,7 +170,7 @@ function optimize_rule_file(path::AbstractString;
 
   close = _is_close(original, best.rule; atol=close_atol, rtol=close_rtol)
   outpath = close ? path : replace(path, r"\.yml$" => ".opt.yml")
-  write_file(outpath, best.rule; reference, precision)
+  write_file(outpath, best.rule; reference, precision, extra_fields)
 
   return (
     path = path,
@@ -175,13 +186,15 @@ function optimize_rule_file(path::AbstractString;
 end
 
 function optimize_rules(dir::AbstractString=joinpath(@__DIR__, "compact");
+                        work_T::Type{<:Real}=BigFloat,
                         accuracy_threshold::Real=DEFAULT_ACCURACY_THRESHOLD,
                         maxiters::Integer=120,
                         close_atol::Real=DEFAULT_CLOSE_ATOL,
                         close_rtol::Real=DEFAULT_CLOSE_RTOL,
-                        opt_tol::Real=DEFAULT_OPT_TOL,
+                        opt_tol::Union{Nothing,Real}=nothing,
                         precision::Integer=32,
                         show_trace::Bool=false)
+  opt_tol = isnothing(opt_tol) ? sqrt(eps(work_T)) : opt_tol
   candidates = NamedTuple[]
   for (root, _, files) in Filesystem.walkdir(dir)
     for file in sort(files)
@@ -201,6 +214,7 @@ function optimize_rules(dir::AbstractString=joinpath(@__DIR__, "compact");
   for candidate in candidates
     path = candidate.path
     result = optimize_rule_file(path;
+      work_T,
       accuracy_threshold,
       maxiters,
       close_atol,

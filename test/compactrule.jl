@@ -1,4 +1,5 @@
 using StaticArrays: @SVector
+import YAML
 
 const F = Float64
 
@@ -201,6 +202,18 @@ let
   cqr = CompactQuadratureRule(tri, 2, [1,2,0], F[0.5,0.0])
   oqr = optimize(cqr)
   @test cqr.positions ≈ oqr.positions atol=1e-12
+end
+
+let
+  cqr = CompactQuadratureRuleWithWeights(tri, 1, [0,1,0], F[0.0], F[1/3])
+  mktempdir() do dir
+    path = joinpath(dir, "rule.yml")
+    write_file(path, cqr; reference="TEST", extra_fields=Dict("comment" => "keep me"))
+    data = YAML.load_file(path)
+    @test data["comment"] == "keep me"
+    @test data["reference"] == "TEST"
+    @test haskey(data, "weights")
+  end
 end
 
 let

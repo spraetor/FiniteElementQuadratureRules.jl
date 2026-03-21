@@ -30,6 +30,22 @@ import YAML
     @test parse(Float64, data2["accuracy"]) ≈ quadratureAccuracy(qr)
   end
 
+  @testset "Preserve Extra Fields" begin
+    data = YAML.load_file(joinpath(rules_root, "compact", "CCGV22", "triangle", "4-6.yml"))
+    qr = expand(CompactQuadratureRuleWithWeights(data))
+
+    data2 = Dict(qr; extra_fields=Dict("comment" => "keep me"))
+    @test data2["comment"] == "keep me"
+
+    mktempdir() do dir
+      path = joinpath(dir, "rule.yml")
+      write_file(path, qr; reference="TEST", extra_fields=Dict("comment" => "keep me"))
+      data3 = YAML.load_file(path)
+      @test data3["comment"] == "keep me"
+      @test data3["reference"] == "TEST"
+    end
+  end
+
   @testset "Quadrature Accuracy" begin
     data = YAML.load_file(joinpath(rules_root, "compact", "CCGV22", "triangle", "4-6.yml"))
     qr = expand(CompactQuadratureRuleWithWeights(data))

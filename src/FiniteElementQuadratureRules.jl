@@ -28,6 +28,7 @@ include("referenceelement.jl")
 include("barycentriccoordinates.jl")
 include("checkinside.jl")
 include("symmetryorbits.jl")
+include("orbitdetection.jl")
 include("jacobi.jl")
 include("lagrange.jl")
 include("monomials.jl")
@@ -48,7 +49,7 @@ export AbstractCube, AbstractDomain, AbstractGeometry, AbstractSimplex, AffineGe
   MonomialPolySet, MultiLinearGeometry, Point, Prism, Pyramid, QuadratureRule,
   Quadrilateral, ReferenceElement, SymmetryOrbit, Tetrahedron, Triangle
 export args, barycentricCoordinates, compact, coordinates, ctype, default_chooser, dimension, domain, domaintype, duneReferenceElement, expand, expandall,
-  facets, generate, generate_rule_overview, getCompactWeights, getOrbitWeights, getProperties, getQuality, getWeights, integrate, isInside, isPositive, isPI,
+  detectSymmetryOrbits, facets, generate, generate_rule_overview, getCompactWeights, getOrbitWeights, getProperties, getQuality, getWeights, integrate, isInside, isPositive, isPI,
   optimize, position, quadratureAccuracy, region, symmetryOrbits, testQuadratureRule, testWeights, transform,
   vertices, volume, write_file
 

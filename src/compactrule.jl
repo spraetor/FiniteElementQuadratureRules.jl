@@ -1,3 +1,5 @@
+import YAML
+
 """
     CompactQuadratureRule{T,Ω}
 
@@ -105,26 +107,23 @@ function getCompactWeights(cqr::CompactQuadratureRule{Ω,T}) where {Ω<:Abstract
 end
 
 
-function write_file(file::AbstractString, cqr::CompactQuadratureRule; reference::String="unknown", precision::Integer=32)
+function Base.Dict(cqr::CompactQuadratureRule; reference::String="unknown", precision::Int=32, extra_fields::AbstractDict=Dict())
   qr = expand(cqr)
-  accuracy = quadratureAccuracy(qr)
-  open(file, "w") do f
-    write(f, "reference: '$(reference)'\n")
-    write(f, "region: $(region(cqr.domain))\n")
-    write(f, "dim: $(dimension(cqr.domain))\n")
-    write(f, "degree: $(cqr.degree)\n")
-    write(f, "quality: $(string(getQuality(qr)))\n")
-    write(f, "accuracy: '$(@sprintf("%0.*e",precision,accuracy))'\n")
-    write(f, "orbits: [$(cqr.orbits[1])")
-    for i in 2:length(cqr.orbits)
-      write(f, ", $(cqr.orbits[i])")
-    end
-    write(f, "]\n")
-    write(f, "positions:\n")
-    for p in cqr.positions
-      write(f, "  - '$(@sprintf("%0.*e",precision,p))'\n")
-    end
-  end
+  data = Dict{String,Any}(string(k) => v for (k, v) in pairs(extra_fields))
+  data["reference"] = reference
+  data["region"] = region(cqr.domain)
+  data["dim"] = dimension(cqr.domain)
+  data["degree"] = cqr.degree
+  data["quality"] = string(getQuality(qr))
+  data["accuracy"] = @sprintf("%0.*e", precision, quadratureAccuracy(qr))
+  data["orbits"] = copy(cqr.orbits)
+  data["positions"] = [@sprintf("%0.*e", precision, p) for p in cqr.positions]
+  data
+end
+
+
+function write_file(file::AbstractString, cqr::CompactQuadratureRule; reference::String="unknown", precision::Integer=32, extra_fields::AbstractDict=Dict())
+  YAML.write_file(file, Dict(cqr; reference, precision, extra_fields))
 end
 
 """
@@ -219,28 +218,22 @@ function expand(cqr::CompactQuadratureRuleWithWeights{Ω,T}) where {Ω<:Abstract
 end
 
 
-function write_file(file::AbstractString, cqr::CompactQuadratureRuleWithWeights; reference::String="unknown", precision::Integer=50)
+function Base.Dict(cqr::CompactQuadratureRuleWithWeights; reference::String="unknown", precision::Int=50, extra_fields::AbstractDict=Dict())
   qr = expand(cqr)
-  accuracy = quadratureAccuracy(qr)
-  open(file, "w") do f
-    write(f, "reference: '$(reference)'\n")
-    write(f, "region: $(region(cqr.domain))\n")
-    write(f, "dim: $(dimension(cqr.domain))\n")
-    write(f, "degree: $(cqr.degree)\n")
-    write(f, "quality: $(string(getQuality(qr)))\n")
-    write(f, "accuracy: '$(@sprintf("%0.*e",precision,accuracy))'\n")
-    write(f, "orbits: [$(cqr.orbits[1])")
-    for i in 2:length(cqr.orbits)
-      write(f, ", $(cqr.orbits[i])")
-    end
-    write(f, "]\n")
-    write(f, "positions:\n")
-    for p in cqr.positions
-      write(f, "  - '$(@sprintf("%0.*e",precision,p))'\n")
-    end
-    write(f, "weights:\n")
-    for w in cqr.weights
-      write(f, "  - '$(@sprintf("%0.*e",precision,w))'\n")
-    end
-  end
+  data = Dict{String,Any}(string(k) => v for (k, v) in pairs(extra_fields))
+  data["reference"] = reference
+  data["region"] = region(cqr.domain)
+  data["dim"] = dimension(cqr.domain)
+  data["degree"] = cqr.degree
+  data["quality"] = string(getQuality(qr))
+  data["accuracy"] = @sprintf("%0.*e", precision, quadratureAccuracy(qr))
+  data["orbits"] = copy(cqr.orbits)
+  data["positions"] = [@sprintf("%0.*e", precision, p) for p in cqr.positions]
+  data["weights"] = [@sprintf("%0.*e", precision, w) for w in cqr.weights]
+  data
+end
+
+
+function write_file(file::AbstractString, cqr::CompactQuadratureRuleWithWeights; reference::String="unknown", precision::Integer=50, extra_fields::AbstractDict=Dict())
+  YAML.write_file(file, Dict(cqr; reference, precision, extra_fields))
 end

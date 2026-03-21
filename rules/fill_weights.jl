@@ -4,6 +4,14 @@ using Base: Filesystem
 using Printf: @sprintf
 
 const DEFAULT_WEIGHT_TOL = BigFloat(sqrt(eps(Float64)))
+const RESERVED_YAML_FIELDS = Set([
+  "reference", "region", "dim", "degree", "quality", "accuracy",
+  "properties", "coordinates", "weights", "orbits", "positions",
+])
+
+function _extra_yaml_fields(data::AbstractDict)
+  Dict{String,Any}(string(k) => v for (k, v) in pairs(data) if !(string(k) in RESERVED_YAML_FIELDS))
+end
 
 function missing_weight_rule_files(dir::AbstractString=joinpath(@__DIR__, "compact"))
   files = String[]
@@ -39,7 +47,8 @@ function fill_rule_weights(path::AbstractString;
   weighted = CompactQuadratureRuleWithWeights(cqr.domain, cqr.degree, cqr.orbits, cqr.positions, compact_weights)
 
   reference = haskey(data, "reference") ? string(data["reference"]) : "unknown"
-  write_file(path, weighted; reference, precision)
+  extra_fields = _extra_yaml_fields(data)
+  write_file(path, weighted; reference, precision, extra_fields)
 
   return (
     path = path,

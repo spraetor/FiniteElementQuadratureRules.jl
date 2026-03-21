@@ -1,3 +1,5 @@
+using StaticArrays: SVector
+
 struct {{ domain }}QuadRule{ T<:Real, Point<:AbstractVector{T} }
   degree::Int
   points::Vector{Point}

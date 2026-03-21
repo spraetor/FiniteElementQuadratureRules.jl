@@ -1,5 +1,6 @@
 using StaticArrays: SVector
 using Printf: @sprintf
+import YAML
 
 """
     QuadratureRule{Ω,T,Point}
@@ -124,48 +125,23 @@ Convert the given `QuadratureRule` into a Dict for exporting into a YAML file.
 The optional parameter `reference` refers to a bibtex key used to reference a publication
 where the quadrature rule is extracted from.
 """
-function Base.Dict(qr::QuadratureRule; reference::String="unknown", precision::Int=32)
-  Dict(
-    "reference" => reference,
-    "region" => region(domain(qr)),
-    "dim" => dimension(domain(qr)),
-    "degree" => qr.degree,
-    "quality" => string(getQuality(qr)),
-    "accuracy" => @sprintf("%0.*e", precision, quadratureAccuracy(qr)),
-    "properties" => String[ string(prop) for prop in qr.properties ],
-    "coordinates" => [ String[ @sprintf("%0.*e", precision,pᵢ) for pᵢ in p ] for p in qr.points ],
-    "weights" => String[ @sprintf("%0.*e", precision,w) for w in qr.weights ]
-    )
+function Base.Dict(qr::QuadratureRule; reference::String="unknown", precision::Int=32, extra_fields::AbstractDict=Dict())
+  data = Dict{String,Any}(string(k) => v for (k, v) in pairs(extra_fields))
+  data["reference"] = reference
+  data["region"] = region(domain(qr))
+  data["dim"] = dimension(domain(qr))
+  data["degree"] = qr.degree
+  data["quality"] = string(getQuality(qr))
+  data["accuracy"] = @sprintf("%0.*e", precision, quadratureAccuracy(qr))
+  data["properties"] = String[ string(prop) for prop in qr.properties ]
+  data["coordinates"] = [ String[ @sprintf("%0.*e", precision,pᵢ) for pᵢ in p ] for p in qr.points ]
+  data["weights"] = String[ @sprintf("%0.*e", precision,w) for w in qr.weights ]
+  data
 end
 
 
-function write_file(file::AbstractString, qr::QuadratureRule; reference::String="unknown", precision::Integer=50)
-  accuracy = quadratureAccuracy(qr)
-  open(file, "w") do f
-    write(f, "reference: '$(reference)'\n")
-    write(f, "region: $(region(domain(qr)))\n")
-    write(f, "dim: $(dimension(domain(qr)))\n")
-    write(f, "degree: $(qr.degree)\n")
-    write(f, "quality: $(string(getQuality(qr)))\n")
-    write(f, "accuracy: '$(@sprintf("%0.*e",precision,accuracy))'\n")
-    write(f, "properties: [$(length(qr.properties)>0 ? string(qr.properties[1]) : "")")
-    for i in 2:length(qr.properties)
-      write(f, ", $(string(qr.properties[i]))")
-    end
-    write(f, "]\n")
-    write(f, "coordinates:\n")
-    for p in qr.points
-      write(f, "  - ['$(@sprintf("%0.*e",precision,p[1]))'")
-      for i in 2:length(p)
-        write(f, ", '$(@sprintf("%0.*e",precision,p[i]))'")
-      end
-      write(f, "]\n")
-    end
-    write(f, "weights:\n")
-    for w in qr.weights
-      write(f, "  - '$(@sprintf("%0.*e",precision,w))'\n")
-    end
-  end
+function write_file(file::AbstractString, qr::QuadratureRule; reference::String="unknown", precision::Integer=50, extra_fields::AbstractDict=Dict())
+  YAML.write_file(file, Dict(qr; reference, precision, extra_fields))
 end
 
 """
