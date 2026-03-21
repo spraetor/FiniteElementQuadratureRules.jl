@@ -1,11 +1,14 @@
 using FiniteElementQuadratureRules
 using Documenter
+using DocumenterCitations
 
 DocMeta.setdocmeta!(FiniteElementQuadratureRules, :DocTestSetup, :(using FiniteElementQuadratureRules); recursive=true)
+bib = CitationBibliography(joinpath(@__DIR__, "..", "references.bib"))
 
 makedocs(;
     modules=[FiniteElementQuadratureRules],
     authors="Simon Praetorius <simon.praetorius@tu-dresden.de> and contributors",
+    plugins=[bib],
     sitename="FiniteElementQuadratureRules.jl",
     format=Documenter.HTML(;
         canonical="https://spraetor.github.io/FiniteElementQuadratureRules.jl/stable",

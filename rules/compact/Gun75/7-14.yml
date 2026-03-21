@@ -3,6 +3,7 @@ region: simplex
 dim: 2
 degree: 7
 quality: NO
+accuracy: '4.39462176734480388136746618901810e-33'
 orbits: [0, 0, 0, 0, 0, 0, 5, 4]
 positions:
   - '6.46948095331269094496562421877558e-01'

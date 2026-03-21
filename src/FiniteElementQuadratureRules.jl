@@ -49,7 +49,7 @@ export AbstractCube, AbstractDomain, AbstractGeometry, AbstractSimplex, AffineGe
   Quadrilateral, ReferenceElement, SymmetryOrbit, Tetrahedron, Triangle
 export args, barycentricCoordinates, compact, coordinates, ctype, default_chooser, dimension, domain, domaintype, duneReferenceElement, expand, expandall,
   facets, generate, generate_rule_overview, getProperties, getQuality, getWeights, integrate, isInside, isPositive, isPI,
-  optimize, position, region, symmetryOrbits, testQuadratureRule, testWeights, transform,
+  optimize, position, quadratureAccuracy, region, symmetryOrbits, testQuadratureRule, testWeights, transform,
   vertices, volume, write_file
 
 end # end module FiniteElementQuadratureRules

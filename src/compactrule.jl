@@ -97,12 +97,14 @@ expand(cqr::CompactQuadratureRule{Ω,T}) where {Ω<:AbstractDomain,T<:Real} = ex
 
 function write_file(file::AbstractString, cqr::CompactQuadratureRule; reference::String="unknown", precision::Integer=32)
   qr = expand(cqr)
+  accuracy = quadratureAccuracy(qr)
   open(file, "w") do f
     write(f, "reference: '$(reference)'\n")
     write(f, "region: $(region(cqr.domain))\n")
     write(f, "dim: $(dimension(cqr.domain))\n")
     write(f, "degree: $(cqr.degree)\n")
     write(f, "quality: $(string(getQuality(qr)))\n")
+    write(f, "accuracy: '$(@sprintf("%0.*e",precision,accuracy))'\n")
     write(f, "orbits: [$(cqr.orbits[1])")
     for i in 2:length(cqr.orbits)
       write(f, ", $(cqr.orbits[i])")
@@ -209,12 +211,14 @@ end
 
 function write_file(file::AbstractString, cqr::CompactQuadratureRuleWithWeights; reference::String="unknown", precision::Integer=50)
   qr = expand(cqr)
+  accuracy = quadratureAccuracy(qr)
   open(file, "w") do f
     write(f, "reference: '$(reference)'\n")
     write(f, "region: $(region(cqr.domain))\n")
     write(f, "dim: $(dimension(cqr.domain))\n")
     write(f, "degree: $(cqr.degree)\n")
     write(f, "quality: $(string(getQuality(qr)))\n")
+    write(f, "accuracy: '$(@sprintf("%0.*e",precision,accuracy))'\n")
     write(f, "orbits: [$(cqr.orbits[1])")
     for i in 2:length(cqr.orbits)
       write(f, ", $(cqr.orbits[i])")

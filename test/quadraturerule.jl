@@ -26,6 +26,16 @@ import YAML
     @test data["degree"] == data2["degree"]
     @test data["dim"] == data2["dim"]
     @test data["region"] == data2["region"]
+    @test haskey(data2, "accuracy")
+    @test parse(Float64, data2["accuracy"]) ≈ quadratureAccuracy(qr)
+  end
+
+  @testset "Quadrature Accuracy" begin
+    data = YAML.load_file(joinpath(rules_root, "compact", "CCGV22", "triangle", "4-6.yml"))
+    qr = expand(CompactQuadratureRuleWithWeights(data))
+    tol = sqrt(eps(Float64))
+    @test quadratureAccuracy(qr) < tol
+    @test testQuadratureRule(qr; tol)
   end
 
   @testset "Read expanded QuadratureRuleRule" begin

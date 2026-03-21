@@ -203,6 +203,13 @@ let
   @test cqr.positions ≈ oqr.positions atol=1e-12
 end
 
+let
+  # Solver kwargs should be forwarded to the selected LM constructor.
+  cqr = CompactQuadratureRule(tri, 1, [0,1,0], F[0.0])
+  oqr = optimize(cqr; solver=:lm, disable_geodesic=Val(true))
+  @test cqr.positions ≈ oqr.positions atol=1e-12
+end
+
 let F = Float64
   # Test the optimization on a more advanced example
   cqr = CompactQuadratureRule(tri, 5, [1,2,0],
@@ -216,6 +223,15 @@ let F = Float64
   @test getProperties(qr) == getProperties(oqr)
   @test cqr.positions ≈ ocqr.positions atol=1e-9
 
+  test_quadrature_rule(oqr)
+end
+
+let F = Float64
+  # Exercise an alternate solver with a forwarded keyword argument.
+  cqr = CompactQuadratureRule(tri, 5, [1,2,0],
+  F[ 4.7014206410e-01,
+     1.0128650732e-01])
+  oqr = expand(optimize(cqr; solver=:str, nlsolve_update_rule=Val(true)))
   test_quadrature_rule(oqr)
 end
 

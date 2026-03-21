@@ -10,6 +10,7 @@ not select only one representative per degree.
 Rules are grouped by domain type and listed with:
 - degree
 - number of quadrature points after expansion
+- accuracy
 - quality marker
 - orbit signature (for compact rules)
 - reference key
@@ -26,7 +27,7 @@ function generate_rule_overview(
   bibfile = Filesystem.isfile(bib) ? BibParser.parse_file(bib) : Dict()
 
   entries = Dict{Symbol, Vector{NamedTuple}}()
-  for Domain in Base.uniontypes(AllDomains)
+  for Domain in Base.uniontypes(FiniteElementQuadratureRules.AllDomains)
     entries[Symbol(Domain)] = NamedTuple[]
   end
 
@@ -41,6 +42,7 @@ function generate_rule_overview(
       push!(entries[Symbol(domaintype(qr))], (
         degree = qr.degree,
         points = length(qr),
+        accuracy = _format_accuracy(haskey(data, "accuracy") ? data["accuracy"] : quadratureAccuracy(qr)),
         quality = string(getQuality(qr)),
         orbits = _format_orbits(data),
         reference = reference,
@@ -50,7 +52,7 @@ function generate_rule_overview(
   end
 
   for domain in keys(entries)
-    sort!(entries[domain]; by = entry -> (entry.degree, entry.points, entry.quality, entry.orbits, entry.reference, entry.path))
+    sort!(entries[domain]; by = entry -> (entry.degree, entry.points, entry.accuracy, entry.quality, entry.orbits, entry.reference, entry.path))
   end
 
   Filesystem.mkpath(Filesystem.dirname(out_file))
@@ -66,19 +68,21 @@ function generate_rule_overview(
     println(io, "- `B`: some quadrature points lie on the boundary")
     println(io, "- `O`: some quadrature points lie outside the reference element")
 
-    for Domain in Base.uniontypes(AllDomains)
+    for Domain in Base.uniontypes(FiniteElementQuadratureRules.AllDomains)
       D = Symbol(Domain)
       isempty(entries[D]) && continue
 
       println(io)
       println(io, "## $(uppercasefirst(string(D)))")
       println(io)
-      println(io, "| Degree | Points | Quality | Orbits | Reference |")
-      println(io, "| ---: | ---: | :---: | :--- | :--- |")
+      println(io, "| Degree | Points | Accuracy | Quality | Orbits | Reference |")
+      println(io, "| ---: | ---: | ---: | :---: | :--- | :--- |")
       for entry in entries[D]
         println(
           io,
-          "| $(entry.degree) | $(entry.points) | $(entry.quality) | `",
+          "| $(entry.degree) | $(entry.points) | `",
+          _markdown_escape(entry.accuracy),
+          "` | $(entry.quality) | `",
           _markdown_escape(entry.orbits),
           "` | ",
           _format_rule_reference(entry.reference, bibfile),

@@ -39,6 +39,11 @@ end
 _markdown_escape(s::AbstractString) = replace(s, "|" => "\\|", "\n" => " ")
 _markdown_escape(x) = _markdown_escape(string(x))
 
+function _format_accuracy(x)
+  value = x isa AbstractString ? parse(BigFloat, x) : BigFloat(x)
+  return @sprintf("%.2e", Float64(value))
+end
+
 
 function _format_rule_reference(reference::AbstractString, bibfile::AbstractDict)
   label = "`$(_markdown_escape(reference))`"

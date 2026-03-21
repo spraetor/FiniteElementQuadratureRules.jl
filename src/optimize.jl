@@ -6,28 +6,52 @@ import NonlinearSolve as NLS
 Optimize the position of the quadrature points given as symmetric orbits in the
 compact rule, by minimizing the quadrature residual on a set of polynomial basis
 functions. We use basis functions and their integrals given by a `JacobiPolySet`.
+
+Allowed solvers:
+- `:lm`: Levenberg-Marquardt
+- `:tr`: TrustRegion
+- `:gn`: Gauss-Newton
+- `:str`: SimpleTrustRegion
+
+Additional keyword arguments are forwarded to the selected solver constructor.
 """
 function optimize(qr::CompactQuadratureRule{Ω,T};
-                  maxiters=1_000, show_trace=false) where {Ω,T}
+                  maxiters=1_000, show_trace=false, solver=:lm, solver_kwargs...) where {Ω,T}
   domain = qr.domain
   orbits = qr.orbits
   polyset = JacobiPolySet(T, domain, qr.degree)
   b = polyset.integrals
 
+  solver = _nonlinear_solver(T, solver; solver_kwargs...)
+
   let prob = NLS.NonlinearProblem(_residual, qr.positions, (domain,orbits,polyset,b))
-    if show_trace
-      # Work around a LinearSolve QR cache type mismatch for non-BLAS element types
-      # (e.g. Float128, Double64) by using Julia's native `\` linsolve path.
-      linsolve = T <: Union{Float32, Float64} ? nothing : (\)
-      sol = NLS.solve(prob, NLS.LevenbergMarquardt(; linsolve),
-        show_trace=Val(true),
-        maxiters=maxiters)
-    else
-      sol = NLS.solve(prob, NLS.SimpleTrustRegion(),
-        maxiters=maxiters)
-    end
+    solve_kwargs = (; maxiters, show_trace = Val(show_trace))
+    sol = NLS.solve(prob, solver; solve_kwargs...)
     return CompactQuadratureRule(domain,qr.degree,orbits,sol.u)
   end
+end
+
+function _nonlinear_solver(::Type{T}, solver::Symbol; solver_kwargs...) where {T}
+  if solver == :lm
+    # Work around a LinearSolve QR cache type mismatch for non-BLAS element types
+    # (e.g. Float128, Double64) by using Julia's native `\` linsolve path.
+    defaults = T <: Union{Float32, Float64} ? (;) : (; linsolve = (\))
+    return NLS.LevenbergMarquardt(; defaults..., solver_kwargs...)
+  elseif solver == :tr
+    return NLS.TrustRegion(; solver_kwargs...)
+  elseif solver == :gn
+    return NLS.GaussNewton(; solver_kwargs...)
+  elseif solver == :str
+    return NLS.SimpleTrustRegion(; solver_kwargs...)
+  else
+    error("Unrecognized solver argument. Use one of {:lm, :tr, :gn, :str}")
+  end
+end
+
+_nonlinear_solver(::Type, solver; solver_kwargs...) = solver
+
+function optimize(qr::CompactQuadratureRuleWithWeights; kwargs...)
+  optimize(CompactQuadratureRule(qr.domain, qr.degree, qr.orbits, qr.positions); kwargs...)
 end
 
 
@@ -38,10 +62,6 @@ Optimize the position of the quadrature points given as symmetric orbits in the
 compact rule, by minimizing the quadrature residual on a set of polynomial basis
 functions. We use basis functions and their integrals given by a `JacobiPolySet`.
 """
-function optimize(qr::CompactQuadratureRuleWithWeights)
-  optimize(CompactQuadratureRule(qr.domain, qr.degree, qr.orbits, qr.positions))
-end
-
 # Restrict the arguments given by the vector `r` to the valid range for the
 # symmetry orbit `so`.
 function _clamporbit(so::SymmetryOrbit, r::AbstractVector)

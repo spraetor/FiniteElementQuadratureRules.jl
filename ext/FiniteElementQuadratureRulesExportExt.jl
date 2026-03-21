@@ -1,6 +1,7 @@
 module FiniteElementQuadratureRulesExportExt
 
 using Base: Filesystem
+using Printf: @sprintf
 using FiniteElementQuadratureRules
 using OteraEngine
 import BibParser

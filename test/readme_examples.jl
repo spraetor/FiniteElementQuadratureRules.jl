@@ -14,10 +14,15 @@ import YAML
     mktempdir() do tmp
       out = joinpath(tmp, "4-6.yml")
       write_file(out, cqr; reference=data["reference"])
-      write_file(out, qr; reference=data["reference"])
-      YAML.write_file(out, Dict(qr; reference=data["reference"]))
-      @test isfile(out)
       exported = YAML.load_file(out)
+      @test haskey(exported, "accuracy")
+      write_file(out, qr; reference=data["reference"])
+      exported = YAML.load_file(out)
+      @test haskey(exported, "accuracy")
+      YAML.write_file(out, Dict(qr; reference=data["reference"]))
+      exported = YAML.load_file(out)
+      @test isfile(out)
+      @test haskey(exported, "accuracy")
       @test Int(exported["degree"]) == 4
       @test length(exported["coordinates"]) == 6
     end

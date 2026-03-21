@@ -3,6 +3,7 @@ region: simplex
 dim: 3
 degree: 11
 quality: PI
+accuracy: '1.48029736616687536505664023277763e-16'
 orbits: [0, 5, 1, 4, 1]
 positions:
   - '1.21188871707302677301020964676878e-01'
